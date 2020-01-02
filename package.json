@@ -1,0 +1,25 @@
+{
+  "name": "purecloud-partner-listing-management",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PrinceMerluza/purecloud-partner-listing-management.git"
+  },
+  "author": "Prince Merluza",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/PrinceMerluza/purecloud-partner-listing-management/issues"
+  },
+  "homepage": "https://github.com/PrinceMerluza/purecloud-partner-listing-management#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
