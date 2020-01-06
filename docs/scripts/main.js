@@ -36,14 +36,29 @@ client.loginImplicitGrant('e7de8a75-62bb-43eb-9063-38509f8c21af',
     } else {
         throw new Error('Manager group not found');
     }
-// HTML related calls
-    showListings();
+    
+    return contentManagementApi.getContentmanagementWorkspaces({
+        'pageSize': 100,
+        'access': ['content']
+    });
+})
+.then((workspaces) => {
+    // Display workspaces that are listings
+    let listings = workspaces.entities
+                    .filter(ws => ws.name.startsWith(config.prefix));
+    view.showListings('listing-cards-container', listings);
+
+    // Additional elements to DOM
     view.addModalsToDocument();
 })
 .catch((e) => {
     console.error(e);
 });
 
+/**
+ * Create a new listing workspace
+ * @param {String} listingName 
+ */
 function createNewListing(listingName){
     // Create the workspace for the listing
     contentManagementApi.postContentmanagementWorkspaces({
@@ -65,21 +80,27 @@ function createNewListing(listingName){
     .catch(e => console.error(e));
 }
 
-function showListings(){
-    const containerId = 'listing-cards-container';
-    view.showListings(containerId);
+function showListingDeletionModal(id){
+    view.showYesNoModal('Delete Listing', 
+    'Are you sure you want  to delete this listing?',
+    function(){
+        contentManagementApi.deleteContentmanagementWorkspace(id)
+        .then(() => {
+            console.log('Deleted workspace.');
+            view.hideYesNoModal();
+        })
+        .catch(e => console.error(e));
+    },
+    function(){
+        view.hideYesNoModal();
+    })
 }
 
-function showCreationModal(){
-    view.showCreationModal();
-}
 
-function hideCreationModal(){
-    view.hideCreationModal();
-}
-
-// Global Assignment
+// Global exposition
 window.createNewListing = createNewListing;
-window.showCreationModal = showCreationModal;
-window.hideCreationModal = hideCreationModal;
-window.showListings = showListings;
+window.showListingDeletionModal = showListingDeletionModal;
+
+window.showCreationModal = view.showCreationModal;
+window.hideCreationModal = view.hideCreationModal;
+
