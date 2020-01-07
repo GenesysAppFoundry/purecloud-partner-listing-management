@@ -10,6 +10,7 @@ const client = platformClient.ApiClient.instance;
 const contentManagementApi = new platformClient.ContentManagementApi();
 const groupsApi = new platformClient.GroupsApi();
 const usersApi = new platformClient.UsersApi();
+const notificationsApi = new platformClient.NotificationsApi();
 
 // Globals
 let managerGroup = null;
@@ -17,7 +18,7 @@ let managerGroup = null;
 // Authenticate
 // TODO: regional authentication
 client.loginImplicitGrant('e7de8a75-62bb-43eb-9063-38509f8c21af', 
-                        'http://localhost:8080/index.html')
+                        window.location.href.split('?')[0])
 .then(() => {
     console.log('PureCloud Auth successful.');
 
@@ -135,9 +136,7 @@ function createNewListing(listingName){
             }
         );
     })
-    .then(() => {
-        console.log("Assigned group to workspace.");
-
+    .then((document) => {       
         // Create a doument that will have the latest version
         return contentManagementApi.postContentmanagementDocuments({
             name: 'current',
@@ -147,9 +146,8 @@ function createNewListing(listingName){
             tags: ['listing-data']
         });
     })
+    // Upload the blank listing JSON to the document
     .then((document) => {
-        console.log(document);
-
         let settings = {
             'crossDomain': true,
             'url': document.uploadDestinationUri,
@@ -163,14 +161,57 @@ function createNewListing(listingName){
             + '\r\n\r\n--A4Q9L5049cRQj9hx8FK8I7bep3YXSsN0hTNa--'
         }
             
-        return $.ajax(settings).done(function (response) {
-            console.log('Created blank listing document.');
-            
-            view.hideLoader();
-            return reloadListings();
+        return new Promise((resolve, reject) => {
+            $.ajax(settings)
+            .done(function (response) {
+
+                console.log('Created blank listing document.');
+                // TODO: Change this to actually listen to when document uplaod completes.
+                setTimeout(() => { 
+                    resolve(document);
+                }, 5000);
+            })
+            .fail(function(jqXHR, textStatus) {
+                reject(textStatus);
+            });
         });
     })
+    .then((document) => {
+        // Set the document's shareability to public
+        return contentManagementApi.postContentmanagementShares({
+            sharedEntityType: 'DOCUMENT',
+            sharedEntity: {
+                id: document.id
+            },
+            memberType: 'PUBLIC'
+        });
+    })
+    .then((document) => {   
+        console.log('Made document public');
+
+        // Clean up and refresh
+        view.hideLoader();
+        return reloadListings();
+    })
     .catch(e => console.error(e));
+}
+
+/**
+ * Set up a channel to listen to workspace events.
+ * Will be used to know if a document has finished uploading.
+ * @param {String} workspaceId 
+ * @param {Function} onmessage callback function for each event
+ */
+function setupWorkspaceNotifications(workspaceId, onmessage){
+    notificationsApi.postNotificationsChannels()
+    .then((channel) => {
+        let webSocket = new WebSocket(channel.connectUri);
+        webSocket.onmessage = onmessage;
+
+        let topic = `contentmanagement.workspaces.${workspaceId}.documents`;
+        let body = [{id: topic}];
+        return notificationsApi.putNotificationsChannelSubscriptions(channel.id, body);
+    })
 }
 
 /**
