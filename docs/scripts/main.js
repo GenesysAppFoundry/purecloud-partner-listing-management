@@ -1,5 +1,6 @@
 import view from './view.js';
 import config from '../config/config.js';
+import blankCoreListingJSON from '../config/core-listing-blank.js';
 
 //Load purecloud and create the ApiClient Instance
 const platformClient = require('platformClient');
@@ -146,15 +147,36 @@ function createNewListing(listingName){
             tags: ['listing-data']
         });
     })
-    .then(() => {
-        console.log("Creted document for lsiting data");
+    .then((document) => {
+        console.log(document);
 
-        view.hideLoader();
-        return reloadListings();
+        let settings = {
+            'crossDomain': true,
+            'url': document.uploadDestinationUri,
+            'method': 'POST',
+            'headers': {
+                'Content-Type': 'multipart/form-data; boundary=A4Q9L5049cRQj9hx8FK8I7bep3YXSsN0hTNa',
+                'Authorization': `Bearer ${client.authData.accessToken}`
+            },
+            'data': '--A4Q9L5049cRQj9hx8FK8I7bep3YXSsN0hTNa\r\nContent-Disposition: form-data; name=\"current\"; filename=\"current.json\"\r\nContent-Type: application/json\r\n\r\n' +
+            JSON.stringify(blankCoreListingJSON)
+            + '\r\n\r\n--A4Q9L5049cRQj9hx8FK8I7bep3YXSsN0hTNa--'
+        }
+            
+        return $.ajax(settings).done(function (response) {
+            console.log('Created blank listing document.');
+            
+            view.hideLoader();
+            return reloadListings();
+        });
     })
     .catch(e => console.error(e));
 }
 
+/**
+ * Display the modal confirmation for deleting a listing
+ * @param {String} id 
+ */
 function showListingDeletionModal(id){
     view.showYesNoModal('Delete Listing', 
     'Are you sure you want  to delete this listing?',
