@@ -49,6 +49,15 @@ export default {
             showListingDeletionModal(pcWorkspace.id);
         };
 
+        // Edit Button
+        let btnEdit = el.querySelectorAll('.btn-edit-listing')[0];
+        btnEdit.onclick = function(){
+            window.location.href = 
+                config.redirectUriBase + 
+                'edit-listing.html' +
+                '?workspaceId=' + pcWorkspace.id;
+        };
+
         return el;
     }
 };;

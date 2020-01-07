@@ -169,7 +169,7 @@ function createNewListing(listingName){
                 // TODO: Change this to actually listen to when document uplaod completes.
                 setTimeout(() => { 
                     resolve(document);
-                }, 5000);
+                }, 2000);
             })
             .fail(function(jqXHR, textStatus) {
                 reject(textStatus);
