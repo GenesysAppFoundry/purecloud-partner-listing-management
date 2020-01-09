@@ -7,6 +7,7 @@ export default {
 
     // PureCloud assigned name for the premium app
     // This should match the integration type name of the Premium App
+    // TODO:
     "appName": "premium-app-example",
 
     // Default Values for fail-safe/testing. Shouldn't have to be changed since the app
@@ -43,6 +44,36 @@ export default {
                 "description": "People that will have acess to the Listing Info Workspce.",
             }
         ],
-        "appInstances": []
+        "appInstances": [],
+        "oauth": [],
+        "dataTables": [
+            {
+                "name": "Listings",
+                "description": "Contains the details of your app listings.",
+                "referenceKey": "id",
+                "customFields": [
+                    {
+                        "name": "listingDetails",
+                        "type": "string"
+                    },
+                    {
+                        "name": "premiumAppDetails",
+                        "type": "string"
+                    },
+                    {
+                        "name": "placeholder1",
+                        "type": "string"
+                    },
+                    {
+                        "name": "placeholder2",
+                        "type": "string"
+                    },
+                    {
+                        "name": "placeholder3",
+                        "type": "string"
+                    }
+                ]
+            }
+        ] 
     }
 };

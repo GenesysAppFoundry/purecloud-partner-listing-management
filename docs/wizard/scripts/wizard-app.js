@@ -29,6 +29,7 @@ class WizardApp {
         this.groupsApi = new this.platformClient.GroupsApi();
         this.authApi = new this.platformClient.AuthorizationApi();
         this.oAuthApi = new this.platformClient.OAuthApi();
+        this.architectApi = new this.platformClient.ArchitectApi();
 
         // Language default is english
         // Language context is object containing the translations
@@ -81,6 +82,7 @@ class WizardApp {
         promiseArr.push(this.getExistingRoles());
         promiseArr.push(this.getExistingApps());
         promiseArr.push(this.getExistingAuthClients());
+        promiseArr.push(this.getExistingDataTables());
 
         return Promise.all(promiseArr)
         .then((results) => { 
@@ -258,6 +260,104 @@ class WizardApp {
 
         return Promise.all(groupPromises)
         .then(() => groupData);
+    }
+
+    //// =======================================================
+    ////      DATA TABLES
+    //// =======================================================
+
+    /**
+     * Get existing data tables in purecloud based on prefix
+     * @returns {Promise.<Array>} PureCloud Roles
+     */
+    getExistingDataTables(){
+        return this.architectApi.getFlowsDatatables({ 
+            pageSize: 100
+        })
+        .then((result) => {
+            return result.entities.filter((dt) => 
+                        dt.name.startsWith(this.prefix));
+        });
+    }
+
+    /**
+     * Delete existing data tables from PureCloud
+     * @returns {Promise}
+     */
+    deletePureCloudDataTables(){
+        return this.getExistingDataTables()
+        .then(dts => {
+            let del_dataTable = [];
+
+            if(dts.length > 0){
+                dts.map(dt => dt.id).forEach(dt_id => {
+                    del_dataTable.push(
+                        this.architectApi.deleteFlowsDatatable(dt_id,{
+                            'force': true
+                        }));
+                });
+            }
+            
+            return Promise.all(del_dataTable);
+        });
+    }
+
+    /**
+     * Add PureCLoud data tables based on installation data
+     * @returns {Promise}
+     */
+    addDataTables(){
+        let dataTablePromises = [];
+        let dataTableData = {};
+
+        // Create the data tables
+        this.installationData.dataTables.forEach((dt) => {
+            let dataTableBody = {
+                "$schema": "http://json-schema.org/draft-04/schema#",
+                "additionalProperties": false,
+                "name": this.prefix + dt.name,
+                "type": "object",
+                "schema": {
+                    "$schema": "http://json-schema.org/draft-04/schema#",
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": ["key"]
+                },
+                "description": dt.description
+            };
+
+            // Create properties object with reference key
+            let properties = {
+                "key": {
+                    "title": dt.referenceKey,
+                    "type": "string",
+                    "$id": "/properties/key",
+                    "displayOrder": 0
+                }
+            }
+
+            // Build the custom fields
+            dt.customFields.forEach((field, i) => {
+                properties[field.name] = {
+                   "title": field.name,
+                   "type": field.type,
+                   "$id": "/properties/" + field.name,
+                   "displayOrder": i + 1
+                }
+            })
+            dataTableBody.schema['properties'] = properties;
+
+            dataTablePromises.push(
+                this.architectApi.postFlowsDatatables(dataTableBody)
+                .then((resdtult) => {
+                    this.logInfo("Created Data Table: " + dt.name);
+                    dataTableData[dt.name] = dt.id;
+                })
+            );
+        });
+
+        return Promise.all(dataTablePromises)
+        .then(() => dataTableData);
     }
 
 
@@ -473,6 +573,7 @@ class WizardApp {
         configArr.push(this.deletePureCloudGroups());
         configArr.push(this.deletePureCloudRoles());
         configArr.push(this.deletePureCloudApps());
+        configArr.push(this.deletePureCloudDataTables());
 
         return Promise.all(configArr);
     }
@@ -493,10 +594,11 @@ class WizardApp {
 
         // Create Roles
         .then(() => this.addRoles())
+        .then((dataTableData) => this.addDataTables())
 
         // Create OAuth client after role (required) and pass to server
-        .then((roleData) => this.addAuthClients(roleData))
-        .then((oAuthClients) => this.storeOAuthClient(oAuthClients))
+        //.then((roleData) => this.addAuthClients(roleData))
+        //.then((oAuthClients) => this.storeOAuthClient(oAuthClients))
 
 
         // When everything's finished, log a success message.
@@ -504,28 +606,6 @@ class WizardApp {
             this.logInfo("Installation Complete!");
         })
         .catch((err) => console.log(err));
-    }
-
-    /**
-     * If an OAUTH Client is created pass the details over to a backend system.
-     * NOTE: This function is for demonstration purposes and is neither functional
-     *       nor production-ready.
-     * @param {Array} oAuthClients PureCloud OAuth objects. 
-     *         Normally there should only be 1 auth client created for an app.                     
-     */
-    storeOAuthClient(oAuthClients){
-        // TODO: Replace with something functional for production
-
-        // oAuthClients.forEach((client) => {
-        //     $.ajax({
-        //         url: "https://mycompany.org/premium-app",
-        //         method: "POST",
-        //         contentType: "application/json",
-        //         data: JSON.stringify(oAuthClients)
-        //     });
-        // });
-
-        console.log("Sent to server!");
     }
 
     //// =======================================================
