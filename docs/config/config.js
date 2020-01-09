@@ -61,6 +61,10 @@ export default {
                         "type": "string"
                     },
                     {
+                        "name": "workspaceId",
+                        "type": "string"
+                    },
+                    {
                         "name": "placeholder1",
                         "type": "string"
                     },

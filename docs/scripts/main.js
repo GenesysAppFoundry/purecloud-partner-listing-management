@@ -11,9 +11,11 @@ const contentManagementApi = new platformClient.ContentManagementApi();
 const groupsApi = new platformClient.GroupsApi();
 const usersApi = new platformClient.UsersApi();
 const notificationsApi = new platformClient.NotificationsApi();
+const architectApi = new platformClient.ArchitectApi();
 
 // Globals
 let managerGroup = null;
+let listingDataTable = null;
 
 // Authenticate
 // TODO: regional authentication
@@ -65,6 +67,21 @@ function setUp(){
         // TODO: Page that will provide access to the group workspace
 
         console.log('User has access to group.');
+
+        // Check and store a reference to the data table for listings
+        return architectApi.getFlowsDatatables({
+            pageSize: 100
+        });
+    })
+    .then((results) => {
+        listingDataTable = results.entities.find(
+                        (dt) => dt.name.startsWith(config.prefix));
+
+        if(listingDataTable){
+            console.log('Data table detected.');
+        } else {
+            throw new Error('Data Table not found');
+        }
 
         // Display workspaces that are listings
         return reloadListings();
@@ -124,10 +141,10 @@ function createNewListing(listingName){
     contentManagementApi.postContentmanagementWorkspaces({
         name: config.prefix + listingName
     })
-    // Add group as member of workspace
     .then((workspace) => {
         newWorkspaceId = workspace.id;
 
+        // Add group as member of workspace
         return contentManagementApi.putContentmanagementWorkspaceMember(
             newWorkspaceId,
             managerGroup.id,
@@ -136,64 +153,57 @@ function createNewListing(listingName){
             }
         );
     })
-    .then((document) => {       
-        // Create a doument that will have the latest version
-        return contentManagementApi.postContentmanagementDocuments({
-            name: 'current',
-            workspace: {
-                id: newWorkspaceId
-            },
-            tags: ['listing-data']
-        });
-    })
-    // Upload the blank listing JSON to the document
-    .then((document) => {
-        let settings = {
-            'crossDomain': true,
-            'url': document.uploadDestinationUri,
-            'method': 'POST',
-            'headers': {
-                'Content-Type': 'multipart/form-data; boundary=A4Q9L5049cRQj9hx8FK8I7bep3YXSsN0hTNa',
-                'Authorization': `Bearer ${client.authData.accessToken}`
-            },
-            'data': '--A4Q9L5049cRQj9hx8FK8I7bep3YXSsN0hTNa\r\nContent-Disposition: form-data; name=\"current\"; filename=\"current.json\"\r\nContent-Type: application/json\r\n\r\n' +
-            JSON.stringify(blankCoreListingJSON)
-            + '\r\n\r\n--A4Q9L5049cRQj9hx8FK8I7bep3YXSsN0hTNa--'
-        }
-            
-        return new Promise((resolve, reject) => {
-            $.ajax(settings)
-            .done(function (response) {
-
-                console.log('Created blank listing document.');
-                // TODO: Change this to actually listen to when document uplaod completes.
-                setTimeout(() => { 
-                    resolve(document);
-                }, 2000);
-            })
-            .fail(function(jqXHR, textStatus) {
-                reject(textStatus);
-            });
-        });
-    })
-    .then((document) => {
-        // Set the document's shareability to public
-        return contentManagementApi.postContentmanagementShares({
-            sharedEntityType: 'DOCUMENT',
-            sharedEntity: {
-                id: document.id
-            },
-            memberType: 'PUBLIC'
-        });
-    })
     .then((document) => {   
-        console.log('Made document public');
+        console.log('Added group as member of workspace.');
 
-        // Clean up and refresh
+        // Determine the last id of the latest listing
+        return architectApi.getFlowsDatatableRows(listingDataTable.id, {
+            pageSize: 100,
+            showbrief: true
+        })
+    })
+    .then((results) => {
+        // NOTE: If all listings are deleted id'ing will restart to 1.
+        // Will fix when it actually arrives, too edge case.
+        let version = 1;
+
+        // Get the highest id value then use the next one for the new listing
+        if(results.entities.length > 0){
+            let maxId = results.entities.reduce((max, current) => {
+                let currentId = parseInt(current.key); 
+                console.log(currentId + ' -- ' + max);
+                return (currentId > max) ? currentId : max;
+            }, 1);
+
+            version = maxId + 1;
+        } 
+
+        // Create the JSON for the app listing details
+        let jsonInfo = blankCoreListingJSON;
+        jsonInfo.name = listingName;
+
+        // Create the new row for the new listing
+        return architectApi.postFlowsDatatableRows(listingDataTable.id, {
+            key: version.toString(),
+            listingDetails: JSON.stringify(jsonInfo),
+            premiumAppDetails: '',
+            workspaceId: newWorkspaceId,
+            placeholder1: '',
+            placeholder2: '',
+            placeholder3: ''
+        });
+    })
+    .then(() => {
+        console.log('Listing created.')
+
         view.hideLoader();
         return reloadListings();
     })
     .catch(e => console.error(e));
+}
+
+function deleteListing(){
+
 }
 
 /**
@@ -216,7 +226,7 @@ function setupWorkspaceNotifications(workspaceId, onmessage){
 
 /**
  * Display the modal confirmation for deleting a listing
- * @param {String} id 
+ * @param {String} id workspaceId 
  */
 function showListingDeletionModal(id){
     view.showYesNoModal('Delete Listing', 
