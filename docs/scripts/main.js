@@ -109,13 +109,12 @@ function checkUserAccess(){
 function reloadListings(){
     view.showLoader('Loading listings...');
 
-    return contentManagementApi.getContentmanagementWorkspaces({
-        'pageSize': 100,
-        'access': ['content']
+    return architectApi.getFlowsDatatableRows(listingDataTable.id, {
+        pageSize: 100,
+        showbrief: false
     })
-    .then((workspaces) => {
-        let listings = workspaces.entities
-                        .filter(ws => ws.name.startsWith(config.prefix));
+    .then((rows) => {
+        let listings = rows.entities;
         view.showListings('listing-cards-container', listings);
 
         console.log('Listed all listings');
@@ -171,7 +170,6 @@ function createNewListing(listingName){
         if(results.entities.length > 0){
             let maxId = results.entities.reduce((max, current) => {
                 let currentId = parseInt(current.key); 
-                console.log(currentId + ' -- ' + max);
                 return (currentId > max) ? currentId : max;
             }, 1);
 
@@ -202,8 +200,39 @@ function createNewListing(listingName){
     .catch(e => console.error(e));
 }
 
-function deleteListing(){
+/**
+ * Delete the listing - it's entry on the data table and the
+ * assosciated workspae
+ * @param {String} id data table id of the listing
+ */
+function deleteListing(id){
+    view.showLoader('Deleting listing...');
 
+    // Get the workspace info
+    architectApi.getFlowsDatatableRow(listingDataTable.id, id, {
+        showbrief: false
+    })
+    .then((row) => {
+        let workspaceId = row.workspaceId;
+
+        // Delete the workspace
+        return contentManagementApi.deleteContentmanagementWorkspace(workspaceId);
+    })
+    .then(() => {
+        console.log('Deleted workspace.');
+
+        // Delete the row from the dat table
+        return architectApi.deleteFlowsDatatableRow(listingDataTable.id, id)
+    })
+    .then(() => {
+        console.log('Deleted the listing row.');
+
+        view.hideYesNoModal();
+        view.hideLoader();
+        
+        return reloadListings();
+    })
+    .catch(e => console.error(e));
 }
 
 /**
@@ -232,17 +261,7 @@ function showListingDeletionModal(id){
     view.showYesNoModal('Delete Listing', 
     'Are you sure you want  to delete this listing?',
     function(){
-        view.showLoader('Deleting listing...');
-
-        contentManagementApi.deleteContentmanagementWorkspace(id)
-        .then(() => {
-            console.log('Deleted workspace.');
-            view.hideYesNoModal();
-            view.hideLoader();
-            
-            return reloadListings();
-        })
-        .catch(e => console.error(e));
+        deleteListing(id);
     },
     function(){
         view.hideYesNoModal();

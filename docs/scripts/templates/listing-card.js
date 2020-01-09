@@ -30,23 +30,24 @@ t.innerHTML =
 `;
 
 export default {
-    new(pcWorkspace){
+    new(dataTableRow){
         let el = document.importNode(t.content, true);
+
+        let appDetails = JSON.parse(dataTableRow.listingDetails);
 
         // Name
         let listingNameEl = el.querySelectorAll('.listing-name')[0];
-        let newName = pcWorkspace.name
-        newName = newName.substring(config.prefix.length);
-        listingNameEl.innerText = newName;
+        listingNameEl.innerText = appDetails.name;
 
         // Description
         let listingDescEl = el.querySelectorAll('.listing-description')[0];
-        listingDescEl.innerText = pcWorkspace.description ? pcWorkspace.description : '';
+        listingDescEl.innerText = 
+            appDetails.shortDescription ? appDetails.shortDescription : '';
 
         // Delete Button
         let btnDelete = el.querySelectorAll('.btn-delete-listing')[0];
         btnDelete.onclick = function(){
-            showListingDeletionModal(pcWorkspace.id);
+            showListingDeletionModal(dataTableRow.key);
         };
 
         // Edit Button
@@ -55,7 +56,7 @@ export default {
             window.location.href = 
                 config.redirectUriBase + 
                 'edit-listing.html' +
-                '?workspaceId=' + pcWorkspace.id;
+                '?id=' + dataTableRow.key;
         };
 
         return el;
