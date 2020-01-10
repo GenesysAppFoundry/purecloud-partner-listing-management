@@ -1,5 +1,7 @@
 import view from './view.js';
 import config from '../config/config.js';
+import validators from '../config/validators.js';
+import assignValidator from './util/assign-validator.js';
 
 //Load purecloud and create the ApiClient Instance
 const platformClient = require('platformClient');
@@ -52,6 +54,9 @@ function setUp(){
     .then(() => {
         return loadListing();
     })
+    .then(() => {
+        assignValidators();
+    });
 }
 
 /**
@@ -71,6 +76,10 @@ function loadListing(){
     })
 }
 
+function saveListing(){
+    // TODO:
+}
+
 /**
  * Get and store the reference to the data table for listings
  */
@@ -88,4 +97,19 @@ function getListingDataTable(){
             throw new Error('Data Table not found');
         }
     })
+}
+
+/**
+ * Loop through the rules defined in config/validators.js
+ * and attach the event listeners that will respond to the validation.
+ */
+function assignValidators(){
+    // Listing Details
+    let listingDetails = validators.listingDetail;
+    Object.keys(listingDetails).forEach((key) => {
+        assignValidator(listingDetails[key]);
+    });
+
+    // Premium App
+    // TODO:
 }

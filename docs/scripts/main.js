@@ -83,7 +83,7 @@ function setUp(){
             throw new Error('Data Table not found');
         }
 
-        // Display workspaces that are listings
+        // Display the listings from the data table
         return reloadListings();
     })
     .catch((e) => {
