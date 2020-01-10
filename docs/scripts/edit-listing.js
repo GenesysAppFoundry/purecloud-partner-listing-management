@@ -104,6 +104,7 @@ function getListingDataTable(){
  * and attach the event listeners that will respond to the validation.
  */
 function assignValidators(){
+    console.log('asd')
     // Listing Details
     let listingDetails = validators.listingDetail;
     Object.keys(listingDetails).forEach((key) => {
