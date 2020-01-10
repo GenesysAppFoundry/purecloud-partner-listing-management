@@ -25,6 +25,17 @@ export default {
                 cb.checked = false;
             }
         }
+    },
+
+    radioFill(name, valueChecked){
+        let radios = document.getElementsByName(name);
+        for(let i = 0; i < radios.length; i++){
+            let radio = radios.item(i);
+            if(radio.value == valueChecked) {
+                radio.checked = true;
+                break;
+            }
+        }
     }
 
 }

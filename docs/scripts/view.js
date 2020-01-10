@@ -96,5 +96,26 @@ export default {
         // Industries
         fieldFiller.checkBoxesFill('cb-app-industries', listingDetails.industries);
 
+        // Selling Party
+        fieldFiller.radioFill('rdo-app-sellingParty', listingDetails.sellingParty);
+
+        // Licensing
+        fieldFiller.checkBoxesFill('cb-app-licensing', listingDetails.licensingClassifications);
+
+        // App Permissions
+        fieldFiller.inputTextFill('app-appPermissions', listingDetails.appPermissions);    
+
+        // Attestations
+        fieldFiller.checkBoxesFill('cb-app-attestations', listingDetails.attestations);
+
+        // App Type
+        fieldFiller.checkBoxesFill('cb-app-appType', listingDetails.appType);
+
+        // TODO: Hardware Add-ons 
+
+        // TODO: Use Cases
+
+        // Pricing
+        fieldFiller.textAreaFill('app-pricing', listingDetails.pricing);    
     }
 }
