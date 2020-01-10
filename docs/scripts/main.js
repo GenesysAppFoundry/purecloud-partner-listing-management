@@ -185,10 +185,7 @@ function createNewListing(listingName){
             key: version.toString(),
             listingDetails: JSON.stringify(jsonInfo),
             premiumAppDetails: '',
-            workspaceId: newWorkspaceId,
-            placeholder1: '',
-            placeholder2: '',
-            placeholder3: ''
+            workspaceId: newWorkspaceId
         });
     })
     .then(() => {

@@ -53,6 +53,10 @@ export default {
                 "referenceKey": "id",
                 "customFields": [
                     {
+                        "name": "businessInformation",
+                        "type": "string"
+                    },
+                    {
                         "name": "listingDetails",
                         "type": "string"
                     },
@@ -75,7 +79,7 @@ export default {
                     {
                         "name": "placeholder3",
                         "type": "string"
-                    }
+                    },
                 ]
             }
         ] 

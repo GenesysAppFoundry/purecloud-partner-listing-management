@@ -9,28 +9,32 @@ const client = platformClient.ApiClient.instance;
 const contentManagementApi = new platformClient.ContentManagementApi();
 const groupsApi = new platformClient.GroupsApi();
 const usersApi = new platformClient.UsersApi();
+const architectApi = new platformClient.ArchitectApi();
 
 // Globals
 let managerGroup = null;
 // Id will be taken from query param but will be saved as state after 
 // PC Auth
 var urlParams = new URLSearchParams(window.location.search);
-let workspaceId = urlParams.get('workspaceId');
+
+// Globals
+let listingId = urlParams.get('id');
+let listingDataTable = null
 
 // Authenticate
 // TODO: regional authentication
 client.loginImplicitGrant('e7de8a75-62bb-43eb-9063-38509f8c21af', 
                     window.location.href.split('?')[0],
-                    {state: workspaceId})
+                    {state: listingId})
 .then((data) => {
-    workspaceId = client.authData.state;
+    listingId = client.authData.state;
     console.log('PureCloud Auth successful.');
-    history.pushState({}, '', window.location.href + '?workspaceId=' + workspaceId);
+    history.pushState({}, '', window.location.href + '?id=' + listingId);
 
     // Add modals to DOM
     view.addModalsToDocument();
 
-    view.showLoader('Please wait...');
+    view.showLoader('Loading Listing...');
     return setUp(); 
 })
 .then(() => {
@@ -44,42 +48,44 @@ client.loginImplicitGrant('e7de8a75-62bb-43eb-9063-38509f8c21af',
  * Initial Setup for the page
  */
 function setUp(){
-    loadListing();
-    view.hideLoader();
+    return getListingDataTable()
+    .then(() => {
+        return loadListing();
+    })
 }
 
 /**
  * Open the listing document and put info on the fields
- * @param {String} version published version #. If blank open the current saved. 
  */
-function loadListing(version){
-    contentManagementApi.getContentmanagementWorkspaceDocuments(workspaceId)
-    .then((results) => {
-        // FIXME: Issue with getting document file. :(
+function loadListing(){
+    let listingDetails = {};
 
-        // TODO: Open version psecific
-
-        console.log(results);
-        // Get the document of the curent saved version
-        let currentVer = results.entities.find(doc => doc.name == 'current');
-        if(!currentVer) throw new Error('Missing the current listing version');
-
-        // Load JSON listing
-        // TODO: REGION shiz
-        let downloadUri = 'https://api.mypurecloud.com' + 
-                        currentVer.downloadSharingUri;
-        
-        // contentManagementApi.getContentmanagementDocumentContent(currentVer.id, {
-        //     disposition: 'inline'
-        // })
-        // .then((response) => {
-        //     console.log(response);
-        //     fetch(response.contentLocationUri);
-        // })
-        // .then((response) => {
-        //     console.log(response);
-        // });
-
+    return architectApi.getFlowsDatatableRow(listingDataTable.id, listingId, {
+        showbrief: false
     })
-    .catch(e => console.error(e));
+    .then((listingRow) => {
+        console.log(listingRow);
+        listingDetails = JSON.parse(listingRow.listingDetails);
+
+        view.fillEditListingFields(listingDetails);
+    })
+}
+
+/**
+ * Get and store the reference to the data table for listings
+ */
+function getListingDataTable(){
+    return architectApi.getFlowsDatatables({
+        pageSize: 100
+    })
+    .then((results) => {
+        listingDataTable = results.entities.find(
+                        (dt) => dt.name.startsWith(config.prefix));
+
+        if(listingDataTable){
+            console.log('Data table detected.');
+        } else {
+            throw new Error('Data Table not found');
+        }
+    })
 }
