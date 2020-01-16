@@ -8,14 +8,18 @@
 /**
  * Assign the validator
  * @param {Object} rule rule as defined in the config file
+ * @returns {Object} Two keys:
+ *                func: the actual function event listener
+ *                context: the supposed context which is an HTML element
  */
 export default function(rule){
     let field = document.getElementById(rule.fieldId);
+    let validatorFunction = null;
+    let context = null;
 
     // For text realted input
     if(rule.type == 'input' || rule.type == 'textarea'){
-        field.querySelectorAll(rule.type)[0]
-        .addEventListener('input', function(){
+        validatorFunction = function(){
             let valid = true;
 
             // Required Field
@@ -59,14 +63,16 @@ export default function(rule){
                 this.classList.add('is-danger');
                 field.querySelectorAll('p.help')[0].innerText = rule.message;
             }
-        });
+        };
+        context = field.querySelectorAll(rule.type)[0];
+
+        context.addEventListener('input', validatorFunction);
     }
     
     // For checkbox groups
     if(rule.type == 'checkbox'){
         let checkboxes = field.querySelectorAll('input');      
-
-        field.addEventListener('click', function(){
+        validatorFunction = function(){
             let valid = true;
             let currentValues = [];
 
@@ -88,6 +94,14 @@ export default function(rule){
             // Message show if invalid
             field.querySelectorAll('p.help')[0].innerText = 
             valid ? '' : rule.message;
-        });
+        };
+        context = field;
+
+        field.addEventListener('click', validatorFunction);
     }
+
+    return {
+        func: validatorFunction, 
+        context: context
+    };
 }

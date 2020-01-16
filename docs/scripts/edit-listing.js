@@ -22,6 +22,7 @@ var urlParams = new URLSearchParams(window.location.search);
 // Globals
 let listingId = urlParams.get('id');
 let listingDataTable = null
+let validatorFunctions = [];
 
 // Authenticate
 // TODO: regional authentication
@@ -56,6 +57,8 @@ function setUp(){
     })
     .then(() => {
         assignValidators();
+        assignButtonEventHandlers();
+        validateAllFields();
     });
 }
 
@@ -76,8 +79,11 @@ function loadListing(){
     })
 }
 
+/**
+ * Validate and then save the listing back to the data table 
+ */
 function saveListing(){
-    // TODO:
+    
 }
 
 /**
@@ -104,13 +110,32 @@ function getListingDataTable(){
  * and attach the event listeners that will respond to the validation.
  */
 function assignValidators(){
-    console.log('asd')
     // Listing Details
     let listingDetails = validators.listingDetail;
     Object.keys(listingDetails).forEach((key) => {
-        assignValidator(listingDetails[key]);
+        validatorFunctions.push(assignValidator(listingDetails[key]));
     });
 
     // Premium App
     // TODO:
+}
+
+/**
+ * Assign event handlers to the static buttons
+ */
+function assignButtonEventHandlers(){
+    document.getElementById('btn-save')
+            .addEventListener('click', function(){
+                saveListing();
+            });
+}
+
+/**
+ * Run the validators of all fields, happens at start ofpage
+ * and before saving
+ */
+function validateAllFields(){
+    validatorFunctions.forEach((validator) => {
+        validator.func.apply(validator.context);
+    });
 }
