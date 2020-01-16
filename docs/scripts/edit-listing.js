@@ -2,6 +2,7 @@ import view from './view.js';
 import config from '../config/config.js';
 import validators from '../config/validators.js';
 import assignValidator from './util/assign-validator.js';
+import fieldInterface from './util/field-interface.js';
 
 //Load purecloud and create the ApiClient Instance
 const platformClient = require('platformClient');
@@ -21,8 +22,14 @@ var urlParams = new URLSearchParams(window.location.search);
 
 // Globals
 let listingId = urlParams.get('id');
-let listingDataTable = null
+let listingRow = {};
+let listingObject = {};
+let listingDataTable = null;
 let validatorFunctions = [];
+
+// Add modals to DOM
+view.addModalsToDocument();
+view.showLoader('Loading Listing...');
 
 // Authenticate
 // TODO: regional authentication
@@ -33,11 +40,7 @@ client.loginImplicitGrant('e7de8a75-62bb-43eb-9063-38509f8c21af',
     listingId = client.authData.state;
     console.log('PureCloud Auth successful.');
     history.pushState({}, '', window.location.href + '?id=' + listingId);
-
-    // Add modals to DOM
-    view.addModalsToDocument();
-
-    view.showLoader('Loading Listing...');
+    
     return setUp(); 
 })
 .then(() => {
@@ -66,16 +69,14 @@ function setUp(){
  * Open the listing document and put info on the fields
  */
 function loadListing(){
-    let listingDetails = {};
-
     return architectApi.getFlowsDatatableRow(listingDataTable.id, listingId, {
         showbrief: false
     })
-    .then((listingRow) => {
-        console.log(listingRow);
-        listingDetails = JSON.parse(listingRow.listingDetails);
+    .then((row) => {
+        listingRow = row;
+        listingObject = JSON.parse(listingRow.listingDetails);
 
-        view.fillEditListingFields(listingDetails);
+        view.fillEditListingFields(listingObject);
     })
 }
 
@@ -83,7 +84,33 @@ function loadListing(){
  * Validate and then save the listing back to the data table 
  */
 function saveListing(){
-    
+    // Validate fields first
+    if(!validateAllFields()){
+        alert('Some fields are incorrenct. Please review.')
+        return;
+    }
+
+    view.showLoader('Saving Listing...');
+
+    // Build the "normal" fields
+    let listingDetails = validators.listingDetail;
+    Object.keys(listingDetails).forEach((key) => {
+        listingObject[key] = fieldInterface.getFieldValue(
+                                    listingDetails[key].type, 
+                                    listingDetails[key].fieldId);
+    });
+    listingRow.listingDetails = JSON.stringify(listingObject);
+    console.log(listingRow);
+
+    // Save to Data Table
+    architectApi.putFlowsDatatableRow(listingDataTable.id, listingRow.key, {
+        body: listingRow
+    })
+    .then(() => {
+        console.log("Successfully Saved!");
+        view.hideLoader();
+    })
+    .catch((e) => console.error(e));
 }
 
 /**
@@ -124,9 +151,18 @@ function assignValidators(){
  * Assign event handlers to the static buttons
  */
 function assignButtonEventHandlers(){
+    // Save
     document.getElementById('btn-save')
-            .addEventListener('click', function(){
+            .addEventListener('click', function(e){
+                e.preventDefault(); // Prevent submitting form
                 saveListing();
+            });
+    
+    // Cancel
+    document.getElementById('btn-cancel')
+            .addEventListener('click', function(e){
+                e.preventDefault(); // Prevent submitting form
+                window.location.href = config.redirectUriBase;
             });
 }
 
@@ -135,7 +171,13 @@ function assignButtonEventHandlers(){
  * and before saving
  */
 function validateAllFields(){
+    let allValid = true;
+
     validatorFunctions.forEach((validator) => {
-        validator.func.apply(validator.context);
+        if(!validator.func.apply(validator.context)){
+            allValid = false;
+        }
     });
+
+    return allValid;
 }

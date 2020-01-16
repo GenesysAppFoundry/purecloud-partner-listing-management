@@ -1,6 +1,47 @@
 /**
- * Helper function to fill the fields. Yep
+ * Helper function to gettin and setting field values.
+ * TODO: Decide if to generify the setters as well
  */
+function getInputText(fieldId){
+    let val = document
+                .getElementById(fieldId)
+                .querySelectorAll('input')[0].value;
+    return val ? val : "";
+}
+
+function getTextArea(fieldId){
+    let val = document
+            .getElementById(fieldId)
+            .querySelectorAll('textarea')[0].value;
+    return val ? val : "";
+}
+
+function getCheckBoxes(fieldId){
+    let val = [];
+    let field = document.getElementById(fieldId);
+    let cbs = field.querySelectorAll('input');   
+    for(let i = 0; i < cbs.length; i++){
+        let cb = cbs.item(i);
+        if(cb.checked){
+            val.push(cb.value);
+        }
+    }
+    return val;
+}
+
+function getRadio(fieldId){
+    let val = "";
+    let field = document.getElementById(fieldId);
+    let radios = field.querySelectorAll('input');
+    for(let i = 0; i < radios.length; i++){
+        let rd = radios.item(i);
+        if(rd.checked){
+            val = rd.value;
+            break;
+        }
+    }
+    return val;
+}
 
 export default {
     /**
@@ -57,6 +98,22 @@ export default {
                 break;
             }
         }
-    }
+    },
 
+    getFieldValue(type, fieldId){
+        switch(type){
+            case 'input':
+                return getInputText(fieldId);
+                break;
+            case 'textarea':
+                return getTextArea(fieldId);
+                break;
+            case 'checkbox':
+                return getCheckBoxes(fieldId);
+                break;
+            case 'radio':
+                return getRadio(fieldId);
+                break;
+        }
+    }
 }

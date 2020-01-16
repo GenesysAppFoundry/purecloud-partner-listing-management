@@ -1,4 +1,4 @@
-import fieldFiller from './util/field-filler.js';
+import fieldInterface from './util/field-interface.js';
 import listingCardTemplate from './templates/listing-card.js';
 import addNewListing from './templates/add-new-listing.js';
 import newListingModal from './templates/new-listing-modal.js';
@@ -61,61 +61,61 @@ export default {
 
     fillEditListingFields(listingDetails){
         // Name
-        fieldFiller.inputTextFill('app-name', listingDetails.name);
+        fieldInterface.inputTextFill('app-name', listingDetails.name);
 
         // Platform checkboxes
-        fieldFiller.checkBoxesFill('cb-app-platform', listingDetails.platforms);
+        fieldInterface.checkBoxesFill('cb-app-platform', listingDetails.platforms);
         
         // Vendor Name 
-        fieldFiller.inputTextFill('app-vendorName', listingDetails.vendorName);
+        fieldInterface.inputTextFill('app-vendorName', listingDetails.vendorName);
 
         // Vendor Website 
-        fieldFiller.inputTextFill('app-vendorWebSite', listingDetails.vendorWebSite);    
+        fieldInterface.inputTextFill('app-vendorWebSite', listingDetails.vendorWebSite);    
 
         // Vendor Email 
-        fieldFiller.inputTextFill('app-vendorEmail', listingDetails.vendorEmail);    
+        fieldInterface.inputTextFill('app-vendorEmail', listingDetails.vendorEmail);    
 
         // TagLine
-        fieldFiller.inputTextFill('app-tagLine', listingDetails.tagLine);    
+        fieldInterface.inputTextFill('app-tagLine', listingDetails.tagLine);    
 
         // Short Description
-        fieldFiller.textAreaFill('app-shortDescription', listingDetails.shortDescription);    
+        fieldInterface.textAreaFill('app-shortDescription', listingDetails.shortDescription);    
 
         // Full Description
-        fieldFiller.textAreaFill('app-fullDescription', listingDetails.fullDescription);    
+        fieldInterface.textAreaFill('app-fullDescription', listingDetails.fullDescription);    
 
         // Video URL
-        fieldFiller.inputTextFill('app-videoURL', listingDetails.videoURL);    
+        fieldInterface.inputTextFill('app-videoURL', listingDetails.videoURL);    
 
         // Help Documentation
-        fieldFiller.inputTextFill('app-helpDocumentation', listingDetails.helpDocumentation);    
+        fieldInterface.inputTextFill('app-helpDocumentation', listingDetails.helpDocumentation);    
 
         // App Languages
-        fieldFiller.checkBoxesFill('cb-appLanguages', listingDetails.appLanguages);
+        fieldInterface.checkBoxesFill('cb-appLanguages', listingDetails.appLanguages);
 
         // Industries
-        fieldFiller.checkBoxesFill('cb-app-industries', listingDetails.industries);
+        fieldInterface.checkBoxesFill('cb-app-industries', listingDetails.industries);
 
         // Selling Party
-        fieldFiller.radioFill('rdo-app-sellingParty', listingDetails.sellingParty);
+        fieldInterface.radioFill('rdo-app-sellingParty', listingDetails.sellingParty);
 
         // Licensing
-        fieldFiller.checkBoxesFill('cb-app-licensing', listingDetails.licensingClassifications);
+        fieldInterface.checkBoxesFill('cb-app-licensing', listingDetails.licensingClassifications);
 
         // App Permissions
-        fieldFiller.inputTextFill('app-appPermissions', listingDetails.appPermissions);    
+        fieldInterface.inputTextFill('app-appPermissions', listingDetails.appPermissions);    
 
         // Attestations
-        fieldFiller.checkBoxesFill('cb-app-attestations', listingDetails.attestations);
+        fieldInterface.checkBoxesFill('cb-app-attestations', listingDetails.attestations);
 
         // App Type
-        fieldFiller.checkBoxesFill('cb-app-appType', listingDetails.appType);
+        fieldInterface.checkBoxesFill('cb-app-appType', listingDetails.appType);
 
         // TODO: Hardware Add-ons 
 
         // TODO: Use Cases
 
         // Pricing
-        fieldFiller.textAreaFill('app-pricing', listingDetails.pricing);    
+        fieldInterface.textAreaFill('app-pricing', listingDetails.pricing);    
     }
 }

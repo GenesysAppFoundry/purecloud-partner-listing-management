@@ -63,6 +63,8 @@ export default function(rule){
                 this.classList.add('is-danger');
                 field.querySelectorAll('p.help')[0].innerText = rule.message;
             }
+
+            return valid;
         };
         context = field.querySelectorAll(rule.type)[0];
 
@@ -94,10 +96,50 @@ export default function(rule){
             // Message show if invalid
             field.querySelectorAll('p.help')[0].innerText = 
             valid ? '' : rule.message;
+
+            return valid;
         };
         context = field;
 
         field.addEventListener('click', validatorFunction);
+    }
+
+    // For radio groups
+    if(rule.type == 'radio'){
+        let radioBoxes = field.querySelectorAll('input');  
+        validatorFunction = function(){
+            let valid = true;
+            let currentValue = null;
+
+            for(let i = 0; i < radioBoxes.length; i++){
+                let radio = radioBoxes.item(i); 
+                if(radio.checked){
+                    currentValue = radio.value;
+                    break;
+                }
+            }
+
+            // Required
+            if(!currentValue){
+                valid = false;
+            }
+
+            // If invalid color that field
+            if(valid) this.classList.remove('is-danger');
+
+            // Message show if invalid
+            field.querySelectorAll('p.help')[0].innerText = 
+            valid ? '' : rule.message;
+
+            return valid;
+        };
+        context = field;
+        context = field;
+        field.addEventListener('click', validatorFunction);
+    }
+
+    if(!validatorFunction || !context){
+        throw new Error(`Invalid function or context for field id: ${rule.fieldId}`);
     }
 
     return {
