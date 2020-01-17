@@ -2,7 +2,7 @@
  * This will contain all the validation rules for the fields
  */
 
- // TODO: Probably rename the file as it will be loaded (used by save listing to build
+ // TODO: Probably rename the file as it will be generified(?) (used by save listing to build
  // the JSON) and not jsut used for validation
 export default {
     listingDetail: {

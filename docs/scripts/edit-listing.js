@@ -3,6 +3,7 @@ import config from '../config/config.js';
 import validators from '../config/validators.js';
 import assignValidator from './util/assign-validator.js';
 import fieldInterface from './util/field-interface.js';
+import hardwareAddons from './special-fields/hardware-addons.js';
 
 //Load purecloud and create the ApiClient Instance
 const platformClient = require('platformClient');
@@ -54,6 +55,9 @@ client.loginImplicitGrant('e7de8a75-62bb-43eb-9063-38509f8c21af',
  * Initial Setup for the page
  */
 function setUp(){
+    // Setup some functionalities of the 'special' fields
+    hardwareAddons.setup();
+
     return getListingDataTable()
     .then(() => {
         return loadListing();
@@ -99,6 +103,11 @@ function saveListing(){
                                     listingDetails[key].type, 
                                     listingDetails[key].fieldId);
     });
+
+    // Build the Hardware Addons Field
+    listingObject.hardwareAddons = hardwareAddons.buildField();
+
+    // Turn the entire thing to string
     listingRow.listingDetails = JSON.stringify(listingObject);
     console.log(listingRow);
 
