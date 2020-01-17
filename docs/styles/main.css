@@ -5,3 +5,28 @@
 .loading-text {
     font-size: 32px;
 }
+
+.form-label {
+    color: #FF4F1F;
+    display: block;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.div-section {
+    display: flex;
+}
+
+.div-info {
+    flex-grow: 50;
+    margin: 20px;
+
+    padding: 10px;
+    border-style: solid;
+    border-color: #FF4F1F;
+}
+
+.control-selling-party {
+    display: flex;
+    flex-direction: column;
+}
