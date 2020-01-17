@@ -96,21 +96,20 @@ let sample = {
     "hardwareAddons": {
         // CHECKBOX
         "regions": [
-            "US East",
-            "US West",
-            "Frankfurt",
-            "Ireland",
-            "Japan",
-            "Australia",
+            "useast",
+            "uswest",
+            "frankfurt",
+            "ireland",
+            "japan",
+            "australia",
         ],
         // DYNAMIC BASED ON SELECTED REGIONS
-        "URLs": [
-            {
-                "region": "US EAST",
-                "purchaseURL": "link",
-                "firmwareURL": "link"
+        "URLs": {
+            "useast": {
+                "purchase": "link",
+                "firmware": "link"
             }
-        ]
+        }
     },
 
     "pricing": "",

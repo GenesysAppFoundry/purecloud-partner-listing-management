@@ -30,7 +30,7 @@ export default {
 
     "hardwareAddons": {
         "regions": [],
-        "URLs": []
+        "URLs": {}
     },
 
     "pricing": "",
