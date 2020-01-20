@@ -15,18 +15,59 @@
 
 .div-section {
     display: flex;
+    overflow: auto;
 }
 
 .div-info {
     flex-grow: 50;
     margin: 20px;
-
-    padding: 10px;
-    border-style: solid;
-    border-color: #FF4F1F;
 }
 
 .control-selling-party {
     display: flex;
     flex-direction: column;
+}
+
+.radio+.radio {
+    margin-left: 0;
+}
+
+.button {
+    height: 40px;
+    border-radius: 25px;
+    color: #fff !important;
+    background-color: #FF4F1F !important;
+    border: 2px solid #FF4F1F;
+    font-size: 16px;
+}
+
+.button:hover {
+    height: 40px;
+    border-radius: 25px;
+    border-color: #FF4F1F !important;
+    color: #FF4F1F !important;
+    background-color: #fff !important;    
+    border: 2px solid #FF4F1F;    
+}
+
+.button.is-light {
+    height: 40px;
+    border-radius: 25px;
+    border-color: #FF4F1F !important;
+    color: #FF4F1F !important;
+    background-color: #fff !important;    
+    border: 2px solid #FF4F1F;   
+}
+
+.button.is-light:hover {
+    height: 40px;
+    border-radius: 25px;
+    color: #fff !important;
+    background-color: #FF4F1F !important;
+    border: 2px solid #FF4F1F;
+    font-size: 16px;
+}
+
+.app-hardwareAddons.div-info {
+    margin: 10px;
 }

@@ -23,7 +23,8 @@ export default {
             document.getElementById(cbIdPrefix + region)
             .addEventListener('change', function(){
                 if(this.checked){
-                    toggableDiv.style.display = 'block';
+                    // toggableDiv.style.display = 'block';
+                    toggableDiv.style.display = 'flex';
                 }else{
                     toggableDiv.style.display = 'none';
                 }
