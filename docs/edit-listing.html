@@ -63,15 +63,11 @@
             </div>
           </div>
           <div class="div-info">
-            <!-- 
-              ============ VENDOR INFORMATION ================
-            -->
-
             <!-- Vendor Name -->
             <div class="field" id="app-vendorName">
               <label class="form-label">Vendor Name</label>
               <div class="control">
-                <input class="input"  type="text" placeholder="App Name" value="">
+                <input class="input"  type="text" placeholder="Vendor Name" value="">
               </div>
               <p class="help is-danger"></p>
             </div>
@@ -80,7 +76,7 @@
             <div class="field" id="app-vendorWebSite">
               <label class="form-label">Vendor Website</label>
               <div class="control">
-                <input class="input"  type="text" placeholder="App Name" value="">
+                <input class="input"  type="text" placeholder="example.com" value="">
               </div>
               <p class="help is-danger"></p>
             </div>
@@ -89,7 +85,7 @@
             <div class="field" id="app-vendorEmail">
               <label class="form-label">Vendor Email</label>
               <div class="control">
-                <input class="input"  type="text" placeholder="App Name" value="">
+                <input class="input"  type="text" placeholder="example@mail.com" value="">
               </div>
               <p class="help is-danger"></p>
             </div>
@@ -98,10 +94,6 @@
         <hr>
         <div class="div-section">
           <div class="div-info">
-            <!-- 
-              ============ DESCRIPTIONS ================
-            -->
-
             <!-- Tagline  -->
             <div class="field" id="app-tagLine">
               <label class="form-label">Tagline</label>
@@ -115,7 +107,7 @@
             <div class="field" id="app-shortDescription">
               <label class="form-label">Short Description</label>
               <div class="control">
-                <textarea class="textarea" placeholder="Textarea" value=""></textarea>
+                <textarea class="textarea" placeholder="Short Description" value=""></textarea>
               </div>
               <p class="help is-danger"></p>
             </div>
@@ -124,7 +116,7 @@
             <div class="field" id="app-fullDescription">
               <label class="form-label">Full Description</label>
               <div class="control">
-                <textarea class="textarea" placeholder="Textarea" value=""></textarea>
+                <textarea class="textarea" placeholder="Full Description" value=""></textarea>
               </div>
               <p class="help is-danger"></p>
             </div>
@@ -133,7 +125,7 @@
             <div class="field" id="app-videoURL">
               <label class="form-label">Video URL (Youtube or Vimeo ONLY)</label>
               <div class="control">
-                <input class="input"  type="text" placeholder="App Name" value="">
+                <input class="input"  type="text" placeholder="Video URL" value="">
               </div>
               <p class="help is-danger"></p>
             </div>
@@ -142,7 +134,17 @@
             <div class="field" id="app-helpDocumentation">
               <label class="form-label">Help Documentation</label>
               <div class="control">
-                <input class="input"  type="text" placeholder="App Name" value="">
+                <input class="input"  type="text" placeholder="Help Documentation" value="">
+              </div>
+              <p class="help is-danger"></p>
+            </div>
+          </div>
+          <div class="div-info">
+            <!-- App Permissions -->
+            <div class="field" id="app-appPermissions">
+              <label class="form-label">App Permissions</label>
+              <div class="control">
+                <input class="input"  type="text" placeholder="App Permissions" value="">
               </div>
               <p class="help is-danger"></p>
             </div>
@@ -281,31 +283,6 @@
                 <br />
               </div>
             </div>
-
-            <!-- Selling Party -->
-            <div class="field" id="app-sellingParty">
-              <label class="form-label">Selling Party</label>
-              <p class="help is-danger"></p>
-              <div class="control-selling-party">
-                <label class="radio">
-                  <input type="radio" name="rdo-app-sellingParty" value="Genesys AppFoundry">
-                  Genesys AppFoundry
-                </label>
-                <label class="radio">
-                  <input type="radio" name="rdo-app-sellingParty" value="Genesys Reseller">
-                  Genesys Reseller
-                </label>
-                <label class="radio">
-                  <input type="radio" name="rdo-app-sellingParty" value="AppFoundry Vendor">
-                  AppFoundry Vendor
-                </label>
-                <label class="radio">
-                  <input type="radio" name="rdo-app-sellingParty" value="Genesys Professional Services">
-                  Genesys Professional Services
-                </label>
-              </div>
-            </div>
-
             <!-- Licensing -->
             <div class="field" id="app-licensingClassifications">
               <label class="form-label">Licensing</label>
@@ -353,14 +330,30 @@
                 <br />
               </div>
             </div>
-
-            <!-- App Permissions -->
-            <div class="field" id="app-appPermissions">
-              <label class="form-label">App Permissions</label>
-              <div class="control">
-                <input class="input"  type="text" placeholder="App Name" value="">
-              </div>
+          </div>
+          <div class="div-info">
+            <!-- Selling Party -->
+            <div class="field" id="app-sellingParty">
+              <label class="form-label">Selling Party</label>
               <p class="help is-danger"></p>
+              <div class="control-selling-party">
+                <label class="radio">
+                  <input type="radio" name="rdo-app-sellingParty" value="Genesys AppFoundry">
+                  Genesys AppFoundry
+                </label>
+                <label class="radio">
+                  <input type="radio" name="rdo-app-sellingParty" value="Genesys Reseller">
+                  Genesys Reseller
+                </label>
+                <label class="radio">
+                  <input type="radio" name="rdo-app-sellingParty" value="AppFoundry Vendor">
+                  AppFoundry Vendor
+                </label>
+                <label class="radio">
+                  <input type="radio" name="rdo-app-sellingParty" value="Genesys Professional Services">
+                  Genesys Professional Services
+                </label>
+              </div>
             </div>
 
             <!-- Attestations -->
@@ -431,139 +424,141 @@
         <hr>        
 
         <!-- TODO: Hardware Add-ons -->
-        <div class="field" id="app-hardwareAddons">
-          <label class="form-label">Hardware Add-ons</label>
-          <div class="control">
-            <label class="checkbox">
-              <input id="cb-app-hardwareAddons-useast" 
-                    type="checkbox"> US East
-            </label>
-            <div id="app-hardwareAddons-useast" class="div-section">
-              <div class="div-info app-hardwareAddons">
-                <label class="form-label">Purchase URL</label>
-                <div class="control">
-                  <input class="input purchase-url"  type="text" placeholder="App Name" value="">
+        <div class="div-section">
+          <div class="field div-info" id="app-hardwareAddons">
+            <label class="form-label">Hardware Add-ons</label>
+            <div class="control">
+              <label class="checkbox">
+                <input id="cb-app-hardwareAddons-useast" 
+                      type="checkbox"> US East
+              </label>
+              <div id="app-hardwareAddons-useast" class="div-section">
+                <div class="div-info app-hardwareAddons">
+                  <label class="form-label">Purchase URL</label>
+                  <div class="control">
+                    <input class="input purchase-url" type="text" placeholder="Purchase URL" value="">
+                  </div>
                 </div>
-              </div>
-              <div class="div-info app-hardwareAddons">
-                <label class="form-label">Firmware URL</label>
-                <div class="control">
-                  <input class="input firmware-url"  type="text" placeholder="App Name" value="">
-                </div>
-              </div>
-              
-           </div>
-          </div>
-          <div class="control">
-            <label class="checkbox">
-              <input id="cb-app-hardwareAddons-uswest"
-                    type="checkbox"> US West
-            </label>
-            <div id="app-hardwareAddons-uswest" class="div-section">
-              <div class="div-info app-hardwareAddons">
-                <label class="form-label">Purchase URL</label>
-                <div class="control">
-                  <input class="input purchase-url"  type="text" placeholder="App Name" value="">
-                </div>
-              </div>
-              <div class="div-info app-hardwareAddons">
-                <label class="form-label">Firmware URL</label>
-                <div class="control">
-                  <input class="input firmware-url"  type="text" placeholder="App Name" value="">
-                </div>
-              </div>              
+                <div class="div-info app-hardwareAddons">
+                  <label class="form-label">Firmware URL</label>
+                  <div class="control">
+                    <input class="input firmware-url" type="text" placeholder="Firmware URL" value="">
+                  </div>
+                </div>                
+             </div>
             </div>
-          </div>
-          <div class="control">
-            <label class="checkbox">
-              <input id="cb-app-hardwareAddons-frankfurt"
-                    type="checkbox"> Frankfurt
-            </label>
-            <div id="app-hardwareAddons-frankfurt" class="div-section">
-              <div class="div-info app-hardwareAddons">
-                <label class="form-label">Purchase URL</label>
-                <div class="control">
-                  <input class="input purchase-url"  type="text" placeholder="App Name" value="">
+            <div class="control">
+              <label class="checkbox">
+                <input id="cb-app-hardwareAddons-uswest"
+                      type="checkbox"> US West
+              </label>
+              <div id="app-hardwareAddons-uswest" class="div-section">
+                <div class="div-info app-hardwareAddons">
+                  <label class="form-label">Purchase URL</label>
+                  <div class="control">
+                    <input class="input purchase-url" type="text" placeholder="Purchase URL" value="">
+                  </div>
                 </div>
-              </div>
-              <div class="div-info app-hardwareAddons">
-                <label class="form-label">Firmware URL</label>
-                <div class="control">
-                  <input class="input firmware-url"  type="text" placeholder="App Name" value="">
-                </div>
-              </div>              
-            </div>
-          </div>
-          <div class="control">
-            <label class="checkbox">
-              <input id="cb-app-hardwareAddons-ireland"
-                    type="checkbox"> Ireland
-            </label>
-            <div id="app-hardwareAddons-ireland" class="div-section">
-              <div class="div-info app-hardwareAddons">
-                <label class="form-label">Purchase URL</label>
-                <div class="control">
-                  <input class="input purchase-url"  type="text" placeholder="App Name" value="">
-                </div>
-              </div>
-              <div class="div-info app-hardwareAddons">
-                <label class="form-label">Firmware URL</label>
-                <div class="control">
-                  <input class="input firmware-url"  type="text" placeholder="App Name" value="">
-                </div>
+                <div class="div-info app-hardwareAddons">
+                  <label class="form-label">Firmware URL</label>
+                  <div class="control">
+                    <input class="input firmware-url" type="text" placeholder="Firmware URL" value="">
+                  </div>
+                </div>              
               </div>
             </div>
-          </div>
-          <div class="control">
-            <label class="checkbox">
-              <input id="cb-app-hardwareAddons-japan"
-                    type="checkbox"> Japan
-            </label>
-            <div id="app-hardwareAddons-japan" class="div-section">
-              <div class="div-info app-hardwareAddons">
-                <label class="form-label">Purchase URL</label>
-                <div class="control">
-                  <input class="input purchase-url"  type="text" placeholder="App Name" value="">
+            <div class="control">
+              <label class="checkbox">
+                <input id="cb-app-hardwareAddons-frankfurt"
+                      type="checkbox"> Frankfurt
+              </label>
+              <div id="app-hardwareAddons-frankfurt" class="div-section">
+                <div class="div-info app-hardwareAddons">
+                  <label class="form-label">Purchase URL</label>
+                  <div class="control">
+                    <input class="input purchase-url" type="text" placeholder="Purchase URL" value="">
+                  </div>
+                </div>
+                <div class="div-info app-hardwareAddons">
+                  <label class="form-label">Firmware URL</label>
+                  <div class="control">
+                    <input class="input firmware-url" type="text" placeholder="Firmware URL" value="">
+                  </div>
+                </div>              
+              </div>
+            </div>
+            <div class="control">
+              <label class="checkbox">
+                <input id="cb-app-hardwareAddons-ireland"
+                      type="checkbox"> Ireland
+              </label>
+              <div id="app-hardwareAddons-ireland" class="div-section">
+                <div class="div-info app-hardwareAddons">
+                  <label class="form-label">Purchase URL</label>
+                  <div class="control">
+                    <input class="input purchase-url" type="text" placeholder="Purchase URL" value="">
+                  </div>
+                </div>
+                <div class="div-info app-hardwareAddons">
+                  <label class="form-label">Firmware URL</label>
+                  <div class="control">
+                    <input class="input firmware-url" type="text" placeholder="Firmware URL" value="">
+                  </div>
                 </div>
               </div>
-              <div class="div-info app-hardwareAddons">
-                <label class="form-label">Firmware URL</label>
-                <div class="control">
-                  <input class="input firmware-url"  type="text" placeholder="App Name" value="">
+            </div>
+            <div class="control">
+              <label class="checkbox">
+                <input id="cb-app-hardwareAddons-japan"
+                      type="checkbox"> Japan
+              </label>
+              <div id="app-hardwareAddons-japan" class="div-section">
+                <div class="div-info app-hardwareAddons">
+                  <label class="form-label">Purchase URL</label>
+                  <div class="control">
+                    <input class="input purchase-url" type="text" placeholder="Purchase URL" value="">
+                  </div>
                 </div>
-              </div>              
+                <div class="div-info app-hardwareAddons">
+                  <label class="form-label">Firmware URL</label>
+                  <div class="control">
+                    <input class="input firmware-url" type="text" placeholder="Firmware URL" value="">
+                  </div>
+                </div>              
+              </div>
+            </div>
+            <div class="control">
+              <label class="checkbox">
+                <input id="cb-app-hardwareAddons-australia"
+                      type="checkbox"> Australia
+              </label>
+              <div id="app-hardwareAddons-australia" class="div-section">
+                <div class="div-info app-hardwareAddons">
+                  <label class="form-label">Purchase URL</label>
+                  <div class="control">
+                    <input class="input purchase-url" type="text" placeholder="Purchase URL" value="">
+                  </div>
+                </div>
+                <div class="div-info app-hardwareAddons">
+                  <label class="form-label">Firmware URL</label>
+                  <div class="control">
+                    <input class="input firmware-url" type="text" placeholder="Firmware URL" value="">
+                  </div>
+                </div>              
+              </div>
             </div>
           </div>
-          <div class="control">
-            <label class="checkbox">
-              <input id="cb-app-hardwareAddons-australia"
-                    type="checkbox"> Australia
-            </label>
-            <div id="app-hardwareAddons-australia" class="div-section">
-              <div class="div-info app-hardwareAddons">
-                <label class="form-label">Purchase URL</label>
-                <div class="control">
-                  <input class="input purchase-url"  type="text" placeholder="App Name" value="">
-                </div>
-              </div>
-              <div class="div-info app-hardwareAddons">
-                <label class="form-label">Firmware URL</label>
-                <div class="control">
-                  <input class="input firmware-url"  type="text" placeholder="App Name" value="">
-                </div>
-              </div>              
+  
+          <!-- Pricing  -->
+          <div class="field div-info" id="app-pricing">
+            <label class="form-label">Pricing</label>
+            <div class="control">
+              <textarea class="textarea" placeholder="Pricing"></textarea>
             </div>
+            <p class="help is-danger"></p>
           </div>
         </div>
-
-        <!-- Pricing  -->
-        <div class="field" id="app-pricing">
-          <label class="form-label">Pricing</label>
-          <div class="control">
-            <textarea class="textarea" placeholder="Textarea"></textarea>
-          </div>
-          <p class="help is-danger"></p>
-        </div>
+        <hr>
 
         <div class="field is-grouped" id="app-useCases">
           <div class="control">

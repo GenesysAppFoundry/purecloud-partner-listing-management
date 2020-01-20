@@ -28,8 +28,12 @@
     flex-direction: column;
 }
 
+.radio {
+    margin-left: 10px;
+}
+
 .radio+.radio {
-    margin-left: 0;
+    margin-left: 10px;
 }
 
 .button {
@@ -48,6 +52,10 @@
     color: #FF4F1F !important;
     background-color: #fff !important;    
     border: 2px solid #FF4F1F;    
+}
+
+.button:focus {
+    box-shadow: 0 0 0 0 !important;
 }
 
 .button.is-light {
@@ -70,4 +78,22 @@
 
 .app-hardwareAddons.div-info {
     margin: 10px;
+}
+
+.textarea:focus {
+    border-color: #FF4F1F !important;
+    box-shadow: 0 0 0 0 !important;
+}
+
+.input:focus {
+    border-color: #FF4F1F !important;
+    box-shadow: 0 0 0 0 !important;
+}
+
+.field.is-grouped {
+    margin: 20px 0px;
+}
+
+.checkbox {
+    margin-left: 10px;
 }
