@@ -11,19 +11,19 @@ export default {
             type: "input",
             maxChar: 20, 
             required: true,
-            message: "Required Field. App name should be 20 characters or less."
+            message: "Required. Maximum of 20 characters."
         },
         platforms: {
             fieldId: "app-platforms",
             type: "checkbox", 
             min: 1,
-            message: "Please select at least 1."
+            message: "Select at least 1."
         },
         vendorName: {
             fieldId: "app-vendorName",
             type: "input", 
             required: true,
-            message: "Required Field."
+            message: "Required."
         },
         vendorWebSite: {
             fieldId: "app-vendorWebSite",
@@ -44,21 +44,21 @@ export default {
             type: "input", 
             required: true,
             maxChar: 100,
-            message: "Required. 100 characters or less."
+            message: "Required. Maximum of 100 characters."
         },
         shortDescription: {
             fieldId: "app-shortDescription",
             type: "textarea", 
             required: true,
             maxChar: 250,
-            message: "Required. 250 characters or less."
+            message: "Required. Maximum of 250 characters."
         },
         fullDescription: {
             fieldId: "app-fullDescription",
             type: "textarea", 
             required: true,
             maxChar: 2500,
-            message: "Required. 2500 characters or less."
+            message: "Required. Maximum of 2500 characters."
         },
         videoURL: {
             fieldId: "app-videoURL",
@@ -88,7 +88,7 @@ export default {
             fieldId: "app-sellingParty",
             type: "radio",
             required: true,
-            message: "Select 1."
+            message: "Required."
         },
         licensingClassifications: {
             fieldId: "app-licensingClassifications",

@@ -19,515 +19,546 @@
   <section class="section">
     <div class="container">
       <form action="" id="edit-listing-form">
-        <!-- App Name -->
-        <div class="field" id="app-name">
-          <label class="label">Name</label>
-          <div class="control">
-            <input class="input" type="text" placeholder="App Name" value="">
+        <div class="div-section">
+          <div class="div-info">
+            <!-- App Name -->
+            <div class="field" id="app-name">
+              <label class="form-label">Name</label>
+              <div class="control">
+                <input class="input" type="text" placeholder="App Name" value="">
+              </div>
+              <p class="help is-danger"></p>
+            </div>
+            
+            <!-- Platforms -->
+            <div class="field" id="app-platforms">
+              <label class="form-label">Platforms</label>
+              <p class="help is-danger"></p>
+              <div class="control">
+                <label class="checkbox">
+                  <input type="checkbox" class="cb-app-platform" value="purecloud"> 
+                    <span>PureCloud</span>
+                </label>
+                <br />
+                <label class="checkbox">
+                  <input type="checkbox" class="cb-app-platform" value="pureconnect.premise"> 
+                    <span>PureConnect Premise</span>
+                </label>
+                <br />
+                <label class="checkbox">
+                  <input type="checkbox" class="cb-app-platform" value="pureconnect.cloud"> 
+                    <span>PureConnect Cloud</span>
+                </label>
+                <br />
+                <label class="checkbox">
+                  <input type="checkbox" class="cb-app-platform" value="pureengage.premise"> 
+                    <span>PureEngage Premise</span>
+                </label>
+                <br />
+                <label class="checkbox">
+                  <input type="checkbox" class="cb-app-platform" value="pureengage.cloud"> 
+                    <span>PureEngage Cloud</span>
+                </label>
+              </div>            
+            </div>
           </div>
-          <p class="help is-danger"></p>
+          <div class="div-info">
+            <!-- Vendor Name -->
+            <div class="field" id="app-vendorName">
+              <label class="form-label">Vendor Name</label>
+              <div class="control">
+                <input class="input"  type="text" placeholder="Vendor Name" value="">
+              </div>
+              <p class="help is-danger"></p>
+            </div>
+
+            <!-- Vendor Website -->
+            <div class="field" id="app-vendorWebSite">
+              <label class="form-label">Vendor Website</label>
+              <div class="control">
+                <input class="input"  type="text" placeholder="example.com" value="">
+              </div>
+              <p class="help is-danger"></p>
+            </div>
+
+            <!-- Vendor Email -->
+            <div class="field" id="app-vendorEmail">
+              <label class="form-label">Vendor Email</label>
+              <div class="control">
+                <input class="input"  type="text" placeholder="example@mail.com" value="">
+              </div>
+              <p class="help is-danger"></p>
+            </div>
+          </div>          
         </div>
-        
-        <!-- Platforms -->
-        <div class="field" id="app-platforms">
-          <label class="label">Platforms</label>
-          <p class="help is-danger"></p>
-          <div class="control">
-            <label class="checkbox">
-              <input type="checkbox" class="cb-app-platform" value="purecloud"> 
-                <span>PureCloud</span>
-            </label>
-            <br />
-            <label class="checkbox">
-              <input type="checkbox" class="cb-app-platform" value="pureconnect.premise"> 
-                <span>PureConnect Premise</span>
-            </label>
-            <br />
-            <label class="checkbox">
-              <input type="checkbox" class="cb-app-platform" value="pureconnect.cloud"> 
-                <span>PureConnect Cloud</span>
-            </label>
-            <br />
-            <label class="checkbox">
-              <input type="checkbox" class="cb-app-platform" value="pureengage.premise"> 
-                <span>PureEngage Premise</span>
-            </label>
-            <br />
-            <label class="checkbox">
-              <input type="checkbox" class="cb-app-platform" value="pureengage.cloud"> 
-                <span>PureEngage Cloud</span>
-            </label>
+        <hr>
+        <div class="div-section">
+          <div class="div-info">
+            <!-- Tagline  -->
+            <div class="field" id="app-tagLine">
+              <label class="form-label">Tagline</label>
+              <div class="control">
+                <input class="input"  type="text"  placeholder="Tagline" value=""></input>
+              </div>
+              <p class="help is-danger"></p>
+            </div>
+
+            <!-- Short Description -->
+            <div class="field" id="app-shortDescription">
+              <label class="form-label">Short Description</label>
+              <div class="control">
+                <textarea class="textarea" placeholder="Short Description" value=""></textarea>
+              </div>
+              <p class="help is-danger"></p>
+            </div>
+
+            <!-- Full Description -->
+            <div class="field" id="app-fullDescription">
+              <label class="form-label">Full Description</label>
+              <div class="control">
+                <textarea class="textarea" placeholder="Full Description" value=""></textarea>
+              </div>
+              <p class="help is-danger"></p>
+            </div>
+
+            <!-- Video URL -->
+            <div class="field" id="app-videoURL">
+              <label class="form-label">Video URL (Youtube or Vimeo ONLY)</label>
+              <div class="control">
+                <input class="input"  type="text" placeholder="Video URL" value="">
+              </div>
+              <p class="help is-danger"></p>
+            </div>
+
+            <!-- Help Documentation -->
+            <div class="field" id="app-helpDocumentation">
+              <label class="form-label">Help Documentation</label>
+              <div class="control">
+                <input class="input"  type="text" placeholder="Help Documentation" value="">
+              </div>
+              <p class="help is-danger"></p>
+            </div>
+          </div>
+          <div class="div-info">
+            <!-- App Permissions -->
+            <div class="field" id="app-appPermissions">
+              <label class="form-label">App Permissions</label>
+              <div class="control">
+                <input class="input"  type="text" placeholder="App Permissions" value="">
+              </div>
+              <p class="help is-danger"></p>
+            </div>
+
+            <!-- Languages -->
+            <div class="field" id="app-appLanguages">
+              <label class="form-label">Languages</label>
+              <p class="help is-danger"></p>
+              <div class="control">
+                <label class="checkbox">
+                  <input type="checkbox" class="cb-appLanguages" value="English"> English
+                </label>
+                <br />
+                <label class="checkbox">
+                  <input type="checkbox" class="cb-appLanguages" value="Dutch"> Dutch
+                </label>
+                <br />
+                <label class="checkbox">
+                  <input type="checkbox" class="cb-appLanguages" value="Spanish"> Spanish
+                </label>
+                <br />
+                <label class="checkbox">
+                  <input type="checkbox" class="cb-appLanguages" value="Chinese"> Chinese
+                </label>
+                <br />
+                <label class="checkbox">
+                  <input type="checkbox" class="cb-appLanguages" value="French Canadian"> 
+                    French Canadian
+                </label>
+                <br />
+                <label class="checkbox">
+                  <input type="checkbox" class="cb-appLanguages" value="French"> 
+                    French
+                </label>
+                <br />
+                <label class="checkbox">
+                  <input type="checkbox" class="cb-appLanguages" value="Australian English"> 
+                    Australian English
+                </label>
+                <br />
+                <label class="checkbox">
+                  <input type="checkbox" class="cb-appLanguages" value="UK English"> 
+                    UK English
+                </label>
+                <br />
+                <label class="checkbox">
+                  <input type="checkbox" class="cb-appLanguages" value="Hebrew"> 
+                    Hebrew
+                </label>
+                <br />
+                <label class="checkbox">
+                  <input type="checkbox" class="cb-appLanguages" value="Hungarian"> 
+                    Hungarian
+                </label>
+                <br />
+                <label class="checkbox">
+                  <input type="checkbox" class="cb-appLanguages" value="Mexican Spanish"> 
+                    Mexican Spanish
+                </label>
+                <br />
+                <label class="checkbox">
+                  <input type="checkbox" class="cb-appLanguages" value="Norwegian"> 
+                    Norwegian
+                </label>
+                <br />
+                <label class="checkbox">
+                  <input type="checkbox" class="cb-appLanguages" value="Romanian"> 
+                    Romanian
+                </label>
+                <br />
+                <label class="checkbox">
+                  <input type="checkbox" class="cb-appLanguages" value="Swedish"> 
+                    Swedish
+                </label>
+                <br />
+                <label class="checkbox">
+                  <input type="checkbox" class="cb-appLanguages" value="Portuguese"> 
+                    Portuguese
+                </label>
+                <br />
+                <label class="checkbox">
+                  <input type="checkbox" class="cb-appLanguages" value="Danish"> 
+                    Danish
+                </label>
+                <br />
+                <label class="checkbox">
+                  <input type="checkbox" class="cb-appLanguages" value="New Zealand English"> 
+                    New Zealand English
+                </label>
+                <br />
+                <label class="checkbox">
+                  <input type="checkbox" class="cb-appLanguages" value="Euro English">
+                    Euro English
+                </label>
+                <br />
+              </div>
+            </div>
+          </div>
+          <div class="div-info">
+            <!-- Industries -->
+            <div class="field" id="app-industries">
+              <label class="form-label">Industries</label>
+              <p class="help is-danger"></p>
+              <div class="control">
+                <label class="checkbox">
+                  <input type="checkbox" class="cb-app-industries" value="healthcare"> Healthcare
+                </label>
+                <br />
+                <label class="checkbox">
+                  <input type="checkbox" class="cb-app-industries" value="retail"> Retail
+                </label>
+                <br />
+                <label class="checkbox">
+                  <input type="checkbox" class="cb-app-industries" value="telco"> Telco
+                </label>
+                <br />
+                <label class="checkbox">
+                  <input type="checkbox" class="cb-app-industries" value="hospitality"> Hospitality
+                </label>
+                <br />
+                <label class="checkbox">
+                  <input type="checkbox" class="cb-app-industries" value="airlines"> Airlines
+                </label>
+                <br />
+                <label class="checkbox">
+                  <input type="checkbox" class="cb-app-industries" value="automotive"> Automotive
+                </label>
+                <br />
+                <label class="checkbox">
+                  <input type="checkbox" class="cb-app-industries" value="high tech"> High Tech
+                </label>
+                <br />
+                <label class="checkbox">
+                  <input type="checkbox" class="cb-app-industries" value="banking"> Banking
+                </label>
+                <br />
+              </div>
+            </div>
+            <!-- Licensing -->
+            <div class="field" id="app-licensingClassifications">
+              <label class="form-label">Licensing</label>
+              <p class="help is-danger"></p>
+              <div class="control">
+                <label class="checkbox">
+                  <input type="checkbox" class="cb-app-licensing" value=""> SIP EP Connector
+                </label>
+                <br />
+                <label class="checkbox">
+                  <input type="checkbox" class="cb-app-licensing" value=""> Agent Connector
+                </label>
+                <br />
+                <label class="checkbox">
+                  <input type="checkbox" class="cb-app-licensing" value=""> Telco
+                </label>
+                <br />
+                <label class="checkbox">
+                  <input type="checkbox" class="cb-app-licensing" value=""> 3rd Party Media
+                </label>
+                <br />
+                <label class="checkbox">
+                  <input type="checkbox" class="cb-app-licensing" value="Advanced Integration"> Advanced Integration
+                </label>
+                <br />
+                <label class="checkbox">
+                  <input type="checkbox" class="cb-app-licensing" value="IVR Connector"> IVR Connector
+                </label>
+                <br />
+                <label class="checkbox">
+                  <input type="checkbox" class="cb-app-licensing" value="Enterprise"> Enterprise
+                </label>
+                <br />
+                <label class="checkbox">
+                  <input type="checkbox" class="cb-app-licensing" value="WFM Connector"> WFM Connector
+                </label>
+                <br />
+                <label class="checkbox">
+                  <input type="checkbox" class="cb-app-licensing" value="Wallboard Connector"> Wallboard Connector
+                </label>
+                <br />
+                <label class="checkbox">
+                  <input type="checkbox" class="cb-app-licensing" value="Recording Connector"> Recording Connector
+                </label>
+                <br />
+              </div>
+            </div>
+          </div>
+          <div class="div-info">
+            <!-- Selling Party -->
+            <div class="field" id="app-sellingParty">
+              <label class="form-label">Selling Party</label>
+              <p class="help is-danger"></p>
+              <div class="control-selling-party">
+                <label class="radio">
+                  <input type="radio" name="rdo-app-sellingParty" value="Genesys AppFoundry">
+                  Genesys AppFoundry
+                </label>
+                <label class="radio">
+                  <input type="radio" name="rdo-app-sellingParty" value="Genesys Reseller">
+                  Genesys Reseller
+                </label>
+                <label class="radio">
+                  <input type="radio" name="rdo-app-sellingParty" value="AppFoundry Vendor">
+                  AppFoundry Vendor
+                </label>
+                <label class="radio">
+                  <input type="radio" name="rdo-app-sellingParty" value="Genesys Professional Services">
+                  Genesys Professional Services
+                </label>
+              </div>
+            </div>
+
+            <!-- Attestations -->
+            <div class="field" id="app-attestations">
+              <label class="form-label">Attestations</label>
+              <p class="help is-danger"></p>
+              <div class="control">
+                <label class="checkbox">
+                  <input type="checkbox" class="cb-app-attestations" value="HIPPA"> HIPPA
+                </label>
+                <br />
+                <label class="checkbox">
+                  <input type="checkbox" class="cb-app-attestations" value="GDPR"> GDPR
+                </label>
+                <br />
+                <label class="checkbox">
+                  <input type="checkbox" class="cb-app-attestations" value="PCI"> PCI
+                </label>
+                <br />
+                <label class="checkbox">
+                  <input type="checkbox" class="cb-app-attestations" value="SOC 2"> SOC 2
+                </label>
+                <br />
+                <label class="checkbox">
+                  <input type="checkbox" class="cb-app-attestations" value="HITRUST"> HITRUST
+                </label>
+                <br />
+                <label class="checkbox">
+                  <input type="checkbox" class="cb-app-attestations" value="ISO 27001"> ISO 27001
+                </label>
+                <br />
+                <label class="checkbox">
+                  <input type="checkbox" class="cb-app-attestations" value="FedRAMP"> FedRAMP
+                </label>
+                <br />
+              </div>
+            </div>
+
+            <!-- App Type -->
+            <div class="field" id="app-appType">
+              <label class="form-label">App Type</label>
+              <p class="help is-danger"></p>
+              <div class="control">
+                <label class="checkbox">
+                  <input type="checkbox" class="cb-app-appType" value="Premium Client"> Premium Client
+                </label>
+                <br />
+                <label class="checkbox">
+                  <input type="checkbox" class="cb-app-appType" value="PureCloud Embeddable Framework"> PureCloud Embeddable Framework
+                </label>
+                <br />
+                <label class="checkbox">
+                  <input type="checkbox" class="cb-app-appType" value="Bot"> Bot
+                </label>
+                <br />
+                <label class="checkbox">
+                  <input type="checkbox" class="cb-app-appType" value="Data Action"> Data Action
+                </label>
+                <br />
+                <label class="checkbox">
+                  <input type="checkbox" class="cb-app-appType" value="IVR Flow"> IVR Flow
+                </label>
+                <br />
+              </div>
+            </div>
           </div>
         </div>
-
-        <!-- 
-          ============ VENDOR INFORMATION ================
-        -->
-
-        <!-- Vendor Name -->
-        <div class="field" id="app-vendorName">
-          <label class="label">Vendor Name</label>
-          <div class="control">
-            <input class="input"  type="text" placeholder="App Name" value="">
-          </div>
-          <p class="help is-danger"></p>
-        </div>
-
-        <!-- Vendor Website -->
-        <div class="field" id="app-vendorWebSite">
-          <label class="label">Vendor Website</label>
-          <div class="control">
-            <input class="input"  type="text" placeholder="App Name" value="">
-          </div>
-          <p class="help is-danger"></p>
-        </div>
-
-        <!-- Vendor Email -->
-        <div class="field" id="app-vendorEmail">
-          <label class="label">Vendor Email</label>
-          <div class="control">
-            <input class="input"  type="text" placeholder="App Name" value="">
-          </div>
-          <p class="help is-danger"></p>
-        </div>
-
-        <!-- 
-          ============ DESCRIPTIONS ================
-        -->
-
-        <!-- Tagline  -->
-        <div class="field" id="app-tagLine">
-          <label class="label">Tagline</label>
-          <div class="control">
-            <input class="input"  type="text"  placeholder="Tagline"></input>
-          </div>
-          <p class="help is-danger"></p>
-        </div>
-
-        <!-- Short Description -->
-        <div class="field" id="app-shortDescription">
-          <label class="label">Short Description</label>
-          <div class="control">
-            <textarea class="textarea" placeholder="Textarea"></textarea>
-          </div>
-          <p class="help is-danger"></p>
-        </div>
-
-        <!-- Full Description -->
-        <div class="field" id="app-fullDescription">
-          <label class="label">Full Description</label>
-          <div class="control">
-            <textarea class="textarea" placeholder="Textarea"></textarea>
-          </div>
-          <p class="help is-danger"></p>
-        </div>
-
-        <!-- Video URL -->
-        <div class="field" id="app-videoURL">
-          <label class="label">Video URL (Youtube or Vimeo ONLY)</label>
-          <div class="control">
-            <input class="input"  type="text" placeholder="App Name" value="">
-          </div>
-          <p class="help is-danger"></p>
-        </div>
-
-        <!-- Help Documentation -->
-        <div class="field" id="app-helpDocumentation">
-          <label class="label">Help Documentation</label>
-          <div class="control">
-            <input class="input"  type="text" placeholder="App Name" value="">
-          </div>
-          <p class="help is-danger"></p>
-        </div>
-
-        <!-- Languages -->
-        <div class="field" id="app-appLanguages">
-          <label class="label">Languages</label>
-          <p class="help is-danger"></p>
-          <div class="control">
-            <label class="checkbox">
-              <input type="checkbox" class="cb-appLanguages" value="English"> English
-            </label>
-            <br />
-            <label class="checkbox">
-              <input type="checkbox" class="cb-appLanguages" value="Dutch"> Dutch
-            </label>
-            <br />
-            <label class="checkbox">
-              <input type="checkbox" class="cb-appLanguages" value="Spanish"> Spanish
-            </label>
-            <br />
-            <label class="checkbox">
-              <input type="checkbox" class="cb-appLanguages" value="Chinese"> Chinese
-            </label>
-            <br />
-            <label class="checkbox">
-              <input type="checkbox" class="cb-appLanguages" value="French Canadian"> 
-                French Canadian
-            </label>
-            <br />
-            <label class="checkbox">
-              <input type="checkbox" class="cb-appLanguages" value="French"> 
-                French
-            </label>
-            <br />
-            <label class="checkbox">
-              <input type="checkbox" class="cb-appLanguages" value="Australian English"> 
-                Australian English
-            </label>
-            <br />
-            <label class="checkbox">
-              <input type="checkbox" class="cb-appLanguages" value="UK English"> 
-                UK English
-            </label>
-            <br />
-            <label class="checkbox">
-              <input type="checkbox" class="cb-appLanguages" value="Hebrew"> 
-                Hebrew
-            </label>
-            <br />
-            <label class="checkbox">
-              <input type="checkbox" class="cb-appLanguages" value="Hungarian"> 
-                Hungarian
-            </label>
-            <br />
-            <label class="checkbox">
-              <input type="checkbox" class="cb-appLanguages" value="Mexican Spanish"> 
-                Mexican Spanish
-            </label>
-            <br />
-            <label class="checkbox">
-              <input type="checkbox" class="cb-appLanguages" value="Norwegian"> 
-                Norwegian
-            </label>
-            <br />
-            <label class="checkbox">
-              <input type="checkbox" class="cb-appLanguages" value="Romanian"> 
-                Romanian
-            </label>
-            <br />
-            <label class="checkbox">
-              <input type="checkbox" class="cb-appLanguages" value="Swedish"> 
-                Swedish
-            </label>
-            <br />
-            <label class="checkbox">
-              <input type="checkbox" class="cb-appLanguages" value="Portuguese"> 
-                Portuguese
-            </label>
-            <br />
-            <label class="checkbox">
-              <input type="checkbox" class="cb-appLanguages" value="Danish"> 
-                Danish
-            </label>
-            <br />
-            <label class="checkbox">
-              <input type="checkbox" class="cb-appLanguages" value="New Zealand English"> 
-                New Zealand English
-            </label>
-            <br />
-            <label class="checkbox">
-              <input type="checkbox" class="cb-appLanguages" value="Euro English">
-                Euro English
-            </label>
-            <br />
-          </div>
-        </div>
-
-        <!-- Industries -->
-        <div class="field" id="app-industries">
-          <label class="label">Industries</label>
-          <p class="help is-danger"></p>
-          <div class="control">
-            <label class="checkbox">
-              <input type="checkbox" class="cb-app-industries" value="healthcare"> Healthcare
-            </label>
-            <br />
-            <label class="checkbox">
-              <input type="checkbox" class="cb-app-industries" value="retail"> Retail
-            </label>
-            <br />
-            <label class="checkbox">
-              <input type="checkbox" class="cb-app-industries" value="telco"> Telco
-            </label>
-            <br />
-            <label class="checkbox">
-              <input type="checkbox" class="cb-app-industries" value="hospitality"> Hospitality
-            </label>
-            <br />
-            <label class="checkbox">
-              <input type="checkbox" class="cb-app-industries" value="airlines"> Airlines
-            </label>
-            <br />
-            <label class="checkbox">
-              <input type="checkbox" class="cb-app-industries" value="automotive"> Automotive
-            </label>
-            <br />
-            <label class="checkbox">
-              <input type="checkbox" class="cb-app-industries" value="high tech"> High Tech
-            </label>
-            <br />
-            <label class="checkbox">
-              <input type="checkbox" class="cb-app-industries" value="banking"> Banking
-            </label>
-            <br />
-          </div>
-        </div>
-
-        <!-- Selling Party -->
-        <div class="field" id="app-sellingParty">
-          <label class="label">Selling Party</label>
-          <p class="help is-danger"></p>
-          <div class="control">
-            <label class="radio">
-              <input type="radio" name="rdo-app-sellingParty" value="Genesys AppFoundry">
-              Genesys AppFoundry
-            </label>
-            <label class="radio">
-              <input type="radio" name="rdo-app-sellingParty" value="Genesys Reseller">
-              Genesys Reseller
-            </label>
-            <label class="radio">
-              <input type="radio" name="rdo-app-sellingParty" value="AppFoundry Vendor">
-              AppFoundry Vendor
-            </label>
-            <label class="radio">
-              <input type="radio" name="rdo-app-sellingParty" value="Genesys Professional Services">
-              Genesys Professional Services
-            </label>
-          </div>
-        </div>
-
-        <!-- Licensing -->
-        <div class="field" id="app-licensingClassifications">
-          <label class="label">Licensing</label>
-          <p class="help is-danger"></p>
-          <div class="control">
-            <label class="checkbox">
-              <input type="checkbox" class="cb-app-licensing" value=""> SIP EP Connector
-            </label>
-            <br />
-            <label class="checkbox">
-              <input type="checkbox" class="cb-app-licensing" value=""> Agent Connector
-            </label>
-            <br />
-            <label class="checkbox">
-              <input type="checkbox" class="cb-app-licensing" value=""> Telco
-            </label>
-            <br />
-            <label class="checkbox">
-              <input type="checkbox" class="cb-app-licensing" value=""> 3rd Party Media
-            </label>
-            <br />
-            <label class="checkbox">
-              <input type="checkbox" class="cb-app-licensing" value="Advanced Integration"> Advanced Integration
-            </label>
-            <br />
-            <label class="checkbox">
-              <input type="checkbox" class="cb-app-licensing" value="IVR Connector"> IVR Connector
-            </label>
-            <br />
-            <label class="checkbox">
-              <input type="checkbox" class="cb-app-licensing" value="Enterprise"> Enterprise
-            </label>
-            <br />
-            <label class="checkbox">
-              <input type="checkbox" class="cb-app-licensing" value="WFM Connector"> WFM Connector
-            </label>
-            <br />
-            <label class="checkbox">
-              <input type="checkbox" class="cb-app-licensing" value="Wallboard Connector"> Wallboard Connector
-            </label>
-            <br />
-            <label class="checkbox">
-              <input type="checkbox" class="cb-app-licensing" value="Recording Connector"> Recording Connector
-            </label>
-            <br />
-          </div>
-        </div>
-
-        <!-- App Permissions -->
-        <div class="field" id="app-appPermissions">
-          <label class="label">App Permissions</label>
-          <div class="control">
-            <input class="input"  type="text" placeholder="App Name" value="">
-          </div>
-          <p class="help is-danger"></p>
-        </div>
-
-        <!-- Attestations -->
-        <div class="field" id="app-attestations">
-          <label class="label">Attestations</label>
-          <p class="help is-danger"></p>
-          <div class="control">
-            <label class="checkbox">
-              <input type="checkbox" class="cb-app-attestations" value="HIPPA"> HIPPA
-            </label>
-            <br />
-            <label class="checkbox">
-              <input type="checkbox" class="cb-app-attestations" value="GDPR"> GDPR
-            </label>
-            <br />
-            <label class="checkbox">
-              <input type="checkbox" class="cb-app-attestations" value="PCI"> PCI
-            </label>
-            <br />
-            <label class="checkbox">
-              <input type="checkbox" class="cb-app-attestations" value="SOC 2"> SOC 2
-            </label>
-            <br />
-            <label class="checkbox">
-              <input type="checkbox" class="cb-app-attestations" value="HITRUST"> HITRUST
-            </label>
-            <br />
-            <label class="checkbox">
-              <input type="checkbox" class="cb-app-attestations" value="ISO 27001"> ISO 27001
-            </label>
-            <br />
-            <label class="checkbox">
-              <input type="checkbox" class="cb-app-attestations" value="FedRAMP"> FedRAMP
-            </label>
-            <br />
-          </div>
-        </div>
-
-        <!-- App Type -->
-        <div class="field" id="app-appType">
-          <label class="label">App Type</label>
-          <p class="help is-danger"></p>
-          <div class="control">
-            <label class="checkbox">
-              <input type="checkbox" class="cb-app-appType" value="Premium Client"> Premium Client
-            </label>
-            <br />
-            <label class="checkbox">
-              <input type="checkbox" class="cb-app-appType" value="PureCloud Embeddable Framework"> PureCloud Embeddable Framework
-            </label>
-            <br />
-            <label class="checkbox">
-              <input type="checkbox" class="cb-app-appType" value="Bot"> Bot
-            </label>
-            <br />
-            <label class="checkbox">
-              <input type="checkbox" class="cb-app-appType" value="Data Action"> Data Action
-            </label>
-            <br />
-            <label class="checkbox">
-              <input type="checkbox" class="cb-app-appType" value="IVR Flow"> IVR Flow
-            </label>
-            <br />
-          </div>
-        </div>
+        <hr>        
 
         <!-- TODO: Hardware Add-ons -->
-        <div class="field" id="app-hardwareAddons">
-          <label class="label">Hardware Add-ons</label>
-          <div class="control">
-            <label class="checkbox">
-              <input id="cb-app-hardwareAddons-useast" 
-                    type="checkbox"> US East
-            </label>
-            <div id="app-hardwareAddons-useast">
-              <label class="label">Purchase URL</label>
-              <div class="control">
-                <input class="input purchase-url"  type="text" placeholder="App Name" value="">
+        <div class="div-section">
+          <div class="field div-info" id="app-hardwareAddons">
+            <label class="form-label">Hardware Add-ons</label>
+            <div class="control">
+              <label class="checkbox">
+                <input id="cb-app-hardwareAddons-useast" 
+                      type="checkbox"> US East
+              </label>
+              <div id="app-hardwareAddons-useast" class="div-section">
+                <div class="div-info app-hardwareAddons">
+                  <label class="form-label">Purchase URL</label>
+                  <div class="control">
+                    <input class="input purchase-url" type="text" placeholder="Purchase URL" value="">
+                  </div>
+                </div>
+                <div class="div-info app-hardwareAddons">
+                  <label class="form-label">Firmware URL</label>
+                  <div class="control">
+                    <input class="input firmware-url" type="text" placeholder="Firmware URL" value="">
+                  </div>
+                </div>                
+             </div>
+            </div>
+            <div class="control">
+              <label class="checkbox">
+                <input id="cb-app-hardwareAddons-uswest"
+                      type="checkbox"> US West
+              </label>
+              <div id="app-hardwareAddons-uswest" class="div-section">
+                <div class="div-info app-hardwareAddons">
+                  <label class="form-label">Purchase URL</label>
+                  <div class="control">
+                    <input class="input purchase-url" type="text" placeholder="Purchase URL" value="">
+                  </div>
+                </div>
+                <div class="div-info app-hardwareAddons">
+                  <label class="form-label">Firmware URL</label>
+                  <div class="control">
+                    <input class="input firmware-url" type="text" placeholder="Firmware URL" value="">
+                  </div>
+                </div>              
               </div>
-              <label class="label">Firmware URL</label>
-              <div class="control">
-                <input class="input firmware-url"  type="text" placeholder="App Name" value="">
+            </div>
+            <div class="control">
+              <label class="checkbox">
+                <input id="cb-app-hardwareAddons-frankfurt"
+                      type="checkbox"> Frankfurt
+              </label>
+              <div id="app-hardwareAddons-frankfurt" class="div-section">
+                <div class="div-info app-hardwareAddons">
+                  <label class="form-label">Purchase URL</label>
+                  <div class="control">
+                    <input class="input purchase-url" type="text" placeholder="Purchase URL" value="">
+                  </div>
+                </div>
+                <div class="div-info app-hardwareAddons">
+                  <label class="form-label">Firmware URL</label>
+                  <div class="control">
+                    <input class="input firmware-url" type="text" placeholder="Firmware URL" value="">
+                  </div>
+                </div>              
               </div>
-           </div>
-          </div>
-          <div class="control">
-            <label class="checkbox">
-              <input id="cb-app-hardwareAddons-uswest"
-                    type="checkbox"> US West
-            </label>
-            <div id="app-hardwareAddons-uswest">
-              <label class="label">Purchase URL</label>
-              <div class="control">
-                <input class="input purchase-url"  type="text" placeholder="App Name" value="">
+            </div>
+            <div class="control">
+              <label class="checkbox">
+                <input id="cb-app-hardwareAddons-ireland"
+                      type="checkbox"> Ireland
+              </label>
+              <div id="app-hardwareAddons-ireland" class="div-section">
+                <div class="div-info app-hardwareAddons">
+                  <label class="form-label">Purchase URL</label>
+                  <div class="control">
+                    <input class="input purchase-url" type="text" placeholder="Purchase URL" value="">
+                  </div>
+                </div>
+                <div class="div-info app-hardwareAddons">
+                  <label class="form-label">Firmware URL</label>
+                  <div class="control">
+                    <input class="input firmware-url" type="text" placeholder="Firmware URL" value="">
+                  </div>
+                </div>
               </div>
-              <label class="label">Firmware URL</label>
-              <div class="control">
-                <input class="input firmware-url"  type="text" placeholder="App Name" value="">
+            </div>
+            <div class="control">
+              <label class="checkbox">
+                <input id="cb-app-hardwareAddons-japan"
+                      type="checkbox"> Japan
+              </label>
+              <div id="app-hardwareAddons-japan" class="div-section">
+                <div class="div-info app-hardwareAddons">
+                  <label class="form-label">Purchase URL</label>
+                  <div class="control">
+                    <input class="input purchase-url" type="text" placeholder="Purchase URL" value="">
+                  </div>
+                </div>
+                <div class="div-info app-hardwareAddons">
+                  <label class="form-label">Firmware URL</label>
+                  <div class="control">
+                    <input class="input firmware-url" type="text" placeholder="Firmware URL" value="">
+                  </div>
+                </div>              
+              </div>
+            </div>
+            <div class="control">
+              <label class="checkbox">
+                <input id="cb-app-hardwareAddons-australia"
+                      type="checkbox"> Australia
+              </label>
+              <div id="app-hardwareAddons-australia" class="div-section">
+                <div class="div-info app-hardwareAddons">
+                  <label class="form-label">Purchase URL</label>
+                  <div class="control">
+                    <input class="input purchase-url" type="text" placeholder="Purchase URL" value="">
+                  </div>
+                </div>
+                <div class="div-info app-hardwareAddons">
+                  <label class="form-label">Firmware URL</label>
+                  <div class="control">
+                    <input class="input firmware-url" type="text" placeholder="Firmware URL" value="">
+                  </div>
+                </div>              
               </div>
             </div>
           </div>
-          <div class="control">
-            <label class="checkbox">
-              <input id="cb-app-hardwareAddons-frankfurt"
-                    type="checkbox"> Frankfurt
-            </label>
-            <div id="app-hardwareAddons-frankfurt">
-              <label class="label">Purchase URL</label>
-              <div class="control">
-                <input class="input purchase-url"  type="text" placeholder="App Name" value="">
-              </div>
-              <label class="label">Firmware URL</label>
-              <div class="control">
-                <input class="input firmware-url"  type="text" placeholder="App Name" value="">
-              </div>
+  
+          <!-- Pricing  -->
+          <div class="field div-info" id="app-pricing">
+            <label class="form-label">Pricing</label>
+            <div class="control">
+              <textarea class="textarea" placeholder="Pricing"></textarea>
             </div>
-          </div>
-          <div class="control">
-            <label class="checkbox">
-              <input id="cb-app-hardwareAddons-ireland"
-                    type="checkbox"> Ireland
-            </label>
-            <div id="app-hardwareAddons-ireland">
-              <label class="label">Purchase URL</label>
-              <div class="control">
-                <input class="input purchase-url"  type="text" placeholder="App Name" value="">
-              </div>
-              <label class="label">Firmware URL</label>
-              <div class="control">
-                <input class="input firmware-url"  type="text" placeholder="App Name" value="">
-              </div>
-            </div>
-          </div>
-          <div class="control">
-            <label class="checkbox">
-              <input id="cb-app-hardwareAddons-japan"
-                    type="checkbox"> Japan
-            </label>
-            <div id="app-hardwareAddons-japan">
-              <label class="label">Purchase URL</label>
-              <div class="control">
-                <input class="input purchase-url"  type="text" placeholder="App Name" value="">
-              </div>
-              <label class="label">Firmware URL</label>
-              <div class="control">
-                <input class="input firmware-url"  type="text" placeholder="App Name" value="">
-              </div>
-            </div>
-          </div>
-          <div class="control">
-            <label class="checkbox">
-              <input id="cb-app-hardwareAddons-australia"
-                    type="checkbox"> Australia
-            </label>
-            <div id="app-hardwareAddons-australia">
-              <label class="label">Purchase URL</label>
-              <div class="control">
-                <input class="input purchase-url"  type="text" placeholder="App Name" value="">
-              </div>
-              <label class="label">Firmware URL</label>
-              <div class="control">
-                <input class="input firmware-url"  type="text" placeholder="App Name" value="">
-              </div>
-            </div>
+            <p class="help is-danger"></p>
           </div>
         </div>
-
-        <!-- Pricing  -->
-        <div class="field" id="app-pricing">
-          <label class="label">Pricing</label>
-          <div class="control">
-            <textarea class="textarea" placeholder="Textarea"></textarea>
-          </div>
-          <p class="help is-danger"></p>
-        </div>
+        <hr>
 
         <!-- Use Cases  -->
         <div class="field" id="app-useCases">
