@@ -1,40 +1,72 @@
 let t = document.createElement('template');
 t.innerHTML =
 `
-<div id="listing-creation-modal" class="modal">
-<div class="modal-background"></div>
-<div class="modal-card">
-  <header class="modal-card-head">
-    <p class="modal-card-title">Create New Listing</p>
-    <button class="delete" aria-label="close" onclick="hideCreationModal()"></button>
+<div class="card use-case">
+  <header class="card-header">
+    <p class="card-header-title"></p>
+    <span class="card-header-icon">
+      <button class="delete" aria-label="close"></button>
+    </span>
   </header>
-  <section class="modal-card-body">
-    <p>App Name</p>
-    <div class="control has-icons-right">
-      <input id="new-listing-name" class="input" type="text" placeholder="My Amazing App">
-      <span class="icon is-small is-right">
-        <i class="fas fa-check"></i>
-      </span>
+  <div class="card-content">
+    <div class="content">
+    <label class="label">Title</label>
+    <div class="control">
+      <input class="input useCase-title" type="text" placeholder="" value="">
     </div>
-  </section>
-  <footer class="modal-card-foot">
-    <button class="button is-success" id="btn-create-listing">
-      Create
-    </button>
-    <button class="button" onclick="hideCreationModal()">
-      Cancel
-    </button>
-  </footer>
-</div>
-</button>
+    <label class="label">Summary</label>
+    <div class="control">
+      <textarea class="textarea useCase-summary" placeholder="Summary" value=""></textarea>
+    </div>
+    <label class="label">Business Benefits</label>
+    <div class="control">
+      <textarea class="textarea useCase-benefits" placeholder="Business Benefits" value=""></textarea>
+    </div>
+    </div>
+  </div>
 </div>
 `;
 
+const idPrefix = 'use-case_';
+
+
+/**
+ * Delete the use case
+ * @param {integer} id suffix id of the usecase element
+ */
+function deleteUseCase(id){
+    let el = document.getElementById(idPrefix + id);
+    el.parentNode.removeChild(el);
+}
+
 export default {
-    new(){
+    new(id){
         // Crete element
         const element = document.importNode(t.content, true);
+        element.querySelectorAll('.card')[0].id = idPrefix + id;
+
+        // Assign delete functionality
+        element.querySelectorAll('.delete')[0]
+        .addEventListener('click', function(){
+            deleteUseCase(id);
+        });
 
         return element;
+    },
+
+    /**
+     * Fill a specific use case field with info
+     * @param {integer} id the element id suffix of the use case
+     * @param {Object} content data that will be used to fill the element.
+     */
+    fill(id, content){
+        const el = document.getElementById(idPrefix + id);
+        const title = el.querySelectorAll('.useCase-title')[0];
+        const summary = el.querySelectorAll('.useCase-summary')[0];
+        const benefits = el.querySelectorAll('.useCase-benefits')[0];
+
+        title.value = content.title;
+        summary.value = content.useCaseSummary;
+        benefits.value = content.businessBenefits;
     }
 };

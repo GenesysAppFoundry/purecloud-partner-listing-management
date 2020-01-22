@@ -273,29 +273,5 @@ function assignButtonListener(){
             console.log('sent');
         })
         .fail((e) => console.error(e));
-
-        // fetch('https://api.mypurecloud.com/api/v2/webchat/guest/conversations', {
-        //     method: 'POST',
-        //     cache: 'no-cache',
-        //     headers: {
-        //         'Content-Type': 'application/json'
-        //     },
-        //     body: JSON.stringify({
-        //         organizationId: organizationId,
-        //         deploymentId: deploymentId,
-        //         memberInfo: { 
-        //           displayName: 'List Man',
-        //           customFields: {
-        //             purpose: 'submit',
-        //             listingDetails: JSON.stringify(sample)
-        //           }
-        //         }
-        //     })
-        // })
-        // .then((x) => {
-        //     console.log(x);
-        //     console.log('Sent request');
-        // })
-        // .catch((e) => console.error(e));
     });
 }

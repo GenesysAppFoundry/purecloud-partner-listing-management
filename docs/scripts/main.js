@@ -5,6 +5,7 @@ import blankCoreListingJSON from '../config/core-listing-blank.js';
 //Load purecloud and create the ApiClient Instance
 const platformClient = require('platformClient');
 const client = platformClient.ApiClient.instance;
+client.setPersistSettings(true, 'listing_management');
 
 // Create API instances
 const contentManagementApi = new platformClient.ContentManagementApi();

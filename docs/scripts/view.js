@@ -5,6 +5,7 @@ import newListingModal from './templates/new-listing-modal.js';
 import yesNoModal from './templates/yes-no-modal.js';
 import loadingModal from './templates/loading-modal.js';
 import hardwareAddons from './special-fields/hardware-addons.js';
+import useCases from './special-fields/use-cases.js';
 
 export default {
     addModalsToDocument(){
@@ -112,10 +113,11 @@ export default {
         // App Type
         fieldInterface.checkBoxesFill('cb-app-appType', listingDetails.appType);
 
-        // TODO: Hardware Add-ons 
+        // Hardware Add-ons 
         hardwareAddons.fillInnerFields(listingDetails.hardwareAddons);
 
         // TODO: Use Cases
+        useCases.showUseCases(listingDetails.useCases);
 
         // Pricing
         fieldInterface.textAreaFill('app-pricing', listingDetails.pricing);    

@@ -4,10 +4,12 @@ import validators from '../config/validators.js';
 import assignValidator from './util/assign-validator.js';
 import fieldInterface from './util/field-interface.js';
 import hardwareAddons from './special-fields/hardware-addons.js';
+import useCases from './special-fields/use-cases.js';
 
 //Load purecloud and create the ApiClient Instance
 const platformClient = require('platformClient');
 const client = platformClient.ApiClient.instance;
+client.setPersistSettings(true, 'listing_management');
 
 // Create API instances
 const contentManagementApi = new platformClient.ContentManagementApi();
@@ -55,9 +57,7 @@ client.loginImplicitGrant('e7de8a75-62bb-43eb-9063-38509f8c21af',
  * Initial Setup for the page
  */
 function setUp(){
-    // Setup some functionalities of the 'special' fields
-    hardwareAddons.setup();
-
+    // Load the listing details
     return getListingDataTable()
     .then(() => {
         return loadListing();
@@ -66,6 +66,10 @@ function setUp(){
         assignValidators();
         assignButtonEventHandlers();
         validateAllFields();
+
+        // Setup some functionalities of the 'special' fields
+        hardwareAddons.setup();
+        useCases.setup();
     });
 }
 
@@ -106,6 +110,9 @@ function saveListing(){
 
     // Build the Hardware Addons Field
     listingObject.hardwareAddons = hardwareAddons.buildField();
+
+    // Build the useCaes field
+    listingObject.useCases = useCases.buildField();
 
     // Turn the entire thing to string
     listingRow.listingDetails = JSON.stringify(listingObject);
