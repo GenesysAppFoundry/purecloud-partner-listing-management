@@ -7,15 +7,16 @@ import validators from '../../config/validators.js'
 /**
  * Validate 
  * @param {File} file file that's 'uploaded'
- * @param {String} fileType file extension(s) in REGEX format 
+ * @param {String} fileTypeRegEx file type in REGEX format 
  * @returns {Boolean} if the file type is correct
  */
-function validateFileType(file, fileType){
+function validateFileType(file, fileTypeRegEx){
     let valid = true;
     
     // File type
-    if(fileType){
-        const regex = new RegExp(`^image\/(${fileType})$`);
+    if(fileTypeRegEx){
+        console.log(file.type);
+        const regex = new RegExp(fileTypeRegEx);
         if (!(regex).test(file.type) ){
             valid = false;
         }
@@ -32,24 +33,17 @@ function validateFileType(file, fileType){
  */
 function validateImage(img, rule){
     let valid = true;
-    console.log('----')
-    console.log(valid);
     if(rule.minWidth){
         if(img.width < rule.minWidth) valid = false;
-        console.log(valid);
     }
     if(rule.minHeight){
         if(img.height < rule.minHeight) valid = false;
-        console.log(img.height);
-        console.log(valid);
     }
     if(rule.maxWidth){
         if(img.width > rule.maxWidth) valid = false;
-        console.log(valid);
     }
     if(rule.maxHeight){
         if(img.height > rule.maxHeight) valid = false;
-        console.log(valid);
     }
     if(rule.ratio){
         let ratio = rule.ratio.split('x');
@@ -59,8 +53,6 @@ function validateImage(img, rule){
         if(img.width % ratio_w > 0) valid = false;
         if(img.height % ratio_h > 0) valid = false;
         if(img.width / ratio_w != img.height / ratio_h) valid = false;
-        console.log(valid);
-
     }
     return valid;
 }
@@ -82,7 +74,7 @@ function readImage(file, rule){
     el_previewContainer.style.display = 'none';
 
     // Validat file type
-    if(!validateFileType(file, rule.fileType)){
+    if(!validateFileType(file, `^image\/(${rule.fileType})$`)){
         el_errorMessge.innerText = rule.message;
         return;
     }
@@ -100,13 +92,36 @@ function readImage(file, rule){
 
             el_previewContainer.appendChild(img);
         });
-        img.src = reader.result;        
+        img.src = reader.result; 
     });
     reader.readAsDataURL(file);
 }
 
-function readDocument(){
+function readDocument(file, rule){
+    // Get elements
+    let el_field = document.getElementById(rule.fieldId);
+    let el_previewContainer = el_field.querySelectorAll('.preview-image')[0];
+    let el_errorMessge = el_field.querySelectorAll('p.help')[0];
 
+    // Empty error msg
+    el_errorMessge.innerText = '';
+    el_previewContainer.style.display = 'none';
+
+    // Validat file type
+    if(!validateFileType(file, `^application\/(${rule.fileType})$`)){
+        el_errorMessge.innerText = rule.message;
+        return;
+    }
+
+    // Show file details once loaded
+    const reader = new FileReader();
+    reader.addEventListener('load', () => {
+        el_previewContainer.style.display = 'block';
+
+        el_previewContainer.innerText = 
+                    `${file.name} (${file.size/1024})`;
+    });
+    reader.readAsDataURL(file);
 }
 
 function readFile(file, rule){
@@ -162,6 +177,109 @@ export default {
                 }                
             });
         })
+    },
+
+    /**
+     * Upload the files into the workspace document
+     * @param {Object} platformClient PureCloud platform client
+     * @param {Object} client client instance of purecloud sdk
+     * @param {String} workspaceId listing workspace id
+     */
+    uploadFiles(platformClient, client, workspaceId){
+        const contentManagementApi = new platformClient.ContentManagementApi();
+        const token = client.authData.accessToken;
+
+        let buildOrder = []; // Objects with name and File
+        let buildPromises = []; 
+
+        // Generate the build order for the attachemnts that will be 
+        // created
+        Object.keys(validators.attachments).forEach(key =>{
+            let rule = validators.attachments[key];
+            let files = document.getElementById(rule.fieldId)
+                                .querySelectorAll('input')[0].files;
+            
+            // Skip if no file in the input
+            if(files.length <= 0) return;
+
+            // If multi-file, then put suffizx enumeration
+            if(rule.manyFiles){
+                for(let i = 0; i < files.length; i++){
+                    buildOrder.push({
+                        name: `${key}-${i + 1}`,
+                        file: files[i]
+                    });
+                }
+            } else {
+                // For single file
+                buildOrder.push({
+                    name: key,
+                    file: files[0]
+                })
+            }
+            
+            console.log(buildOrder);
+        });
+
+        // Let's build this 
+        buildOrder.forEach(build => {
+            let documentId = '';
+
+            let promise = contentManagementApi.postContentmanagementDocuments({
+                name: build.name,
+                workspace: {
+                    id: workspaceId
+                }
+            })
+            .then((result) => {
+                let uri = result.uploadDestinationUri;
+                documentId = result.id;
+
+                let formData = new FormData();
+                formData.append('file', build.file);
+
+                return fetch(uri, {
+                    method: 'POST',
+                    headers: {
+                        Authorization: `bearer ${token}`
+                    },
+                    body: formData
+                })
+            })
+            .then((result) => {
+                // TODO: update to actually track the files if uploaded or not.
+                // Right now, it's just hardcoded seconds to wait while uploading
+                let seconds = 3000; 
+                return new Promise((resolve, reject) => {
+                    setTimeout(() => {
+                        contentManagementApi.getContentmanagementDocument(documentId)
+                        .then((document) => {
+                            resolve(document);
+                        })
+                        .catch(e => reject(e));
+                    }, seconds);
+                });
+            })
+            .then((document) => {
+                // Build the attacahment  of this file
+                // that will be in the data table attaachments
+                let attachment = {
+                    name: document.name,
+                    sharingUri: document.sharingUri
+                }
+                // if there is thumbnail save it too
+                if(document.thumbnails){
+                    attachment.thumbail = document.thumbnails[0].imageUri;
+                }
+
+                return attachment;
+            })
+            .catch((e) => console.error(e));
+
+            buildPromises.push(promise);
+        });
+
+        return Promise.all(buildPromises);
     },
 
     /**

@@ -69,6 +69,10 @@ export default {
                         "type": "string"
                     },
                     {
+                        "name": "attachments",
+                        "type": "string"
+                    },
+                    {
                         "name": "placeholder1",
                         "type": "string"
                     },

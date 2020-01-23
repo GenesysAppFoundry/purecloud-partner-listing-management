@@ -20,6 +20,8 @@ const architectApi = new platformClient.ArchitectApi();
 
 // Globals
 let managerGroup = null;
+let workspaceId = null;
+
 // Id will be taken from query param but will be saved as state after 
 // PC Auth
 var urlParams = new URLSearchParams(window.location.search);
@@ -83,8 +85,10 @@ function loadListing(){
         showbrief: false
     })
     .then((row) => {
+        console.log(row);
         listingRow = row;
         listingObject = JSON.parse(listingRow.listingDetails);
+        workspaceId = listingRow.workspaceId;
 
         view.fillEditListingFields(listingObject);
     })
@@ -110,18 +114,30 @@ function saveListing(){
                                     listingDetails[key].fieldId);
     });
 
+    // Special fields
     buildSpecialFields();
 
-    // Turn the entire thing to string
+    // Listing Row. Turn the entire thing to string
     listingRow.listingDetails = JSON.stringify(listingObject);
     console.log(listingRow);
 
-    // Save to Data Table
-    architectApi.putFlowsDatatableRow(listingDataTable.id, listingRow.key, {
-        body: listingRow
+    // Attachments
+    view.showLoader('Uploading Files...');
+    fileUploaders.uploadFiles(platformClient, client, workspaceId)
+    .then((documents) => {
+        console.log("Successfully Uploaded Files!");
+        listingRow.attachments = JSON.stringify(documents);
+
+        // Save to Data Table
+        return architectApi.putFlowsDatatableRow(
+                listingDataTable.id, 
+                listingRow.key, {
+                    body: listingRow
+                });
     })
     .then(() => {
-        console.log("Successfully Saved!");
+        console.log("Successfully Saved Listing Row!");
+
         view.hideLoader();
     })
     .catch((e) => console.error(e));
