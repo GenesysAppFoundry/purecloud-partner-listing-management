@@ -126,7 +126,28 @@ function saveListing(){
     fileUploaders.uploadFiles(platformClient, client, workspaceId)
     .then((documents) => {
         console.log("Successfully Uploaded Files!");
-        listingRow.attachments = JSON.stringify(documents);
+        let attachments = JSON.parse(listingRow.attachments);
+
+        // NOTE: Special edge case here, clear all existing screenshots
+        // if at least 1 screenshot is to be uploaded.
+        let screenshotDoc = documents.find((doc) => {
+            return doc.name.startsWith('screenshot')
+        });
+        if(screenshotDoc){
+            for(let i = 0; i < validators.attachments.screenshots.maxFiles; i++){
+                delete attachments[`screenshots-${i+1}`];
+            }
+        }
+
+        // Modify the attachments object for new values
+        documents.forEach(doc => {
+            attachments[doc.name] = {
+                sharingUri: doc.sharingUri,
+                id: doc.id
+            }    
+        })
+
+        listingRow.attachments = JSON.stringify(attachments);
 
         // Save to Data Table
         return architectApi.putFlowsDatatableRow(

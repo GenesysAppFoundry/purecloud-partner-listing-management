@@ -279,11 +279,8 @@ export default {
                 // that will be in the data table attaachments
                 let attachment = {
                     name: document.name,
-                    sharingUri: document.sharingUri
-                }
-                // if there is thumbnail save it too
-                if(document.thumbnails){
-                    attachment.thumbail = document.thumbnails[0].imageUri;
+                    sharingUri: document.sharingUri,
+                    id: document.id
                 }
 
                 return attachment;

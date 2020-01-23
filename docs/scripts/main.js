@@ -185,7 +185,8 @@ function createNewListing(listingName){
         return architectApi.postFlowsDatatableRows(listingDataTable.id, {
             key: version.toString(),
             listingDetails: JSON.stringify(jsonInfo),
-            premiumAppDetails: '',
+            premiumAppDetails: '{}',
+            attachments: '{}',
             workspaceId: newWorkspaceId
         });
     })
