@@ -97,3 +97,7 @@
 .checkbox {
     margin-left: 10px;
 }
+
+.preview-image img {
+    max-height: 100px;
+}

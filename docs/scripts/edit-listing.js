@@ -5,6 +5,7 @@ import assignValidator from './util/assign-validator.js';
 import fieldInterface from './util/field-interface.js';
 import hardwareAddons from './special-fields/hardware-addons.js';
 import useCases from './special-fields/use-cases.js';
+import fileUploaders from './special-fields/file-uploaders.js';
 
 //Load purecloud and create the ApiClient Instance
 const platformClient = require('platformClient');
@@ -70,10 +71,7 @@ function setUp(){
         assignValidators();
         assignButtonEventHandlers();
         validateAllFields();
-
-        // Setup some functionalities of the 'special' fields
-        hardwareAddons.setup();
-        useCases.setup();
+        setupSpecialFields();
     });
 }
 
@@ -112,11 +110,7 @@ function saveListing(){
                                     listingDetails[key].fieldId);
     });
 
-    // Build the Hardware Addons Field
-    listingObject.hardwareAddons = hardwareAddons.buildField();
-
-    // Build the useCaes field
-    listingObject.useCases = useCases.buildField();
+    buildSpecialFields();
 
     // Turn the entire thing to string
     listingRow.listingDetails = JSON.stringify(listingObject);
@@ -193,11 +187,51 @@ function assignButtonEventHandlers(){
 function validateAllFields(){
     let allValid = true;
 
+    // Basic Fields
     validatorFunctions.forEach((validator) => {
         if(!validator.func.apply(validator.context)){
             allValid = false;
         }
     });
 
+    //Special Fields
+    if(!validateSpecialFields()) allValid = false;
+
     return allValid;
+}
+
+/**
+ * Calls all setup functions for the special fields
+ */
+function setupSpecialFields(){
+    // Setup some functionalities of the 'special' fields
+    hardwareAddons.setup();
+    useCases.setup();
+    fileUploaders.setup();
+}
+
+/**
+ * Builds the JSON parts and put to the global listingObject
+ */
+function buildSpecialFields(){
+    // Build the Hardware Addons Field
+    listingObject.hardwareAddons = hardwareAddons.buildField();
+
+    // Build the useCaes field
+    listingObject.useCases = useCases.buildField();
+}
+
+/**
+ * Run validation for special fields
+ */
+function validateSpecialFields(){
+    let valid = true;
+
+    // TODO: Hardware Add-ons
+    // TODO: Use Cases
+
+    // Attachemnt fields
+    if(!fileUploaders.validateFields()) valid = false;
+
+    return valid;
 }
