@@ -42,8 +42,12 @@ client.loginImplicitGrant('e7de8a75-62bb-43eb-9063-38509f8c21af',
 .then((data) => {
     listingId = client.authData.state;
     console.log('PureCloud Auth successful.');
-    history.pushState({}, '', window.location.href + '?id=' + listingId);
-    
+
+    // Checks if the query params are already in the URL, if not readd it
+    if(!window.location.href.includes('?')){
+        history.pushState({}, '', window.location.href + '?id=' + listingId);
+    }
+
     return setUp(); 
 })
 .then(() => {
