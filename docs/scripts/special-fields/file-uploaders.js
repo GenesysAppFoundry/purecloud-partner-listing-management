@@ -223,7 +223,8 @@ export default {
 
         // Let's build this 
         buildOrder.forEach(build => {
-            let documentId = '';
+            let documentId = ''; // documentId
+            let document = {};
 
             let promise = contentManagementApi.postContentmanagementDocuments({
                 name: build.name,
@@ -249,18 +250,31 @@ export default {
             .then((result) => {
                 // TODO: update to actually track the files if uploaded or not.
                 // Right now, it's just hardcoded seconds to wait while uploading
-                let seconds = 3000; 
+                let seconds = 4000; 
                 return new Promise((resolve, reject) => {
                     setTimeout(() => {
                         contentManagementApi.getContentmanagementDocument(documentId)
-                        .then((document) => {
-                            resolve(document);
+                        .then((doc) => {
+                            resolve(doc);
                         })
                         .catch(e => reject(e));
                     }, seconds);
                 });
             })
-            .then((document) => {
+            .then((doc) => {
+                document = doc;
+
+                // Make the document public
+                return contentManagementApi.postContentmanagementShares({
+                    sharedEntityType: 'DOCUMENT',
+                    sharedEntity: {
+                       id: documentId
+                    },
+                    memberType: 'PUBLIC'
+                })
+            })
+            .then((result) => {
+
                 // Build the attacahment  of this file
                 // that will be in the data table attaachments
                 let attachment = {
