@@ -101,3 +101,10 @@
 .preview-image img {
     max-height: 100px;
 }
+
+/* Hide by default */
+.preview-loading {
+    display: none;
+    margin-left: 20px;
+    after: 
+}

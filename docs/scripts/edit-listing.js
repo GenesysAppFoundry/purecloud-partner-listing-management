@@ -30,6 +30,7 @@ var urlParams = new URLSearchParams(window.location.search);
 let listingId = urlParams.get('id');
 let listingRow = {};
 let listingObject = {};
+let listingRowAttachments = {};
 let listingDataTable = null;
 let validatorFunctions = [];
 
@@ -88,6 +89,7 @@ function loadListing(){
         console.log(row);
         listingRow = row;
         listingObject = JSON.parse(listingRow.listingDetails);
+        listingRowAttachments = JSON.parse(listingRow.attachments);
         workspaceId = listingRow.workspaceId;
 
         view.fillEditListingFields(listingObject);
@@ -126,7 +128,7 @@ function saveListing(){
     fileUploaders.uploadFiles(platformClient, client, workspaceId)
     .then((documents) => {
         console.log("Successfully Uploaded Files!");
-        let attachments = JSON.parse(listingRow.attachments);
+        let attachments = listingRowAttachments;
 
         // NOTE: Special edge case here, clear all existing screenshots
         // if at least 1 screenshot is to be uploaded.
@@ -244,7 +246,7 @@ function setupSpecialFields(){
     // Setup some functionalities of the 'special' fields
     hardwareAddons.setup();
     useCases.setup();
-    fileUploaders.setup();
+    fileUploaders.setup(platformClient, client, listingRowAttachments);
 }
 
 /**

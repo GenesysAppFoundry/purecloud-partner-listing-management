@@ -135,11 +135,18 @@ function readFile(file, rule){
     }
 }
 
+
 export default {
     /**
      * Setup for the attachment fields. 
+     * @param {Object} platformClient PureCloud platform client reference
+     * @param {Object} client reference to client instance
+     * @param {Object} attachmentsData the attachments from the data table
      */
-    setup(){
+    setup(platformClient, client, attachmentsData){
+        const contentManagementApi = new platformClient.ContentManagementApi();
+
+        // Go thourhg the validators.attachment rules
         Object.keys(validators.attachments).forEach(field => {
             let rule = validators.attachments[field];
 
@@ -148,10 +155,12 @@ export default {
             let el_input = el_field.querySelectorAll('input')[0];
             let el_previewContainer = el_field
                                     .querySelectorAll('.preview-image')[0];
+            let el_previewLoading = el_field
+                                    .querySelectorAll('.preview-loading')[0];
             let el_errorMessge = el_field.querySelectorAll('p.help')[0];
 
 
-            // Callback function when file is 'uploaded'
+            // Set Callback function when file is 'uploaded'
             el_input.addEventListener('change', function(ev){
                 let files = ev.target.files;
                 // If no file is chosen or cancelled is clicked 
@@ -176,6 +185,41 @@ export default {
                     readFile(file, rule);
                 }                
             });
+
+            // Check if file existing already in the workspace
+            const arrDocumentNames = Object.keys(attachmentsData).filter(key => {
+                // Just check the first part of string for enumerated 
+                // files liek screenshots
+                return key.startsWith(field);
+            })
+            if(arrDocumentNames.length <= 0)  return;
+            
+            // Go thourhg the documents in this specific field and show the preview
+            arrDocumentNames.forEach(docName => {
+                // Get entire data from the data table info
+                let doc = attachmentsData[docName];
+                el_previewLoading.style.display = 'block';
+
+                contentManagementApi.getContentmanagementDocument(doc.id)
+                .then((docPcData) => {
+                    let thumbnails = docPcData.thumbnails;
+                    if(thumbnails){
+                        const img  = new Image();
+                        img.addEventListener('load', () => {
+                            el_previewContainer.style.display = 'block';
+                            el_previewLoading.style.display = 'none';
+                            el_previewContainer.appendChild(img);
+                        });
+                        img.src = docPcData.thumbnails[0].imageUri; 
+                    }else{
+                        el_previewContainer.innerText =
+                             `No Preview available. But file ${doc.title} exists.`;
+                    }
+                })
+                .catch(e => console.error(e));
+            });
+
+            
         })
     },
 
