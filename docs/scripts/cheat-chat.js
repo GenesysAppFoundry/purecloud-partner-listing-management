@@ -84,7 +84,9 @@ export default {
         // Build the custom field body
         let customField = {
             id: dtRow.key,
-            orgName: orgName
+            orgName: orgName,
+            // TODO: Actually determine environment
+            environment: 'mypurecloud.com'
         }
         customField.listingDetails = dtRow.listingDetails;
         customField.premiumAppDetails = dtRow.premiumAppDetails;
