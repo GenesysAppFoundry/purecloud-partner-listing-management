@@ -88,10 +88,10 @@ export default {
             // TODO: Actually determine environment
             environment: 'mypurecloud.com'
         }
-        customField.listingDetails = dtRow.listingDetails;
-        customField.premiumAppDetails = dtRow.premiumAppDetails;
-        customField.attachments = dtRow.attachments;
-
+        customField.listingDetails = JSON.parse(dtRow.listingDetails);
+        customField.premiumAppDetails = JSON.parse(dtRow.premiumAppDetails);
+        customField.attachments = JSON.parse(dtRow.attachments);
+        
         let customFieldString = JSON.stringify(customField);
 
         // Divide the long info into parts

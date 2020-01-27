@@ -88,10 +88,10 @@ function listingRequestReceived(){
         
 
         elListingInfo.style.visibility = 'visible';
-        elListingName.innerText = JSON.parse(listingRequest.listingDetails).name;
-        jsonDump.value = listingRequest.listingDetails 
+        elListingName.innerText = listingRequest.listingDetails.name;
+        jsonDump.value = JSON.stringify(listingRequest.listingDetails)
                         + '\n\n\n' 
-                        + listingRequest.attachments;
+                        + JSON.stringify(listingRequest.attachments);
     })
     .catch(e => console.error(e));
 }
