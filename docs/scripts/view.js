@@ -6,19 +6,28 @@ import yesNoModal from './templates/yes-no-modal.js';
 import loadingModal from './templates/loading-modal.js';
 import hardwareAddons from './special-fields/hardware-addons.js';
 import useCases from './special-fields/use-cases.js';
+import infoModal from './templates/info-modal.js';
 
 export default {
     addModalsToDocument(){
         const newListingModalEl = newListingModal.new();
         const newYesNoModalEl = yesNoModal.new();
         const loadingModalEl = loadingModal.new();
+        const infoModalEl = infoModal.new();
 
         document.body.appendChild(newListingModalEl);
         document.body.appendChild(newYesNoModalEl);
         document.body.appendChild(loadingModalEl);
+        document.body.appendChild(infoModalEl);
     },
 
-    showListings(containerId, listings){
+    /**
+     * 
+     * @param {String} containerId css id of container of listings
+     * @param {Object} listings rows from the data table describing listings
+     * @param {Object} listingsStatus statuses of the listings from cheatchat
+     */
+    showListings(containerId, listings, listingsStatus){
         const containerEl = document.getElementById(containerId);
 
         // Remove existing listing first
@@ -27,8 +36,16 @@ export default {
         }
 
         // Add curent listings
-        listings.forEach(ws => {
-            containerEl.appendChild(listingCardTemplate.new(ws));
+        listings.forEach(row => {
+            // Get the status of the listing, if no data exist,
+            // set to deault status
+            let key = row.key;
+            let status = 1;
+            if(listingsStatus){
+                status = listingsStatus[key] ? listingsStatus[key] : 1; 
+            }
+
+            containerEl.appendChild(listingCardTemplate.new(row, status));
         });
         
         const addNewEl = addNewListing.new();
@@ -121,5 +138,13 @@ export default {
 
         // Pricing
         fieldInterface.textAreaFill('app-pricing', listingDetails.pricing);    
+    },
+
+    showInfoModal(title, message, cb){
+        infoModal.show(title, message, cb);
+    },
+
+    hideInfoModal(){
+        infoModal.hide();
     }
 }

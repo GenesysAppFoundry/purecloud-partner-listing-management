@@ -212,49 +212,49 @@ let sample = {
 };
 
 client.loginImplicitGrant('e7de8a75-62bb-43eb-9063-38509f8c21af', 
-                        'http://localhost:8080/test.html')
+                        'http://localhost:8080/test/test-listing.html')
 .then(() => {
     assignButtonListener();
 })
 .catch((e) => console.error(e));
 
 function assignButtonListener(){
-    let listingDetails = JSON.stringify(sample);
-    console.log(listingDetails);
-    console.log(listingDetails.length);
-
-    // Divide the long info into parts
-    const cutSize = 999;
-    let listingDetailsArr = [];
-    let numOfSections = Math.ceil(listingDetails.length / cutSize);
-    for(let i = 0; i < numOfSections; i++){
-        let str = listingDetails.substr(i * (cutSize - 1), cutSize);
-        listingDetailsArr.push(str);
-    }
-
-    // Template
-    let requestBody = {
-        organizationId: organizationId,
-        deploymentId: deploymentId,
-        memberInfo: { 
-          displayName: 'List Man',
-          customFields: {
-            purpose: 'submit',
-          }
-        }
-    }
-
-    // Add the parts as custom fields
-    listingDetailsArr.forEach((part, i) => {
-        requestBody.memberInfo
-        .customFields[`listingDetails_${i + 1}`] = part;
-    })
-
-    console.log(requestBody);
-
     // Send the thing
     document.getElementById('btn-send-info')
     .addEventListener('click', function(){
+        let listingDetails = JSON.stringify(sample);
+        console.log(listingDetails);
+        console.log(listingDetails.length);
+
+        // Divide the long info into parts
+        const cutSize = 999;
+        let listingDetailsArr = [];
+        let numOfSections = Math.ceil(listingDetails.length / cutSize);
+        for(let i = 0; i < numOfSections; i++){
+            let str = listingDetails.substr(i * (cutSize - 1), cutSize);
+            listingDetailsArr.push(str);
+        }
+
+        // Template
+        let requestBody = {
+            organizationId: organizationId,
+            deploymentId: deploymentId,
+            memberInfo: { 
+            displayName: 'List Man',
+            customFields: {
+                purpose: 'submit',
+            }
+            }
+        }
+
+        // Add the parts as custom fields
+        listingDetailsArr.forEach((part, i) => {
+            requestBody.memberInfo
+            .customFields[`listingDetails_${i + 1}`] = part;
+        })
+
+        console.log(requestBody);
+
         $.ajax({
             url: 'https://api.mypurecloud.com/api/v2/webchat/guest/conversations',
             method: 'POST',
@@ -268,7 +268,57 @@ function assignButtonListener(){
             let websocket = new WebSocket(x.eventStreamUri)
             websocket.onmessage = function(event){
                 let data = JSON.parse(event.data);
-                console.log(data);
+                //console.log(data);
+                let eventBody = data.eventBody;
+                if(eventBody.body){
+                    console.log(eventBody.body);
+                }
+                if(eventBody.bodyType == 'member-leave'){
+                    console.log('DONE');
+                }
+            };
+            console.log('sent');
+        })
+        .fail((e) => console.error(e));
+    });
+
+    // Get Info
+    document.getElementById('btn-get-info')
+    .addEventListener('click', function(){
+        let requestBody = {
+            organizationId: organizationId,
+            deploymentId: deploymentId,
+            memberInfo: { 
+                displayName: 'List Man',
+                customFields: {
+                    purpose: 'version',
+                    org: 'genesys4',
+                    environment: 'com'
+                }
+            }
+        }
+
+        $.ajax({
+            url: 'https://api.mypurecloud.com/api/v2/webchat/guest/conversations',
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+                "cache-control": "no-cache"
+            },
+            data: JSON.stringify(requestBody)
+        })
+        .done((x) => {
+            let websocket = new WebSocket(x.eventStreamUri)
+            websocket.onmessage = function(event){
+                let data = JSON.parse(event.data);
+                //console.log(data);
+                let eventBody = data.eventBody;
+                if(eventBody.body){
+                    console.log(eventBody.body);
+                }
+                if(eventBody.bodyType == 'member-leave'){
+                    console.log('DONE');
+                }
             };
             console.log('sent');
         })

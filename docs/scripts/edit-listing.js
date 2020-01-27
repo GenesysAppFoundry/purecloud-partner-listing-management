@@ -6,6 +6,7 @@ import fieldInterface from './util/field-interface.js';
 import hardwareAddons from './special-fields/hardware-addons.js';
 import useCases from './special-fields/use-cases.js';
 import fileUploaders from './special-fields/file-uploaders.js';
+import cheatChat from './cheat-chat.js';
 
 //Load purecloud and create the ApiClient Instance
 const platformClient = require('platformClient');
@@ -17,6 +18,7 @@ const contentManagementApi = new platformClient.ContentManagementApi();
 const groupsApi = new platformClient.GroupsApi();
 const usersApi = new platformClient.UsersApi();
 const architectApi = new platformClient.ArchitectApi();
+const organizationApi = new platformClient.OrganizationApi();
 
 // Globals
 let managerGroup = null;
@@ -33,6 +35,7 @@ let listingObject = {};
 let listingRowAttachments = {};
 let listingDataTable = null;
 let validatorFunctions = [];
+let orgName = '';
 
 // Add modals to DOM
 view.addModalsToDocument();
@@ -65,8 +68,15 @@ client.loginImplicitGrant('e7de8a75-62bb-43eb-9063-38509f8c21af',
  * Initial Setup for the page
  */
 function setUp(){
-    // Load the listing details
-    return getListingDataTable()
+    // Set up Cheat Chat
+    return organizationApi.getOrganizationsMe()
+    .then((org) => {
+        orgName = org.thirdPartyOrgName;
+        cheatChat.setUp(org);
+
+        // Load the listing details
+        return getListingDataTable()
+    })
     .then(() => {
         return loadListing();
     })
@@ -98,12 +108,20 @@ function loadListing(){
 
 /**
  * Validate and then save the listing back to the data table 
+ * @returns {Promise} 
  */
 function saveListing(){
     // Validate fields first
     if(!validateAllFields()){
-        alert('Some fields are incorrenct. Please review.')
-        return;
+        view.showInfoModal(
+            'Error',
+            'Some fields are incorrect. Please review.',
+            () => {
+                view.hideInfoModal();
+            })
+        return new Promise((resolve, reject) => {
+            reject('Save failed.');
+        });
     }
 
     view.showLoader('Saving Listing...');
@@ -125,7 +143,7 @@ function saveListing(){
 
     // Attachments
     view.showLoader('Uploading Files...');
-    fileUploaders.uploadFiles(platformClient, client, workspaceId)
+    return fileUploaders.uploadFiles(platformClient, client, workspaceId)
     .then((documents) => {
         console.log("Successfully Uploaded Files!");
         let attachments = listingRowAttachments;
@@ -159,9 +177,12 @@ function saveListing(){
                 });
     })
     .then(() => {
-        console.log("Successfully Saved Listing Row!");
-
         view.hideLoader();
+        view.showInfoModal('Success', 'Listing saved.', () => {
+            view.hideInfoModal();
+        })
+
+        console.log('Saved the listing!');
     })
     .catch((e) => console.error(e));
 }
@@ -216,6 +237,41 @@ function assignButtonEventHandlers(){
             .addEventListener('click', function(e){
                 e.preventDefault(); // Prevent submitting form
                 window.location.href = config.redirectUriBase;
+            });
+
+    // Submit
+    document.getElementById('btn-submit')
+            .addEventListener('click', function(e){
+                e.preventDefault(); // Prevent submitting form
+            
+                view.showYesNoModal(
+                    'Confirmation', 
+                    'Are you sure you\'re ready to submit this for approval? This will save the listing before submission',
+                    () => {
+                        saveListing()
+                        .then(() => {
+                            view.hideInfoModal();
+                            view.showLoader('Submitting Listing to DevFoundry...'); 
+                            return cheatChat.submitListing(listingRow, orgName);
+                        })
+                        .then(() => {
+                            view.hideLoader();
+                            view.showInfoModal('Success', 'Successfully submitted ' 
+                            + 'the listing request. Please avoid resubmitting the ' 
+                            + 'listing. The status should change to PENDING' 
+                            + 'APPROVAL once a DevFoundry reviewer receives your request.',
+                            () => {
+                                view.hideInfoModal();
+                                window.location.href = config.redirectUriBase;
+                            });
+                        })
+                        .catch((e) => console.error(e));
+                        
+                        view.hideYesNoModal();
+                    }, 
+                    () => {
+                        view.hideYesNoModal();
+                    })
             });
 }
 

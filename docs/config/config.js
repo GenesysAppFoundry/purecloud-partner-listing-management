@@ -87,5 +87,11 @@ export default {
                 ]
             }
         ] 
+    },
+
+    // For the Cheat Chat API
+    "cheatChat": {
+        "organizationId": "1f86c618-0d8d-4f10-9893-aeacc5a158b0",
+        "deploymentId": "ac307e36-df16-4da5-a4bf-6ec3fe7aed09"
     }
 };
