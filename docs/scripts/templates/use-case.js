@@ -2,26 +2,27 @@ let t = document.createElement('template');
 t.innerHTML =
 `
 <div class="card use-case">
-  <header class="card-header">
-    <p class="card-header-title"></p>
+  <div class="card-content">
     <span class="card-header-icon">
       <button class="delete" aria-label="close"></button>
     </span>
-  </header>
-  <div class="card-content">
-    <div class="content">
-    <label class="label">Title</label>
-    <div class="control">
-      <input class="input useCase-title" type="text" placeholder="" value="">
-    </div>
-    <label class="label">Summary</label>
-    <div class="control">
-      <textarea class="textarea useCase-summary" placeholder="Summary" value=""></textarea>
-    </div>
-    <label class="label">Business Benefits</label>
-    <div class="control">
-      <textarea class="textarea useCase-benefits" placeholder="Business Benefits" value=""></textarea>
-    </div>
+    <div class="content div-section">
+      <div class="div-info">
+        <label class="label">Title</label>
+        <div class="control">
+          <input class="input useCase-title" type="text" placeholder="" value="">
+        </div>
+        <label class="label">Summary</label>
+        <div class="control">
+          <textarea class="textarea useCase-summary" placeholder="Summary" value=""></textarea>
+        </div>
+      </div>
+      <div class="div-info">
+        <label class="label">Business Benefits</label>
+        <div class="control">
+          <textarea class="textarea useCase-benefits" placeholder="Business Benefits" value=""></textarea>
+        </div>
+      </div>      
     </div>
   </div>
 </div>
