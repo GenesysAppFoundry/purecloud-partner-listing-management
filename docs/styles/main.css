@@ -97,3 +97,11 @@
 .checkbox {
     margin-left: 10px;
 }
+
+.help.is-danger {
+    color: #FF4F1F !important;
+}
+
+.is-danger.input {
+    border-color: #FF4F1F !important;
+}
