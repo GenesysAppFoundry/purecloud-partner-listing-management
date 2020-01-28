@@ -112,7 +112,7 @@ let sample = {
         }
     },
 
-    "pricing": "",
+    "pricing": "Pricing here",
 
     // DYNAMIC
     "useCases": [
@@ -122,6 +122,13 @@ let sample = {
             "businessBenefits": "MarkDown Format"
         }
     ],
+
+    "appLogoUrl": "link",
+    "companyLogoUrl": "link",
+    "screenshots": [
+        "link1", "link2", "link3", "link4"
+    ],
+    "marketingBrochure": "link",
 
     // Attachments
     // 1. App or Company Logo (min 144x144 PNG)

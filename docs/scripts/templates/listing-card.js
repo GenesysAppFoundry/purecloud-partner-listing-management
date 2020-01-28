@@ -1,4 +1,5 @@
 import config from '../../config/config.js';
+import listingStatus from  '../../config/listing-status.js';
 
 let t = document.createElement('template');
 t.innerHTML =
@@ -11,9 +12,13 @@ t.innerHTML =
             Name: <strong><span class="listing-name">
                 Listing Name</span></strong> 
             <br>
-            <div class="listing-description">
+            Description: <span class="listing-description">
                 Description of Listing
-            </div>
+            </span>
+            <br>
+            Status: <span class="listing-status">
+                ---
+            </span>
         </p>
         </div>
         <div>
@@ -30,7 +35,7 @@ t.innerHTML =
 `;
 
 export default {
-    new(dataTableRow){
+    new(dataTableRow, status){
         let el = document.importNode(t.content, true);
 
         let appDetails = JSON.parse(dataTableRow.listingDetails);
@@ -44,11 +49,21 @@ export default {
         listingDescEl.innerText = 
             appDetails.shortDescription ? appDetails.shortDescription : '';
 
+        // Status
+        let listingStatusEl = el.querySelectorAll('.listing-status')[0];
+        listingStatusEl.innerText = listingStatus[status];
+
         // Delete Button
         let btnDelete = el.querySelectorAll('.btn-delete-listing')[0];
-        btnDelete.onclick = function(){
-            showListingDeletionModal(dataTableRow.key);
-        };
+        // Hide delete button if status is no longer 'in progress'
+        if(status != 1){
+            btnDelete.style.visibility = 'hidden';
+        }else{
+            btnDelete.onclick = function(){
+                showListingDeletionModal(dataTableRow.key);
+            };
+        }
+        
 
         // Edit Button
         let btnEdit = el.querySelectorAll('.btn-edit-listing')[0];

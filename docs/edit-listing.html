@@ -19,6 +19,7 @@
   <section class="section">
     <div class="container">
       <form action="" id="edit-listing-form">
+        <!-- First Section -->
         <div class="div-section">
           <div class="div-info">
             <!-- App Name -->
@@ -92,6 +93,8 @@
           </div>          
         </div>
         <hr>
+        
+        <!-- Second Section-->
         <div class="div-section">
           <div class="div-info">
             <!-- Tagline  -->
@@ -423,7 +426,7 @@
         </div>
         <hr>        
 
-        <!-- TODO: Hardware Add-ons -->
+        <!-- Hardware Add-ons -->
         <div class="div-section">
           <div class="field div-info" id="app-hardwareAddons">
             <label class="form-label">Hardware Add-ons</label>
@@ -560,12 +563,121 @@
         </div>
         <hr>
 
-        <div class="field is-grouped" id="app-useCases">
+        <!-- Use Cases  -->
+        <div class="field" id="app-useCases">
+          <label class="label">Use Cases</label>
+          <div class="control">
+            <button class="button" id="btn-add-useCase">Add</button>
+          </div>
+        </div>
+        <hr>
+
+        <!-- Attachments -->
+        <!-- App or Company Logo -->
+        <div class="field" id="app-companyLogo">
+          <label class="label">App or Company Logo (PNG only)</label>
+          <p class="help is-danger"></p>
+          <div class="file">
+            <label class="file-label">
+              <input class="file-input" 
+                    type="file" 
+                    name="resume"
+                    accept=".png"
+              >
+              <span class="file-cta">
+                <span class="file-icon">
+                  <i class="fas fa-upload"></i>
+                </span>
+                <span class="file-label">
+                  Choose a file…
+                </span>
+              </span>
+            </label>
+          </div>
+          <div class="preview-loading">
+            <div class="fa-2x">
+              <i class="fas fa-spinner fa-spin genOrange"></i>
+            </div>
+          </div>
+          <div class="preview-image">
+            <!-- Preview img will be generated here -->
+          </div>
+        </div>
+
+        <!-- Screenshots -->
+        <div class="field" id="app-screenshots">  
+          <label class="label">Screenshots (PNG only)</label>
+          <p class="help is-danger"></p>
+          <div class="file">
+            <label class="file-label">
+              <input class="file-input" 
+                    type="file" 
+                    name="resume"
+                    accept=".png"
+                    multiple
+              >
+              <span class="file-cta">
+                <span class="file-icon">
+                  <i class="fas fa-upload"></i>
+                </span>
+                <span class="file-label">
+                  Choose files (Max. of 4)…
+                </span>
+              </span>
+            </label>
+          </div>
+          <div class="preview-loading">
+            <div class="fa-2x">
+              <i class="fas fa-spinner fa-spin genOrange"></i>
+            </div>
+          </div>
+          <div class="preview-image">
+            <!-- Preview img will be generated here -->
+          </div>
+        </div>
+        
+        <!-- Brochure -->
+        <div class="field" id="app-brochure">  
+          <label class="label">Marketing Brochure (PDF only)</label>
+          <p class="help is-danger"></p>
+          <div class="file">
+            <label class="file-label">
+              <input class="file-input" 
+                    type="file" 
+                    name="resume"
+                    accept=".pdf"
+              >
+              <span class="file-cta">
+                <span class="file-icon">
+                  <i class="fas fa-upload"></i>
+                </span>
+                <span class="file-label">
+                  Choose file…
+                </span>
+              </span>
+            </label>
+          </div>
+          <div class="preview-loading">
+            <div class="fa-2x">
+              <i class="fas fa-spinner fa-spin genOrange"></i>
+            </div>
+          </div>
+          <div class="preview-image">
+            <!-- Preview img will be generated here -->
+          </div>
+        </div>
+        <hr>
+
+        <!-- Buttons  -->
+        <div class="field is-grouped">
           <div class="control">
             <button id="btn-save" class="button is-link">Save</button>
           </div>
           <div class="control">
             <button id="btn-cancel" class="button is-link is-light">Cancel</button>
+          </div>
+          <div class="control">
+            <button id="btn-submit" class="button is-link is-light">Submit</button>
           </div>
         </div>
       </form>

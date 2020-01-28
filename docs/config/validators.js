@@ -118,5 +118,35 @@ export default {
             required: true,
             message: "Required."
         },
+    },
+    attachments: {
+        companyLogo: {
+            fieldId: 'app-companyLogo',
+            required: true,
+            minWidth: 1,
+            minHeight: 1,
+            fileType: 'png',
+            type: 'image',
+            message: 'Required. Should be .png (Min. size of 144x144 px)',
+            required: true
+        },
+        screenshots: {
+            fieldId: 'app-screenshots',
+            ratio: '4x3',
+            minWidth: 1024,
+            minHeight: 768,
+            fileType: 'png',
+            maxFiles: 4,
+            manyFiles: true,
+            type: 'image',
+            message: 'Max 4 images. PNG only. Aspect ratio 4:3 only. Minimum dimension of 1024x768',
+            required: true
+        },
+        brochure: {
+            fieldId: 'app-brochure',
+            fileType: 'pdf',
+            type: 'document',
+            message: 'PDF file only.'
+        }
     }
 }

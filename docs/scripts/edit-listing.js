@@ -4,19 +4,26 @@ import validators from '../config/validators.js';
 import assignValidator from './util/assign-validator.js';
 import fieldInterface from './util/field-interface.js';
 import hardwareAddons from './special-fields/hardware-addons.js';
+import useCases from './special-fields/use-cases.js';
+import fileUploaders from './special-fields/file-uploaders.js';
+import cheatChat from './cheat-chat.js';
 
 //Load purecloud and create the ApiClient Instance
 const platformClient = require('platformClient');
 const client = platformClient.ApiClient.instance;
+client.setPersistSettings(true, 'listing_management');
 
 // Create API instances
 const contentManagementApi = new platformClient.ContentManagementApi();
 const groupsApi = new platformClient.GroupsApi();
 const usersApi = new platformClient.UsersApi();
 const architectApi = new platformClient.ArchitectApi();
+const organizationApi = new platformClient.OrganizationApi();
 
 // Globals
 let managerGroup = null;
+let workspaceId = null;
+
 // Id will be taken from query param but will be saved as state after 
 // PC Auth
 var urlParams = new URLSearchParams(window.location.search);
@@ -25,8 +32,10 @@ var urlParams = new URLSearchParams(window.location.search);
 let listingId = urlParams.get('id');
 let listingRow = {};
 let listingObject = {};
+let listingRowAttachments = {};
 let listingDataTable = null;
 let validatorFunctions = [];
+let orgName = '';
 
 // Add modals to DOM
 view.addModalsToDocument();
@@ -40,8 +49,12 @@ client.loginImplicitGrant('e7de8a75-62bb-43eb-9063-38509f8c21af',
 .then((data) => {
     listingId = client.authData.state;
     console.log('PureCloud Auth successful.');
-    history.pushState({}, '', window.location.href + '?id=' + listingId);
-    
+
+    // Checks if the query params are already in the URL, if not readd it
+    if(!window.location.href.includes('?')){
+        history.pushState({}, '', window.location.href + '?id=' + listingId);
+    }
+
     return setUp(); 
 })
 .then(() => {
@@ -55,10 +68,15 @@ client.loginImplicitGrant('e7de8a75-62bb-43eb-9063-38509f8c21af',
  * Initial Setup for the page
  */
 function setUp(){
-    // Setup some functionalities of the 'special' fields
-    hardwareAddons.setup();
+    // Set up Cheat Chat
+    return organizationApi.getOrganizationsMe()
+    .then((org) => {
+        orgName = org.thirdPartyOrgName;
+        cheatChat.setUp(org);
 
-    return getListingDataTable()
+        // Load the listing details
+        return getListingDataTable()
+    })
     .then(() => {
         return loadListing();
     })
@@ -66,6 +84,7 @@ function setUp(){
         assignValidators();
         assignButtonEventHandlers();
         validateAllFields();
+        setupSpecialFields();
     });
 }
 
@@ -77,8 +96,11 @@ function loadListing(){
         showbrief: false
     })
     .then((row) => {
+        console.log(row);
         listingRow = row;
         listingObject = JSON.parse(listingRow.listingDetails);
+        listingRowAttachments = JSON.parse(listingRow.attachments);
+        workspaceId = listingRow.workspaceId;
 
         view.fillEditListingFields(listingObject);
     })
@@ -86,12 +108,20 @@ function loadListing(){
 
 /**
  * Validate and then save the listing back to the data table 
+ * @returns {Promise} 
  */
 function saveListing(){
     // Validate fields first
     if(!validateAllFields()){
-        alert('Some fields are incorrenct. Please review.')
-        return;
+        view.showInfoModal(
+            'Error',
+            'Some fields are incorrect. Please review.',
+            () => {
+                view.hideInfoModal();
+            })
+        return new Promise((resolve, reject) => {
+            reject('Save failed.');
+        });
     }
 
     view.showLoader('Saving Listing...');
@@ -104,20 +134,55 @@ function saveListing(){
                                     listingDetails[key].fieldId);
     });
 
-    // Build the Hardware Addons Field
-    listingObject.hardwareAddons = hardwareAddons.buildField();
+    // Special fields
+    buildSpecialFields();
 
-    // Turn the entire thing to string
+    // Listing Row. Turn the entire thing to string
     listingRow.listingDetails = JSON.stringify(listingObject);
     console.log(listingRow);
 
-    // Save to Data Table
-    architectApi.putFlowsDatatableRow(listingDataTable.id, listingRow.key, {
-        body: listingRow
+    // Attachments
+    view.showLoader('Uploading Files...');
+    return fileUploaders.uploadFiles(platformClient, client, workspaceId)
+    .then((documents) => {
+        console.log("Successfully Uploaded Files!");
+        let attachments = listingRowAttachments;
+
+        // NOTE: Special edge case here, clear all existing screenshots
+        // if at least 1 screenshot is to be uploaded.
+        let screenshotDoc = documents.find((doc) => {
+            return doc.name.startsWith('screenshot')
+        });
+        if(screenshotDoc){
+            for(let i = 0; i < validators.attachments.screenshots.maxFiles; i++){
+                delete attachments[`screenshots-${i+1}`];
+            }
+        }
+
+        // Modify the attachments object for new values
+        documents.forEach(doc => {
+            attachments[doc.name] = {
+                sharingUri: doc.sharingUri,
+                id: doc.id
+            }    
+        })
+
+        listingRow.attachments = JSON.stringify(attachments);
+
+        // Save to Data Table
+        return architectApi.putFlowsDatatableRow(
+                listingDataTable.id, 
+                listingRow.key, {
+                    body: listingRow
+                });
     })
     .then(() => {
-        console.log("Successfully Saved!");
         view.hideLoader();
+        view.showInfoModal('Success', 'Listing saved.', () => {
+            view.hideInfoModal();
+        })
+
+        console.log('Saved the listing!');
     })
     .catch((e) => console.error(e));
 }
@@ -173,6 +238,41 @@ function assignButtonEventHandlers(){
                 e.preventDefault(); // Prevent submitting form
                 window.location.href = config.redirectUriBase;
             });
+
+    // Submit
+    document.getElementById('btn-submit')
+            .addEventListener('click', function(e){
+                e.preventDefault(); // Prevent submitting form
+            
+                view.showYesNoModal(
+                    'Confirmation', 
+                    'Are you sure you\'re ready to submit this for approval? This will save the listing before submission',
+                    () => {
+                        saveListing()
+                        .then(() => {
+                            view.hideInfoModal();
+                            view.showLoader('Submitting Listing to DevFoundry...'); 
+                            return cheatChat.submitListing(listingRow, orgName);
+                        })
+                        .then(() => {
+                            view.hideLoader();
+                            view.showInfoModal('Success', 'Successfully submitted ' 
+                            + 'the listing request. Please avoid resubmitting the ' 
+                            + 'listing. The status should change to PENDING' 
+                            + 'APPROVAL once a DevFoundry reviewer receives your request.',
+                            () => {
+                                view.hideInfoModal();
+                                window.location.href = config.redirectUriBase;
+                            });
+                        })
+                        .catch((e) => console.error(e));
+                        
+                        view.hideYesNoModal();
+                    }, 
+                    () => {
+                        view.hideYesNoModal();
+                    })
+            });
 }
 
 /**
@@ -182,11 +282,51 @@ function assignButtonEventHandlers(){
 function validateAllFields(){
     let allValid = true;
 
+    // Basic Fields
     validatorFunctions.forEach((validator) => {
         if(!validator.func.apply(validator.context)){
             allValid = false;
         }
     });
 
+    //Special Fields
+    if(!validateSpecialFields()) allValid = false;
+
     return allValid;
+}
+
+/**
+ * Calls all setup functions for the special fields
+ */
+function setupSpecialFields(){
+    // Setup some functionalities of the 'special' fields
+    hardwareAddons.setup();
+    useCases.setup();
+    fileUploaders.setup(platformClient, client, listingRowAttachments);
+}
+
+/**
+ * Builds the JSON parts and put to the global listingObject
+ */
+function buildSpecialFields(){
+    // Build the Hardware Addons Field
+    listingObject.hardwareAddons = hardwareAddons.buildField();
+
+    // Build the useCaes field
+    listingObject.useCases = useCases.buildField();
+}
+
+/**
+ * Run validation for special fields
+ */
+function validateSpecialFields(){
+    let valid = true;
+
+    // TODO: Hardware Add-ons
+    // TODO: Use Cases
+
+    // Attachemnt fields
+    if(!fileUploaders.validateFields()) valid = false;
+
+    return valid;
 }

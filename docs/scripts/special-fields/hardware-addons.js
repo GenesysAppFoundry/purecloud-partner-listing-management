@@ -15,15 +15,19 @@ export default {
      */ 
     setup(){
         regions.forEach(region => {
-            // Hide all the text fields on all regions
             let toggableDiv = document.getElementById(divIdPrefix + region);
-            toggableDiv.style.display = 'none';
+            let toggleCbox = document.getElementById(cbIdPrefix + region);
 
-            // Add the event listeners for the checkboxes
-            document.getElementById(cbIdPrefix + region)
-            .addEventListener('change', function(){
+            // Determine the initial visibility of the region
+            if(toggleCbox.checked){
+                toggableDiv.style.display = 'flex';
+            }else {
+                toggableDiv.style.display = 'none';
+            }
+
+            // Add the event listeners for the checkbox
+            toggleCbox.addEventListener('change', function(){
                 if(this.checked){
-                    // toggableDiv.style.display = 'block';
                     toggableDiv.style.display = 'flex';
                 }else{
                     toggableDiv.style.display = 'none';

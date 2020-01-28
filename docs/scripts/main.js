@@ -1,10 +1,12 @@
 import view from './view.js';
 import config from '../config/config.js';
 import blankCoreListingJSON from '../config/core-listing-blank.js';
+import cheatChat from './cheat-chat.js';
 
 //Load purecloud and create the ApiClient Instance
 const platformClient = require('platformClient');
 const client = platformClient.ApiClient.instance;
+client.setPersistSettings(true, 'listing_management');
 
 // Create API instances
 const contentManagementApi = new platformClient.ContentManagementApi();
@@ -12,10 +14,13 @@ const groupsApi = new platformClient.GroupsApi();
 const usersApi = new platformClient.UsersApi();
 const notificationsApi = new platformClient.NotificationsApi();
 const architectApi = new platformClient.ArchitectApi();
+const organizationApi = new platformClient.OrganizationApi();
 
 // Globals
 let managerGroup = null;
 let listingDataTable = null;
+let listingsStatus = null; 
+let orgName = '';
 
 // Authenticate
 // TODO: regional authentication
@@ -41,17 +46,30 @@ client.loginImplicitGrant('e7de8a75-62bb-43eb-9063-38509f8c21af',
  * Setup the the page and all authentication and data required
  */
 function setUp(){
-    // Get the id of the managers group and assign 
-    return groupsApi.postGroupsSearch({
-        "query": [
-            {
-                "fields": ["name"],
-                "value": config.prefix,
-                "operator": "AND",
-                "type": "STARTS_WITH"
-            }
-        ]
+    // Get org info ad set up Cheat Chat
+    return organizationApi.getOrganizationsMe()
+    .then((org) => {
+        orgName = org.thirdPartyOrgName;
+        cheatChat.setUp(org);
+
+        return cheatChat.queryListingVersions();
     })
+    .then((listings) => {
+        let regionalListings = JSON.parse(listings);
+        listingsStatus = regionalListings[orgName];
+
+        // Get the id of the managers group and assign 
+        return groupsApi.postGroupsSearch({
+            "query": [
+                {
+                    "fields": ["name"],
+                    "value": config.prefix,
+                    "operator": "AND",
+                    "type": "STARTS_WITH"
+                }
+            ]
+        })
+    })    
     .then((result) => {
         if(result.total > 0){
             console.log('Group detected.');
@@ -115,7 +133,7 @@ function reloadListings(){
     })
     .then((rows) => {
         let listings = rows.entities;
-        view.showListings('listing-cards-container', listings);
+        view.showListings('listing-cards-container', listings, listingsStatus);
 
         console.log('Listed all listings');
 
@@ -184,7 +202,8 @@ function createNewListing(listingName){
         return architectApi.postFlowsDatatableRows(listingDataTable.id, {
             key: version.toString(),
             listingDetails: JSON.stringify(jsonInfo),
-            premiumAppDetails: '',
+            premiumAppDetails: '{}',
+            attachments: '{}',
             workspaceId: newWorkspaceId
         });
     })

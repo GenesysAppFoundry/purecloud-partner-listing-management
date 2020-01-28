@@ -2,8 +2,8 @@ export default {
     clientIDs: {        
         'mypurecloud.com': 'e7de8a75-62bb-43eb-9063-38509f8c21af'
     },
-    //"redirectUriBase": "https://mypurecloud.github.io/purecloud-premium-app/",
-    "redirectUriBase": "http://localhost:8080/",
+    "redirectUriBase": "https://princemerluza.github.io/purecloud-partner-listing-management/",
+    //"redirectUriBase": "http://localhost:8080/",
 
     // PureCloud assigned name for the premium app
     // This should match the integration type name of the Premium App
@@ -69,6 +69,10 @@ export default {
                         "type": "string"
                     },
                     {
+                        "name": "attachments",
+                        "type": "string"
+                    },
+                    {
                         "name": "placeholder1",
                         "type": "string"
                     },
@@ -83,5 +87,11 @@ export default {
                 ]
             }
         ] 
+    },
+
+    // For the Cheat Chat API
+    "cheatChat": {
+        "organizationId": "1f86c618-0d8d-4f10-9893-aeacc5a158b0",
+        "deploymentId": "ac307e36-df16-4da5-a4bf-6ec3fe7aed09"
     }
 };
