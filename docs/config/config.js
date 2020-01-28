@@ -92,6 +92,6 @@ export default {
     // For the Cheat Chat API
     "cheatChat": {
         "organizationId": "1f86c618-0d8d-4f10-9893-aeacc5a158b0",
-        "deploymentId": "ac307e36-df16-4da5-a4bf-6ec3fe7aed09"
+        "deploymentId": "7102e7b2-2b12-4bb0-b90b-2aaf70b52831"
     }
 };
