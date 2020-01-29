@@ -32,7 +32,7 @@ client.loginImplicitGrant('e7de8a75-62bb-43eb-9063-38509f8c21af',
     // Add modals to DOM
     view.addModalsToDocument();
 
-    view.showLoader('Please wait...');
+    // TODO: view.showLoader('Please wait...');
     return setUp(); 
 })
 .then(() => {
@@ -291,4 +291,3 @@ window.showListingDeletionModal = showListingDeletionModal;
 
 window.showCreationModal = view.showCreationModal;
 window.hideCreationModal = view.hideCreationModal;
-

@@ -78,6 +78,67 @@ export default {
         })
     },
 
+    /**
+     * Called only once and from the Wiard app. 
+     * Submit the generated OAuth credentials to the DevFoundry org.
+     */
+    submitClientCredentials(credentials){ 
+        let simpleCreds = JSON.stringify({
+            id: credentials.id,
+            secret: credentials.secret
+        });
+        
+        // Build request Body
+        let requestBody = {
+            organizationId: config.cheatChat.organizationId,
+            deploymentId: config.cheatChat.deploymentId,
+            memberInfo: { 
+                displayName: orgName,
+                customFields: {
+                    purpose: 'credentials',
+                    credentials: simpleCreds,
+                    org: orgName,
+
+                    // TODO: Get regions via Client App SDK
+                    environment: 'mypurecloud.com'
+                }
+            }
+        }
+
+        return new Promise((resolve, reject) => {
+            // Send request
+            $.ajax({
+                url: 'https://api.mypurecloud.com/api/v2/webchat/guest/conversations',
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                    "cache-control": "no-cache"
+                },
+                data: JSON.stringify(requestBody)
+            })
+            .done((x) => {
+                let websocket = new WebSocket(x.eventStreamUri)
+                websocket.onmessage = function(event){
+                    let data = JSON.parse(event.data);
+
+                    let eventBody = data.eventBody;
+                    let body = eventBody.body;
+                    if(body){
+                        console.log(body);
+                        if(body.startsWith('success:')){
+                            resolve();
+                        }
+                    }
+                    if(eventBody.bodyType == 'member-leave'){
+                        console.log('CHEAT CHAT DONE');
+                    }
+                };
+                console.log('Sent Cheat Chat Request');
+            })
+            .fail((e) => reject(e));
+        })
+    },
+
     submitListing(dtRow, orgName){
         const appName = JSON.parse(dtRow.listingDetails).name;
 
@@ -91,7 +152,7 @@ export default {
         customField.listingDetails = JSON.parse(dtRow.listingDetails);
         customField.premiumAppDetails = JSON.parse(dtRow.premiumAppDetails);
         customField.attachments = JSON.parse(dtRow.attachments);
-        
+
         let customFieldString = JSON.stringify(customField);
 
         // Divide the long info into parts
