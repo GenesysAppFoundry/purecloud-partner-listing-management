@@ -35,10 +35,11 @@ t.innerHTML =
 `;
 
 export default {
-    new(dataTableRow, status){
+    new(dataTableRow){
         let el = document.importNode(t.content, true);
 
         let appDetails = JSON.parse(dataTableRow.listingDetails);
+        let status = dataTableRow.status;
 
         // Name
         let listingNameEl = el.querySelectorAll('.listing-name')[0];
@@ -56,7 +57,7 @@ export default {
         // Delete Button
         let btnDelete = el.querySelectorAll('.btn-delete-listing')[0];
         // Hide delete button if status is no longer 'in progress'
-        if(status != 1){
+        if(status != 'IN_PROGRESS'){
             btnDelete.style.visibility = 'hidden';
         }else{
             btnDelete.onclick = function(){

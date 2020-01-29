@@ -252,7 +252,7 @@ function assignButtonEventHandlers(){
                         .then(() => {
                             view.hideInfoModal();
                             view.showLoader('Submitting Listing to DevFoundry...'); 
-                            return cheatChat.submitListing(listingRow, orgName);
+                            return cheatChat.submitListing(listingRow);
                         })
                         .then(() => {
                             view.hideLoader();

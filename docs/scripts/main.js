@@ -20,7 +20,7 @@ const organizationApi = new platformClient.OrganizationApi();
 let managerGroup = null;
 let listingDataTable = null;
 let listingsStatus = null; 
-let orgName = '';
+let orgInfo = null;
 
 // Authenticate
 // TODO: regional authentication
@@ -49,14 +49,10 @@ function setUp(){
     // Get org info ad set up Cheat Chat
     return organizationApi.getOrganizationsMe()
     .then((org) => {
-        orgName = org.thirdPartyOrgName;
-        cheatChat.setUp(org);
+        orgInfo = org;
 
-        return cheatChat.queryListingVersions();
-    })
-    .then((listings) => {
-        let regionalListings = JSON.parse(listings);
-        listingsStatus = regionalListings[orgName];
+        // Set up Cheat Chat
+        cheatChat.setUp(orgInfo);
 
         // Get the id of the managers group and assign 
         return groupsApi.postGroupsSearch({
@@ -133,7 +129,7 @@ function reloadListings(){
     })
     .then((rows) => {
         let listings = rows.entities;
-        view.showListings('listing-cards-container', listings, listingsStatus);
+        view.showListings('listing-cards-container', listings);
 
         console.log('Listed all listings');
 
@@ -249,24 +245,6 @@ function deleteListing(id){
         return reloadListings();
     })
     .catch(e => console.error(e));
-}
-
-/**
- * Set up a channel to listen to workspace events.
- * Will be used to know if a document has finished uploading.
- * @param {String} workspaceId 
- * @param {Function} onmessage callback function for each event
- */
-function setupWorkspaceNotifications(workspaceId, onmessage){
-    notificationsApi.postNotificationsChannels()
-    .then((channel) => {
-        let webSocket = new WebSocket(channel.connectUri);
-        webSocket.onmessage = onmessage;
-
-        let topic = `contentmanagement.workspaces.${workspaceId}.documents`;
-        let body = [{id: topic}];
-        return notificationsApi.putNotificationsChannelSubscriptions(channel.id, body);
-    })
 }
 
 /**

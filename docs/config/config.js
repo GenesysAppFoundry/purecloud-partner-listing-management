@@ -67,19 +67,23 @@ export default {
                 "customFields": [
                     {
                         "name": "status",
-                        "type": "string"
+                        "type": "string",
+                        "default": "IN_PROGRESS"
                     },
                     {
                         "name": "businessInformation",
-                        "type": "string"
+                        "type": "string",
+                        "default": "{}"
                     },
                     {
                         "name": "listingDetails",
-                        "type": "string"
+                        "type": "string",
+                        "default": "{}"
                     },
                     {
                         "name": "premiumAppDetails",
-                        "type": "string"
+                        "type": "string",
+                        "default": "{}"
                     },
                     {
                         "name": "workspaceId",
@@ -87,7 +91,13 @@ export default {
                     },
                     {
                         "name": "attachments",
-                        "type": "string"
+                        "type": "string",
+                        "default": "{}"
+                    },
+                    {
+                        "name": "devFoundryNotes",
+                        "type": "string",
+                        "default": "[]"
                     },
                     {
                         "name": "placeholder1",

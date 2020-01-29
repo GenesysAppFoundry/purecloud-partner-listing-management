@@ -40,6 +40,8 @@ class WizardApp {
         // PureCloud app name
         this.appName = appConfig.appName;
 
+        this.environment = 'mypurecloud.com';
+
         this.prefix = appConfig.prefix;
         this.installationData = appConfig.provisioningInfo;
     }
@@ -340,12 +342,16 @@ class WizardApp {
 
             // Build the custom fields
             dt.customFields.forEach((field, i) => {
-                properties[field.name] = {
+                let tempSchema = {
                    "title": field.name,
                    "type": field.type,
                    "$id": "/properties/" + field.name,
                    "displayOrder": i + 1
                 }
+                // Add default if specified
+                if(field.default) tempSchema.default = field.default;
+
+                properties[field.name] = tempSchema;
             })
             dataTableBody.schema['properties'] = properties;
 
@@ -661,7 +667,7 @@ class WizardApp {
                 return this.organizationApi.getOrganizationsMe()
             })
             .then((result) => {
-                cheatChat.setUp(result);
+                cheatChat.setUp(result, this.environment);
             })
             .catch((err) => console.log(err));
     }
@@ -716,6 +722,9 @@ class WizardApp {
         }
         
         console.log(this.pcApp.pcEnvironment);
+
+        //  Assign environment property 
+        this.environment = pcEnv;
 
         // Get the language context file and assign it to the app
         // For this example, the text is translated on-the-fly.
