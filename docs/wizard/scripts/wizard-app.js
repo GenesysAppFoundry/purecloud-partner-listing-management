@@ -594,10 +594,10 @@ class WizardApp {
 
         // Create Roles
         .then(() => this.addRoles())
-        .then((dataTableData) => this.addDataTables())
+        .then((roleData) => this.addAuthClients(roleData))
+        .then(() => this.addDataTables())
 
         // Create OAuth client after role (required) and pass to server
-        //.then((roleData) => this.addAuthClients(roleData))
         //.then((oAuthClients) => this.storeOAuthClient(oAuthClients))
 
 

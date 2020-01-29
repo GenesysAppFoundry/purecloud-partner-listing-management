@@ -20,7 +20,8 @@ export default {
     "setupPermissionsRequired": ['admin'],
 
     // To be added to names of PureCloud objects created by the wizard
-    "prefix": "APPFOUNDRY_LISTING_MGMT_",
+    "prefix": "TEST_APPFOUNDRY_LISTING_MGMT_",
+    //"prefix": "APPFOUNDRY_LISTING_MGMT_",
 
     // These are the PureCloud items that will be added and provisioned by the wizard
     "provisioningInfo": {
@@ -34,6 +35,11 @@ export default {
                         "entityName": "examplePremiumApp",
                         "actionSet": ["*"],
                         "allowConditions": false
+                    },
+                    {
+                        "domain": "architect",
+                        "entityName": "datatable",
+                        "actionSet": ["*"]
                     }
                 ]
             }
@@ -45,7 +51,14 @@ export default {
             }
         ],
         "appInstances": [],
-        "oauth": [],
+        "oauth": [
+            {
+                "name": "manager",
+                "description": "Generated Client",
+                "roles": ["manager"],
+                "authorizedGrantType": "CLIENT_CREDENTIALS"
+            }
+        ],
         "dataTables": [
             {
                 "name": "Listings",
