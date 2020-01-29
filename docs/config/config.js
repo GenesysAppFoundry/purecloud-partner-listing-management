@@ -66,6 +66,10 @@ export default {
                 "referenceKey": "id",
                 "customFields": [
                     {
+                        "name": "status",
+                        "type": "string"
+                    },
+                    {
                         "name": "businessInformation",
                         "type": "string"
                     },

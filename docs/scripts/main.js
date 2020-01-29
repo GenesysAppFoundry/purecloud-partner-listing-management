@@ -32,7 +32,7 @@ client.loginImplicitGrant('e7de8a75-62bb-43eb-9063-38509f8c21af',
     // Add modals to DOM
     view.addModalsToDocument();
 
-    // TODO: view.showLoader('Please wait...');
+    view.showLoader('Please wait...');
     return setUp(); 
 })
 .then(() => {
