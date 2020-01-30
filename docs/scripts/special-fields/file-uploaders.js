@@ -157,7 +157,7 @@ export default {
                                     .querySelectorAll('.preview-image')[0];
             let el_previewLoading = el_field
                                     .querySelectorAll('.preview-loading')[0];
-            let el_errorMessge = el_field.querySelectorAll('p.help')[0];
+            let el_errorMessage = el_field.querySelectorAll('p.help')[0];
 
 
             // Set Callback function when file is 'uploaded'
@@ -209,6 +209,8 @@ export default {
                             el_previewContainer.style.display = 'block';
                             el_previewLoading.style.display = 'none';
                             el_previewContainer.appendChild(img);
+
+                            el_errorMessage.innerText = '';
                         });
                         img.src = docPcData.thumbnails[0].imageUri; 
                     }else{
@@ -356,12 +358,21 @@ export default {
             if(!rule.fieldId) return;
 
             let el_container = document.getElementById(rule.fieldId);
+            let el_preview = el_container.querySelectorAll('.preview-image')[0];
+            let el_previewLoading = el_container.querySelectorAll('.preview-loading')[0];
+            let el_errorMessge = el_container.querySelectorAll('p.help')[0];
 
-            // TODO: Required property
+            // For the required property required property, 
+            // it should check if the preview section has content
+            if(rule.required 
+                    && !el_preview.hasChildNodes() 
+                    && el_previewLoading.style.display != 'block'
+                ){
+                el_errorMessge.innerText = rule.message;
+            }
 
             // Check the error messages if they exist as basis for validation
-            let errorMsg = el_container.querySelectorAll('p.help')[0].innerText;
-            if(errorMsg.length > 0) valid = false;
+            if(el_errorMessge.innerText.length > 0) valid = false;
         });
 
         return valid;
