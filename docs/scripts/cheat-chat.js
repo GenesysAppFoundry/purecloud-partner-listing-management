@@ -18,16 +18,19 @@ import config from '../config/config.js';
 
 let orgName = '';
 let environment = '';
+let dataTable = '';
 
 export default {
     /**
      * Setup stuff for the cheat chat
      * @param {Object} org PurecCloud org object
      * @param {String} pcEnvironment environment of the PC (eg mypurecloud.com)
+     * @param {Object} dt Purecloud datatable objcet
      */
-    setUp(org, pcEnvironment){
+    setUp(org, pcEnvironment, dt){
         orgName = org.thirdPartyOrgName;
         environment = pcEnvironment ? pcEnvironment : 'mypurecloud.com';
+        dataTable = dt;
 
         console.log('Cheat Chat Setup');
     },
@@ -110,12 +113,14 @@ export default {
                 displayName: orgName + ' - ' + appName,
                 customFields: {
                     purpose: 'submit',
-                    listing: dtRow.key,
+                    listingId: dtRow.key,
                     org: orgName,
-                    environment: environment
+                    environment: environment,
+                    dataTableId: dataTable.id
                 }
             }
         }
+        console.log(requestBody);
 
         return new Promise((resolve, reject) => {
             $.ajax({
@@ -138,6 +143,10 @@ export default {
 
                         if(eventBody.body.startsWith('success:')){
                             resolve();
+                        }
+
+                        if(eventBody.body.startsWith('error:')){
+                            reject();
                         }
                     }
                     if(eventBody.bodyType == 'member-leave'){

@@ -20,10 +20,6 @@ const usersApi = new platformClient.UsersApi();
 const architectApi = new platformClient.ArchitectApi();
 const organizationApi = new platformClient.OrganizationApi();
 
-// Globals
-let managerGroup = null;
-let workspaceId = null;
-
 // Id will be taken from query param but will be saved as state after 
 // PC Auth
 var urlParams = new URLSearchParams(window.location.search);
@@ -31,11 +27,14 @@ var urlParams = new URLSearchParams(window.location.search);
 // Globals
 let listingId = urlParams.get('id');
 let listingRow = {};
-let listingObject = {};
+let listingDetailsObject = {};
 let listingRowAttachments = {};
 let listingDataTable = null;
 let validatorFunctions = [];
-let orgName = '';
+let orgInfo = '';
+let managerGroup = null;
+let workspaceId = null;
+let environment = '';
 
 // Add modals to DOM
 view.addModalsToDocument();
@@ -49,6 +48,7 @@ client.loginImplicitGrant('e7de8a75-62bb-43eb-9063-38509f8c21af',
 .then((data) => {
     listingId = client.authData.state;
     console.log('PureCloud Auth successful.');
+    environment = client.environment;
 
     // Checks if the query params are already in the URL, if not readd it
     if(!window.location.href.includes('?')){
@@ -64,6 +64,7 @@ client.loginImplicitGrant('e7de8a75-62bb-43eb-9063-38509f8c21af',
     console.error(e);
 });
 
+console.log(client);
 /**
  * Initial Setup for the page
  */
@@ -71,9 +72,8 @@ function setUp(){
     // Set up Cheat Chat
     return organizationApi.getOrganizationsMe()
     .then((org) => {
-        orgName = org.thirdPartyOrgName;
-        cheatChat.setUp(org);
-
+        orgInfo = org;
+        
         // Load the listing details
         return getListingDataTable()
     })
@@ -81,6 +81,8 @@ function setUp(){
         return loadListing();
     })
     .then(() => {
+        cheatChat.setUp(orgInfo, environment, listingDataTable);
+
         assignValidators();
         assignButtonEventHandlers();
         validateAllFields();
@@ -98,11 +100,11 @@ function loadListing(){
     .then((row) => {
         console.log(row);
         listingRow = row;
-        listingObject = JSON.parse(listingRow.listingDetails);
+        listingDetailsObject = JSON.parse(listingRow.listingDetails);
         listingRowAttachments = JSON.parse(listingRow.attachments);
         workspaceId = listingRow.workspaceId;
 
-        view.fillEditListingFields(listingObject);
+        view.fillEditListingFields(listingDetailsObject);
     })
 }
 
@@ -129,7 +131,7 @@ function saveListing(){
     // Build the "normal" fields
     let listingDetails = validators.listingDetail;
     Object.keys(listingDetails).forEach((key) => {
-        listingObject[key] = fieldInterface.getFieldValue(
+        listingDetailsObject[key] = fieldInterface.getFieldValue(
                                     listingDetails[key].type, 
                                     listingDetails[key].fieldId);
     });
@@ -138,7 +140,7 @@ function saveListing(){
     buildSpecialFields();
 
     // Listing Row. Turn the entire thing to string
-    listingRow.listingDetails = JSON.stringify(listingObject);
+    listingRow.listingDetails = JSON.stringify(listingDetailsObject);
     console.log(listingRow);
 
     // Attachments
@@ -243,35 +245,8 @@ function assignButtonEventHandlers(){
     document.getElementById('btn-submit')
             .addEventListener('click', function(e){
                 e.preventDefault(); // Prevent submitting form
-            
-                view.showYesNoModal(
-                    'Confirmation', 
-                    'Are you sure you\'re ready to submit this for approval? This will save the listing before submission',
-                    () => {
-                        saveListing()
-                        .then(() => {
-                            view.hideInfoModal();
-                            view.showLoader('Submitting Listing to DevFoundry...'); 
-                            return cheatChat.submitListing(listingRow);
-                        })
-                        .then(() => {
-                            view.hideLoader();
-                            view.showInfoModal('Success', 'Successfully submitted ' 
-                            + 'the listing request. Please avoid resubmitting the ' 
-                            + 'listing. The status should change to PENDING' 
-                            + 'APPROVAL once a DevFoundry reviewer receives your request.',
-                            () => {
-                                view.hideInfoModal();
-                                window.location.href = config.redirectUriBase;
-                            });
-                        })
-                        .catch((e) => console.error(e));
-                        
-                        view.hideYesNoModal();
-                    }, 
-                    () => {
-                        view.hideYesNoModal();
-                    })
+
+                submitListing();
             });
 }
 
@@ -306,14 +281,14 @@ function setupSpecialFields(){
 }
 
 /**
- * Builds the JSON parts and put to the global listingObject
+ * Builds the JSON parts and put to the global listingDetailsObject
  */
 function buildSpecialFields(){
     // Build the Hardware Addons Field
-    listingObject.hardwareAddons = hardwareAddons.buildField();
+    listingDetailsObject.hardwareAddons = hardwareAddons.buildField();
 
     // Build the useCaes field
-    listingObject.useCases = useCases.buildField();
+    listingDetailsObject.useCases = useCases.buildField();
 }
 
 /**
@@ -329,4 +304,41 @@ function validateSpecialFields(){
     if(!fileUploaders.validateFields()) valid = false;
 
     return valid;
+}
+
+function submitListing(){
+    view.showYesNoModal(
+    'Confirmation', 
+    'Are you sure you\'re ready to submit this for approval? This will save the listing before submission',
+    () => {
+        saveListing()
+        .then(() => {
+            view.hideInfoModal();
+            view.showLoader('Submitting Listing to DevFoundry...'); 
+            return cheatChat.submitListing(listingRow);
+        })
+        .then(() => {
+            listingRow.status = 'PENDING_APPROVAL';
+
+            return architectApi.putFlowsDatatableRow(
+                listingDataTable.id,
+                listingRow.key, 
+                { body: listingRow });
+        })
+        .then(() => {
+            view.hideLoader();
+            view.showInfoModal('Success', 'Successfully submitted ' 
+            + 'the listing request.',
+            () => {
+                view.hideInfoModal();
+                window.location.href = config.redirectUriBase;
+            });
+        })
+        .catch((e) => console.error(e));
+        
+        view.hideYesNoModal();
+    }, 
+    () => {
+        view.hideYesNoModal();
+    })
 }

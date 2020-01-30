@@ -21,6 +21,7 @@ let managerGroup = null;
 let listingDataTable = null;
 let listingsStatus = null; 
 let orgInfo = null;
+let environment = '';
 
 // Authenticate
 // TODO: regional authentication
@@ -29,6 +30,7 @@ client.loginImplicitGrant('e7de8a75-62bb-43eb-9063-38509f8c21af',
 .then(() => {
     console.log('PureCloud Auth successful.');
 
+    environment = client.environment;
     // Add modals to DOM
     view.addModalsToDocument();
 
@@ -44,15 +46,14 @@ client.loginImplicitGrant('e7de8a75-62bb-43eb-9063-38509f8c21af',
 
 /**
  * Setup the the page and all authentication and data required
+ * TODO: Setup is looking very familiar to edit-listing setup,
+ *      might be worth modularizig setup.
  */
 function setUp(){
     // Get org info ad set up Cheat Chat
     return organizationApi.getOrganizationsMe()
     .then((org) => {
         orgInfo = org;
-
-        // Set up Cheat Chat
-        cheatChat.setUp(orgInfo);
 
         // Get the id of the managers group and assign 
         return groupsApi.postGroupsSearch({
@@ -99,6 +100,9 @@ function setUp(){
 
         // Display the listings from the data table
         return reloadListings();
+    })
+    .then(() => {
+        cheatChat.setUp(orgInfo, environment, listingDataTable);
     })
     .catch((e) => {
         console.error(e);
