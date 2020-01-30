@@ -1,3 +1,4 @@
+import modal from '../../components/main.js';
 import agentConfig from './config/config.js';
 import test from './test/test.js';
 import partnerAccess from './partner-access.js';
@@ -18,12 +19,15 @@ const integrationsApi = new platformClient.IntegrationsApi();
 let user = {};
 let listingRequest = {};
 
+
 // Authenticate
 client.loginImplicitGrant(agentConfig.clientId, window.location.href)
 // Login
 .then(() => {
+    modal.setup();
     console.log('PureCloud Auth successful.');
 
+    modal.showLoader('Setting you up');
     return usersApi.getUsersMe();
 })    
 // Get User
@@ -67,19 +71,17 @@ client.loginImplicitGrant(agentConfig.clientId, window.location.href)
 })
 .then(() => {
     console.log('Subscribed to Email');
-    setUp();
+    return setUp();
+})
+.then(() => {
+    modal.hideLoader();
 })
 .catch((e) => {
     console.error(e);
 });
 
 function setUp(){    
-    // FOR TESTING PURPOSES ONLY
-    listingRequest = test;
-    listingRequestReceived();
-    // END OF TESTING LOGIC
-
-    partnerAccess.setup(client, platformClient);
+    partnerAccess.setup(client, platformClient, user);
 
     return processTemporaryCredentials()
     .then(() => {
@@ -92,13 +94,14 @@ function setUp(){
     })
     .then((x) => {
         console.log(x);
+        listingRequestReceived(x);
+        setupButtonHandlers();
     })
-    setupButtonHandlers();
 }
 
-function listingRequestReceived(){
+function listingRequestReceived(x){
    let elContainer = document.getElementById('listing-interactions-container');
-   elContainer.appendChild(listingInteractionTemplate.new(listingRequest));
+   elContainer.appendChild(listingInteractionTemplate.new(x));
 }
 
 /**
@@ -189,15 +192,5 @@ function processTemporaryCredentials(){
 
 
 function setupButtonHandlers(){
-    let btnApprove = document.getElementById('btn-approve');
-
-    btnApprove.addEventListener('click', function(){
-        updateListingStatus(4)
-        .then(() => alert('Approved!'));
-    });
-}
-
-// TODO: use consts for the statuses instead of direct int
-function updateListingStatus(status){
 
 }

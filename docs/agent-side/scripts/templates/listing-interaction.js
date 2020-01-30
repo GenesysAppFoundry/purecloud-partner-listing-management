@@ -103,16 +103,13 @@ t.innerHTML =
 export default {
     new(listingInfo){
         let el = document.importNode(t.content, true);
-
+        console.log()
         // Add the org name + listing name
         let headerEl = el.querySelectorAll('.applisting-name')[0];
         headerEl.innerText = 
             `${listingInfo.orgName} - ${listingInfo.listingDetails.name}`;
 
-        // Use validators info to fill the information to make it automated
-        // and easier in the future - as we won't have to modify this
-        // file if there would be changes to the fields 
-        // (ie automated code = less manual work = less potential bugs)
+        // Use validators to fill info
         Object.keys(validators.listingDetail).forEach((key) => {
             let rule = validators.listingDetail[key];
 

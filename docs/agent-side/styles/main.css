@@ -1,3 +1,11 @@
+.genOrange{
+  color: #FF4F1F;
+}
+
+.loading-text {
+  font-size: 32px;
+}
+
 .listing-info {
   padding: 10px;
 }
