@@ -80,7 +80,7 @@ function setUp(){
     return processTemporaryCredentials()
     .then(() => {
 
-        return getListingDetails(
+        return partnerAccess.getListingDetails(
             'genesys4', 
             'mypurecloud.com', 
             'b1f69ef0-2565-47c5-aa19-fff13056b75d', 
@@ -198,35 +198,6 @@ function processTemporaryCredentials(){
     .catch(e => console.error(e));
 }
 
-/**
- * Get details of the listing by authenticating with the org
- * and acquiring and processing datatable row details 
- * @param {String} orgName PureCloud thirdpartyorgname 
- * @param {String} environment eg mypurecloud.com 
- * @param {String} dataTableId partner datatable Id
- * @param {String} listingId key of the partner data table for listings 
- */
-function getListingDetails(orgName, environment, dataTableId, listingId){
-    return new Promise((resolve, reject) => {
-        partnerAccess.getAccessToken(orgName, environment)
-        .then((token) => {
-            $.ajax({
-                url: `https://api.mypurecloud.com/api/v2/flows/datatables/${dataTableId}/rows/${listingId}?showbrief=false`,
-                method: 'GET',
-                headers: {
-                    "Content-Type": "application/json",
-                    "cache-control": "no-cache",
-                    "Authorization": `Bearer ${token}`
-                }
-            })
-            .done((x) => {
-                resolve(x);
-            })
-            .fail((e) => reject(e));
-        })
-        .catch(e => reject(e));
-    })
-}
 
 function setupButtonHandlers(){
     let btnApprove = document.getElementById('btn-approve');
