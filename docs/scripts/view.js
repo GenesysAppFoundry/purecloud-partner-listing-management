@@ -25,9 +25,8 @@ export default {
      * 
      * @param {String} containerId css id of container of listings
      * @param {Object} listings rows from the data table describing listings
-     * @param {Object} listingsStatus statuses of the listings from cheatchat
      */
-    showListings(containerId, listings, listingsStatus){
+    showListings(containerId, listings){
         const containerEl = document.getElementById(containerId);
 
         // Remove existing listing first
@@ -37,15 +36,7 @@ export default {
 
         // Add curent listings
         listings.forEach(row => {
-            // Get the status of the listing, if no data exist,
-            // set to deault status
-            let key = row.key;
-            let status = 1;
-            if(listingsStatus){
-                status = listingsStatus[key] ? listingsStatus[key] : 1; 
-            }
-
-            containerEl.appendChild(listingCardTemplate.new(row, status));
+            containerEl.appendChild(listingCardTemplate.new(row));
         });
         
         const addNewEl = addNewListing.new();

@@ -2,8 +2,8 @@ export default {
     clientIDs: {        
         'mypurecloud.com': 'e7de8a75-62bb-43eb-9063-38509f8c21af'
     },
-    "redirectUriBase": "https://princemerluza.github.io/purecloud-partner-listing-management/",
-    //"redirectUriBase": "http://localhost:8080/",
+    //"redirectUriBase": "https://princemerluza.github.io/purecloud-partner-listing-management/",
+    "redirectUriBase": "http://localhost:8080/",
 
     // PureCloud assigned name for the premium app
     // This should match the integration type name of the Premium App
@@ -20,7 +20,8 @@ export default {
     "setupPermissionsRequired": ['admin'],
 
     // To be added to names of PureCloud objects created by the wizard
-    "prefix": "APPFOUNDRY_LISTING_MGMT_",
+    "prefix": "TEST_APPFOUNDRY_LISTING_MGMT_",
+    //"prefix": "APPFOUNDRY_LISTING_MGMT_",
 
     // These are the PureCloud items that will be added and provisioned by the wizard
     "provisioningInfo": {
@@ -34,6 +35,11 @@ export default {
                         "entityName": "examplePremiumApp",
                         "actionSet": ["*"],
                         "allowConditions": false
+                    },
+                    {
+                        "domain": "architect",
+                        "entityName": "datatable",
+                        "actionSet": ["*"]
                     }
                 ]
             }
@@ -45,7 +51,14 @@ export default {
             }
         ],
         "appInstances": [],
-        "oauth": [],
+        "oauth": [
+            {
+                "name": "manager",
+                "description": "Generated Client",
+                "roles": ["manager"],
+                "authorizedGrantType": "CLIENT_CREDENTIALS"
+            }
+        ],
         "dataTables": [
             {
                 "name": "Listings",
@@ -53,16 +66,24 @@ export default {
                 "referenceKey": "id",
                 "customFields": [
                     {
+                        "name": "status",
+                        "type": "string",
+                        "default": "IN_PROGRESS"
+                    },
+                    {
                         "name": "businessInformation",
-                        "type": "string"
+                        "type": "string",
+                        "default": "{}"
                     },
                     {
                         "name": "listingDetails",
-                        "type": "string"
+                        "type": "string",
+                        "default": "{}"
                     },
                     {
                         "name": "premiumAppDetails",
-                        "type": "string"
+                        "type": "string",
+                        "default": "{}"
                     },
                     {
                         "name": "workspaceId",
@@ -70,7 +91,13 @@ export default {
                     },
                     {
                         "name": "attachments",
-                        "type": "string"
+                        "type": "string",
+                        "default": "{}"
+                    },
+                    {
+                        "name": "devFoundryNotes",
+                        "type": "string",
+                        "default": "[]"
                     },
                     {
                         "name": "placeholder1",
@@ -92,6 +119,6 @@ export default {
     // For the Cheat Chat API
     "cheatChat": {
         "organizationId": "1f86c618-0d8d-4f10-9893-aeacc5a158b0",
-        "deploymentId": "ac307e36-df16-4da5-a4bf-6ec3fe7aed09"
+        "deploymentId": "7102e7b2-2b12-4bb0-b90b-2aaf70b52831"
     }
 };

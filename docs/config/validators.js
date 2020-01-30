@@ -123,8 +123,8 @@ export default {
         companyLogo: {
             fieldId: 'app-companyLogo',
             required: true,
-            minWidth: 1,
-            minHeight: 1,
+            minWidth: 144,
+            minHeight: 144,
             fileType: 'png',
             type: 'image',
             message: 'Required. Should be .png (Min. size of 144x144 px)',

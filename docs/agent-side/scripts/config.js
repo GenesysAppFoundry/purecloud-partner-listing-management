@@ -1,4 +1,10 @@
 export default {
+    // Implicit Grant Client Id
     "clientId": "73be3dbd-183f-48d2-a7f6-34bb30f65f56",
-    "dataTableId": "2b7b42bc-3fa0-4116-857c-ff01420f8ffd"
+
+    // Data Table where the org credentials are
+    "dataTableId": "dbf3ce0b-89f1-42c9-87fd-94b873340710",
+
+    // The Data Action that requests token via Client Credentials Grant
+    "authenticationActionId": "custom_-_f0a8629e-5500-4873-b8c2-655c45ecf65e"
 }

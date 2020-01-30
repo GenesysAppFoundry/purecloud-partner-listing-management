@@ -1,8 +1,8 @@
 export default {
-    0: 'Error: unknown',
-    1: 'In Progress',
-    2: 'Pending Approval',
-    3: 'In Progress (Modifications Requested)',
-    4: 'Approved',
-    5: 'Live'
+    'UNKNOWN': 'Error',
+    'IN_PROGRESS': 'In Progress',
+    'PENDING_APPROVAL': 'Pending Approval',
+    'FOR_REVISION': 'In Progress (Modifications Requested)',
+    'APPROVED': 'Approved',
+    'LIVE': 'Live'
 }

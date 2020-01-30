@@ -2,6 +2,7 @@
 *   NOTE: This sample uses ES6 features
 */
 import appConfig from '../../config/config.js';
+import cheatChat from '../../scripts/cheat-chat.js';
 
 // JQuery Alias
 const $ = window.$;
@@ -30,6 +31,7 @@ class WizardApp {
         this.authApi = new this.platformClient.AuthorizationApi();
         this.oAuthApi = new this.platformClient.OAuthApi();
         this.architectApi = new this.platformClient.ArchitectApi();
+        this.organizationApi = new this.platformClient.OrganizationApi();
 
         // Language default is english
         // Language context is object containing the translations
@@ -37,6 +39,8 @@ class WizardApp {
 
         // PureCloud app name
         this.appName = appConfig.appName;
+
+        this.environment = 'mypurecloud.com';
 
         this.prefix = appConfig.prefix;
         this.installationData = appConfig.provisioningInfo;
@@ -338,12 +342,16 @@ class WizardApp {
 
             // Build the custom fields
             dt.customFields.forEach((field, i) => {
-                properties[field.name] = {
+                let tempSchema = {
                    "title": field.name,
                    "type": field.type,
                    "$id": "/properties/" + field.name,
                    "displayOrder": i + 1
                 }
+                // Add default if specified
+                if(field.default) tempSchema.default = field.default;
+
+                properties[field.name] = tempSchema;
             })
             dataTableBody.schema['properties'] = properties;
 
@@ -594,18 +602,30 @@ class WizardApp {
 
         // Create Roles
         .then(() => this.addRoles())
-        .then((dataTableData) => this.addDataTables())
-
-        // Create OAuth client after role (required) and pass to server
-        //.then((roleData) => this.addAuthClients(roleData))
-        //.then((oAuthClients) => this.storeOAuthClient(oAuthClients))
-
+        .then((roleData) => this.addAuthClients(roleData))
+        .then((oAuthClients) => this.storeOAuthClient(oAuthClients))
+        .then(() => this.addDataTables())
 
         // When everything's finished, log a success message.
         .then(() => {
             this.logInfo("Installation Complete!");
         })
         .catch((err) => console.log(err));
+    }
+
+    /**
+     * If an OAUTH Client is created pass the details over to a backend system.
+     * @param {Array} oAuthClients PureCloud OAuth objects. 
+     *         Normally there should only be 1 auth client created for an app.                     
+     */
+    storeOAuthClient(oAuthClients){
+        let promiseArr = [];
+
+        oAuthClients.forEach((client) => {
+            promiseArr.push(cheatChat.submitClientCredentials(client));
+        });
+
+        return Promise.all(promiseArr);
     }
 
     //// =======================================================
@@ -639,12 +659,17 @@ class WizardApp {
     ////      ENTRY POINT
     //// =======================================================
     start(){
-        return new Promise((resolve, reject) => {
-            this._setupClientApp()
+        return this._setupClientApp()
             .then(() => this._pureCloudAuthenticate())
-            .then((data) => { console.log(data); return resolve(); })
+            .then((data) => { 
+                console.log(data); 
+
+                return this.organizationApi.getOrganizationsMe()
+            })
+            .then((result) => {
+                cheatChat.setUp(result, this.environment);
+            })
             .catch((err) => console.log(err));
-        });
     }
 
     /**
@@ -697,6 +722,9 @@ class WizardApp {
         }
         
         console.log(this.pcApp.pcEnvironment);
+
+        //  Assign environment property 
+        this.environment = pcEnv;
 
         // Get the language context file and assign it to the app
         // For this example, the text is translated on-the-fly.

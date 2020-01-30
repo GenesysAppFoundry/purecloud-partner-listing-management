@@ -1,5 +1,6 @@
 import agentConfig from './config.js';
 import test from './test.js';
+import partnerAccess from './partner-access.js';
 
 //Load purecloud and create the ApiClient Instance
 const platformClient = require('platformClient');
@@ -10,6 +11,7 @@ client.setPersistSettings(true, 'listing_management');
 const usersApi = new platformClient.UsersApi();
 const notificationsApi = new platformClient.NotificationsApi();
 const architectApi = new platformClient.ArchitectApi();
+const integrationsApi = new platformClient.IntegrationsApi();
 
 // Global
 let user = {};
@@ -94,6 +96,20 @@ function setUp(){
     listingRequestReceived();
     // END OF TESTING LOGIC
 
+    partnerAccess.setup(client, platformClient);
+
+    return processTemporaryCredentials()
+    .then(() => {
+
+        return partnerAccess.getListingDetails(
+            'genesys4', 
+            'mypurecloud.com', 
+            'b1f69ef0-2565-47c5-aa19-fff13056b75d', 
+            '1');
+    })
+    .then((x) => {
+        console.log(x);
+    })
     setupButtonHandlers();
 }
 
@@ -151,6 +167,93 @@ function listingRequestReceived(){
     .catch(e => console.error(e));
 }
 
+/**
+ * Partner credentials are saved initially in their own separate row
+ * in the Data Table because of DataTable/DataAction limitation reasons. 
+ * Every time the agent side app starts,it needs to process them and integrate
+ * into the data table cells.
+ * @returns {Promise}
+ */
+function processTemporaryCredentials(){
+    let tempCreds = [];
+    let tempCredCount = 0;
+
+    return architectApi.getFlowsDatatableRows(agentConfig.dataTableId, {
+        pageSize: 500,
+        showbrief: false
+    })
+    .then((results) => {
+        let processingPromises = [];
+
+        tempCreds = results.entities.filter((row) => {
+            return row.key.startsWith('temp_');
+        });
+
+        // Process the temporary credentials
+        tempCreds.forEach((cred) => {
+            console.log(cred);
+            let credEnv = ''; // eg mypurecloud.com
+            let credKey = cred.key.substring(5);
+
+            let process = new Promise((resolve, reject) => {
+                // Get the temp row
+                architectApi.getFlowsDatatableRow(
+                    agentConfig.dataTableId, 
+                    cred.key, 
+                    { showbrief: false })
+                .then((row) => {
+                    // Determine environment that has credentials
+                    credEnv = Object.keys(row).find(key => {
+                        return key.startsWith('mypurecloud') &&
+                        row[key] != "{}";
+                    });
+
+                    return architectApi.getFlowsDatatableRow(
+                        agentConfig.dataTableId, 
+                        credKey[0], 
+                        { showbrief: false })
+                })
+                // Get the row that the creds will be insterted to
+                .then((row) => {
+                    // Rebuild the cell with the new values
+                    let cellObject = JSON.parse(row[credEnv]);
+                    cellObject[credKey] = JSON.parse(cred[credEnv]);
+                    row[credEnv] = JSON.stringify(cellObject);
+
+                    return architectApi.putFlowsDatatableRow(
+                        agentConfig.dataTableId, 
+                        row.key,
+                        { body: row }
+                    )
+                })
+                // Delete the temp row
+                .then(() => {
+                    return architectApi.deleteFlowsDatatableRow(
+                        agentConfig.dataTableId, 
+                        cred.key
+                    )
+                })
+                .then(() => {
+                    console.log('Processed temp for ' + credKey);
+                    tempCredCount++;
+                    resolve();
+                })
+                .catch((e) => reject(e));
+            });
+
+            processingPromises.push(process);
+        })
+
+        return Promise.all(processingPromises);
+    })
+    .then(() => {
+        console.log('Finished processing all temporary credentials ' 
+                    + tempCredCount);
+    })
+    .catch(e => console.error(e));
+}
+
+
 function setupButtonHandlers(){
     let btnApprove = document.getElementById('btn-approve');
 
@@ -162,32 +265,5 @@ function setupButtonHandlers(){
 
 // TODO: use consts for the statuses instead of direct int
 function updateListingStatus(status){
-    let environment = listingRequest.environment;
-    let orgName = listingRequest.orgName;
-    let listingId = listingRequest.id;
-    let rowKey = orgName[0].toLowerCase()
 
-    return architectApi.getFlowsDatatableRow(
-        agentConfig.dataTableId, rowKey, {showbrief: false})
-    .then((row) => {
-        let regionalData = JSON.parse(row[environment]);
-
-        // Create org if doesn't exist yet
-        if(!regionalData[orgName]){
-            regionalData[orgName] = {};
-        }
-
-        // Get orgdata
-        let orgData = regionalData[orgName];
-
-        // Set status to pending approval
-        orgData[listingId] = status;
-
-        row[environment] = JSON.stringify(regionalData);
-
-        return architectApi.putFlowsDatatableRow(
-            agentConfig.dataTableId, rowKey, {
-                body: row
-            })
-    })
 }

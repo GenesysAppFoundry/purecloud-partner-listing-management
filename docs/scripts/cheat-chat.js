@@ -8,8 +8,6 @@
  * Important messages will be prefixed based on intended usage:
  * (prefix):somethin something
  * Prefixes:
- *      listings-info: Will contain the entire lsitings info of that 
- *                      particular region as requested
  *      meta: random messages for testing purposes 
  *                      to know the current state in the IVR
  *      error: errors lilke if data actions in the ivr fail or times-out
@@ -19,15 +17,35 @@
 import config from '../config/config.js';
 
 let orgName = '';
+let environment = '';
 
 export default {
-    setUp(org){
+    /**
+     * Setup stuff for the cheat chat
+     * @param {Object} org PurecCloud org object
+     * @param {String} pcEnvironment environment of the PC (eg mypurecloud.com)
+     */
+    setUp(org, pcEnvironment){
         orgName = org.thirdPartyOrgName;
+        environment = pcEnvironment ? pcEnvironment : 'mypurecloud.com';
 
         console.log('Cheat Chat Setup');
     },
 
-    queryListingVersions(){
+    /**
+     * Called only once and from the Wiard app. 
+     * Submit the generated OAuth credentials to the DevFoundry org.
+     * @param {Object} credentials Purecloud OAuth credentials 
+     */
+    submitClientCredentials(credentials){ 
+        console.log(orgName);
+        console.log(environment);
+
+        let simpleCreds = JSON.stringify({
+            id: credentials.id,
+            secret: credentials.secret
+        });
+        
         // Build request Body
         let requestBody = {
             organizationId: config.cheatChat.organizationId,
@@ -35,16 +53,16 @@ export default {
             memberInfo: { 
                 displayName: orgName,
                 customFields: {
-                    purpose: 'version',
+                    purpose: 'credentials',
+                    credentials: simpleCreds,
                     org: orgName,
-                    // TODO: Get regions via Client App SDK
-                    environment: 'com'
+                    environment: environment
                 }
             }
         }
 
         return new Promise((resolve, reject) => {
-             // Send request
+            // Send request
             $.ajax({
                 url: 'https://api.mypurecloud.com/api/v2/webchat/guest/conversations',
                 method: 'POST',
@@ -63,9 +81,8 @@ export default {
                     let body = eventBody.body;
                     if(body){
                         console.log(body);
-                        if(body.startsWith('listings-info:')){
-                            let res = body.substring(body.search(':') + 1);
-                            resolve(res);
+                        if(body.startsWith('success:')){
+                            resolve();
                         }
                     }
                     if(eventBody.bodyType == 'member-leave'){
@@ -78,30 +95,12 @@ export default {
         })
     },
 
-    submitListing(dtRow, orgName){
+    /**
+     * Submit the listing for approval
+     * @param {Object} dtRow PureCloud datatable row
+     */
+    submitListing(dtRow){
         const appName = JSON.parse(dtRow.listingDetails).name;
-
-        // Build the custom field body
-        let customField = {
-            id: dtRow.key,
-            orgName: orgName,
-            // TODO: Actually determine environment
-            environment: 'mypurecloud.com'
-        }
-        customField.listingDetails = JSON.parse(dtRow.listingDetails);
-        customField.premiumAppDetails = JSON.parse(dtRow.premiumAppDetails);
-        customField.attachments = JSON.parse(dtRow.attachments);
-        
-        let customFieldString = JSON.stringify(customField);
-
-        // Divide the long info into parts
-        const cutSize = 999;
-        let customFieldStringArr = [];
-        let numOfSections = Math.ceil(customFieldString.length / cutSize);
-        for(let i = 0; i < numOfSections; i++){
-            let str = customFieldString.substr(i * (cutSize - 1), cutSize);
-            customFieldStringArr.push(str);
-        }
 
         // Template
         let requestBody = {
@@ -110,18 +109,13 @@ export default {
             memberInfo: { 
                 displayName: orgName + ' - ' + appName,
                 customFields: {
-                    purpose: 'submit'
+                    purpose: 'submit',
+                    listing: dtRow.key,
+                    org: orgName,
+                    environment: environment
                 }
             }
         }
-
-        // Add the parts as custom fields
-        customFieldStringArr.forEach((part, i) => {
-            requestBody.memberInfo
-            .customFields[`listingDetails_${i + 1}`] = part;
-        })
-
-        console.log(requestBody);
 
         return new Promise((resolve, reject) => {
             $.ajax({
