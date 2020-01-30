@@ -1,4 +1,5 @@
 import view from './view.js';
+import modal from '../components/main.js';
 import config from '../config/config.js';
 import validators from '../config/validators.js';
 import assignValidator from './util/assign-validator.js';
@@ -37,8 +38,8 @@ let workspaceId = null;
 let environment = '';
 
 // Add modals to DOM
-view.addModalsToDocument();
-view.showLoader('Loading Listing...');
+modal.setup();
+modal.showLoader('Loading Listing...');
 
 // Authenticate
 // TODO: regional authentication
@@ -58,7 +59,7 @@ client.loginImplicitGrant('e7de8a75-62bb-43eb-9063-38509f8c21af',
     return setUp(); 
 })
 .then(() => {
-    view.hideLoader();
+    modal.hideLoader();
 })    
 .catch((e) => {
     console.error(e);
@@ -115,18 +116,18 @@ function loadListing(){
 function saveListing(){
     // Validate fields first
     if(!validateAllFields()){
-        view.showInfoModal(
+        modal.showInfoModal(
             'Error',
             'Some fields are incorrect. Please review.',
             () => {
-                view.hideInfoModal();
+                modal.hideInfoModal();
             })
         return new Promise((resolve, reject) => {
             reject('Save failed.');
         });
     }
 
-    view.showLoader('Saving Listing...');
+    modal.showLoader('Saving Listing...');
 
     // Build the "normal" fields
     let listingDetails = validators.listingDetail;
@@ -144,7 +145,7 @@ function saveListing(){
     console.log(listingRow);
 
     // Attachments
-    view.showLoader('Uploading Files...');
+    modal.showLoader('Uploading Files...');
     return fileUploaders.uploadFiles(platformClient, client, workspaceId)
     .then((documents) => {
         console.log("Successfully Uploaded Files!");
@@ -179,9 +180,9 @@ function saveListing(){
                 });
     })
     .then(() => {
-        view.hideLoader();
-        view.showInfoModal('Success', 'Listing saved.', () => {
-            view.hideInfoModal();
+        modal.hideLoader();
+        modal.showInfoModal('Success', 'Listing saved.', () => {
+            modal.hideInfoModal();
         })
 
         console.log('Saved the listing!');
@@ -307,14 +308,14 @@ function validateSpecialFields(){
 }
 
 function submitListing(){
-    view.showYesNoModal(
+    modal.showYesNoModal(
     'Confirmation', 
     'Are you sure you\'re ready to submit this for approval? This will save the listing before submission',
     () => {
         saveListing()
         .then(() => {
-            view.hideInfoModal();
-            view.showLoader('Submitting Listing to DevFoundry...'); 
+            modal.hideInfoModal();
+            modal.showLoader('Submitting Listing to DevFoundry...'); 
             return cheatChat.submitListing(listingRow);
         })
         .then(() => {
@@ -326,19 +327,19 @@ function submitListing(){
                 { body: listingRow });
         })
         .then(() => {
-            view.hideLoader();
-            view.showInfoModal('Success', 'Successfully submitted ' 
+            modal.hideLoader();
+            modal.showInfoModal('Success', 'Successfully submitted ' 
             + 'the listing request.',
             () => {
-                view.hideInfoModal();
+                modal.hideInfoModal();
                 window.location.href = config.redirectUriBase;
             });
         })
         .catch((e) => console.error(e));
         
-        view.hideYesNoModal();
+        modal.hideYesNoModal();
     }, 
     () => {
-        view.hideYesNoModal();
+        modal.hideYesNoModal();
     })
 }

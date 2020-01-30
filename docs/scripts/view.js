@@ -1,26 +1,10 @@
 import fieldInterface from './util/field-interface.js';
 import listingCardTemplate from './templates/listing-card.js';
 import addNewListing from './templates/add-new-listing.js';
-import newListingModal from './templates/new-listing-modal.js';
-import yesNoModal from './templates/yes-no-modal.js';
-import loadingModal from './templates/loading-modal.js';
 import hardwareAddons from './special-fields/hardware-addons.js';
 import useCases from './special-fields/use-cases.js';
-import infoModal from './templates/info-modal.js';
 
 export default {
-    addModalsToDocument(){
-        const newListingModalEl = newListingModal.new();
-        const newYesNoModalEl = yesNoModal.new();
-        const loadingModalEl = loadingModal.new();
-        const infoModalEl = infoModal.new();
-
-        document.body.appendChild(newListingModalEl);
-        document.body.appendChild(newYesNoModalEl);
-        document.body.appendChild(loadingModalEl);
-        document.body.appendChild(infoModalEl);
-    },
-
     /**
      * 
      * @param {String} containerId css id of container of listings
@@ -41,32 +25,6 @@ export default {
         
         const addNewEl = addNewListing.new();
         containerEl.appendChild(addNewEl);
-    },
-
-    showCreationModal(){
-        const modal = document.getElementById('listing-creation-modal');
-        modal.classList.add('is-active');
-    }, 
-
-    hideCreationModal(){
-        const modal = document.getElementById('listing-creation-modal');
-        modal.classList.remove('is-active')
-    }, 
-
-    showYesNoModal(title, question, yesCb, noCb){
-        yesNoModal.show(title, question, yesCb, noCb);
-    },
-
-    hideYesNoModal(){
-        yesNoModal.hide();
-    },
-
-    showLoader(message){
-        loadingModal.show(message);
-    },
-
-    hideLoader(){
-        loadingModal.hide();
     },
 
     fillEditListingFields(listingDetails){
@@ -129,13 +87,5 @@ export default {
 
         // Pricing
         fieldInterface.textAreaFill('app-pricing', listingDetails.pricing);    
-    },
-
-    showInfoModal(title, message, cb){
-        infoModal.show(title, message, cb);
-    },
-
-    hideInfoModal(){
-        infoModal.hide();
     }
 }

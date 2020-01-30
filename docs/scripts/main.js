@@ -1,4 +1,5 @@
 import view from './view.js';
+import modal from '../components/main.js';
 import config from '../config/config.js';
 import blankCoreListingJSON from '../config/core-listing-blank.js';
 import cheatChat from './cheat-chat.js';
@@ -32,13 +33,13 @@ client.loginImplicitGrant('e7de8a75-62bb-43eb-9063-38509f8c21af',
 
     environment = client.environment;
     // Add modals to DOM
-    view.addModalsToDocument();
+    modal.setup();
 
-    view.showLoader('Please wait...');
+    modal.showLoader('Please wait...');
     return setUp(); 
 })
 .then(() => {
-    view.hideLoader();
+    modal.hideLoader();
 })    
 .catch((e) => {
     console.error(e);
@@ -125,7 +126,7 @@ function checkUserAccess(){
  * Get current listing workspaces to display to page
  */
 function reloadListings(){
-    view.showLoader('Loading listings...');
+    modal.showLoader('Loading listings...');
 
     return architectApi.getFlowsDatatableRows(listingDataTable.id, {
         pageSize: 100,
@@ -137,7 +138,7 @@ function reloadListings(){
 
         console.log('Listed all listings');
 
-        view.hideLoader();
+        modal.hideLoader();
     })
     .catch((e) => {
         console.error(e);
@@ -149,8 +150,8 @@ function reloadListings(){
  * @param {String} listingName 
  */
 function createNewListing(listingName){
-    view.hideCreationModal();
-    view.showLoader('Creating listing...')
+    modal.hideCreationModal();
+    modal.showLoader('Creating listing...')
 
     let newWorkspaceId = null;
 
@@ -210,7 +211,7 @@ function createNewListing(listingName){
     .then(() => {
         console.log('Listing created.')
 
-        view.hideLoader();
+        modal.hideLoader();
         return reloadListings();
     })
     .catch(e => console.error(e));
@@ -222,7 +223,7 @@ function createNewListing(listingName){
  * @param {String} id data table id of the listing
  */
 function deleteListing(id){
-    view.showLoader('Deleting listing...');
+    modal.showLoader('Deleting listing...');
 
     // Get the workspace info
     architectApi.getFlowsDatatableRow(listingDataTable.id, id, {
@@ -243,8 +244,8 @@ function deleteListing(id){
     .then(() => {
         console.log('Deleted the listing row.');
 
-        view.hideYesNoModal();
-        view.hideLoader();
+        modal.hideYesNoModal();
+        modal.hideLoader();
         
         return reloadListings();
     })
@@ -256,13 +257,13 @@ function deleteListing(id){
  * @param {String} id workspaceId 
  */
 function showListingDeletionModal(id){
-    view.showYesNoModal('Delete Listing', 
+    modal.showYesNoModal('Delete Listing', 
     'Are you sure you want  to delete this listing?',
     function(){
         deleteListing(id);
     },
     function(){
-        view.hideYesNoModal();
+        modal.hideYesNoModal();
     })
 }
 
@@ -271,5 +272,5 @@ function showListingDeletionModal(id){
 window.createNewListing = createNewListing;
 window.showListingDeletionModal = showListingDeletionModal;
 
-window.showCreationModal = view.showCreationModal;
-window.hideCreationModal = view.hideCreationModal;
+window.showCreationModal = modal.showCreationModal;
+window.hideCreationModal = modal.hideCreationModal;
