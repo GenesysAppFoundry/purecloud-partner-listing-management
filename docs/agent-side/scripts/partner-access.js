@@ -3,7 +3,7 @@
  * read/do in the partner orgs
  */
 
-import agentConfig from './config.js';
+import agentConfig from './config/config.js';
 
 let pcClient = null;
 let platformClient = null;

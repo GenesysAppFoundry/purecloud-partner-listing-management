@@ -1,5 +1,5 @@
-import agentConfig from './config.js';
-import test from './test.js';
+import agentConfig from './config/config.js';
+import test from './test/test.js';
 import partnerAccess from './partner-access.js';
 import listingInteractionTemplate from './templates/listing-interaction.js';
 
