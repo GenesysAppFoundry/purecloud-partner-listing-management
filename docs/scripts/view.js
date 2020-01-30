@@ -124,7 +124,7 @@ export default {
         // Hardware Add-ons 
         hardwareAddons.fillInnerFields(listingDetails.hardwareAddons);
 
-        // TODO: Use Cases
+        // Use Cases
         useCases.showUseCases(listingDetails.useCases);
 
         // Pricing

@@ -20,7 +20,7 @@ export default {
     "setupPermissionsRequired": ['admin'],
 
     // To be added to names of PureCloud objects created by the wizard
-    "prefix": "TEST_APPFOUNDRY_LISTING_MGMT_",
+    "prefix": "APPFOUNDRY_LISTING_MGMT_",
     //"prefix": "APPFOUNDRY_LISTING_MGMT_",
 
     // These are the PureCloud items that will be added and provisioned by the wizard

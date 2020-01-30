@@ -1,6 +1,7 @@
 import agentConfig from './config.js';
 import test from './test.js';
 import partnerAccess from './partner-access.js';
+import listingInteractionTemplate from './templates/listing-interaction.js';
 
 //Load purecloud and create the ApiClient Instance
 const platformClient = require('platformClient');
@@ -19,16 +20,19 @@ let listingRequest = {};
 
 // Authenticate
 client.loginImplicitGrant(agentConfig.clientId, window.location.href)
+// Login
 .then(() => {
     console.log('PureCloud Auth successful.');
 
     return usersApi.getUsersMe();
 })    
+// Get User
 .then((me) => {
     user = me;
 
     return notificationsApi.postNotificationsChannels();
 })
+// Create a subscription channel for incoming interaction
 .then((channel) => {
     let topic = `v2.users.${user.id}.conversations.emails`;
     
@@ -69,28 +73,7 @@ client.loginImplicitGrant(agentConfig.clientId, window.location.href)
     console.error(e);
 });
 
-function setUp(){
-    // TODO: move to view
-    let elListingInfo = document.getElementById('listing-info');
-    let elListingName = document.getElementById('listing-name');
-
-    elListingInfo.style.visibility = 'hidden';
-
-    var coll = document.getElementsByClassName("collapsible");
-    var i;
-
-    for (i = 0; i < coll.length; i++) {
-        coll[i].addEventListener("click", function() {
-            this.classList.toggle("active");
-            var content = this.nextElementSibling;
-            if (content.style.display === "block") {
-                content.style.display = "none";
-            } else {
-                content.style.display = "block";
-            }
-        });
-    }
-    
+function setUp(){    
     // FOR TESTING PURPOSES ONLY
     listingRequest = test;
     listingRequestReceived();
@@ -104,7 +87,7 @@ function setUp(){
         return partnerAccess.getListingDetails(
             'genesys4', 
             'mypurecloud.com', 
-            'b1f69ef0-2565-47c5-aa19-fff13056b75d', 
+            'f6f81425-79fe-4269-b750-e86764411594', 
             '1');
     })
     .then((x) => {
@@ -114,57 +97,8 @@ function setUp(){
 }
 
 function listingRequestReceived(){
-    return updateListingStatus(2)
-    .then(() => {
-        console.log('Update dt');
-
-        // TODO: view
-        let elAppListingName = document.getElementById('applisting-name');
-        let elListingInfo = document.getElementById('listing-info');
-        let elListingName = document.getElementById('listing-name');
-        let elListingPlatforms = document.getElementById('listing-platforms');
-        let elListingVendorName = document.getElementById('listing-vendorName');
-        let elListingVendorWebSite = document.getElementById('listing-vendorWebSite');
-        let elListingVendorEmail = document.getElementById('listing-vendorEmail');
-        let elListingTagLine = document.getElementById('listing-tagLine');
-        let elListingShortDescription = document.getElementById('listing-shortDescription');
-        let elListingFullDescription = document.getElementById('listing-fullDescription');
-        let elListingVideoURL = document.getElementById('listing-videoURL');
-        let elListingHelpDocumentation = document.getElementById('listing-helpDocumentation');
-        let elListingAppLanguages = document.getElementById('listing-appLanguages');
-        let elListingIndustries = document.getElementById('listing-industries');
-        let elListingSellingParty = document.getElementById('listing-sellingParty');
-        let elListingLicensingClassifications = document.getElementById('listing-licensingClassifications');
-        let elListingAppPermissions = document.getElementById('listing-appPermissions');
-        let elListingAttestations = document.getElementById('listing-attestations');
-        let elListingAppType = document.getElementById('listing-appType');
-        // let jsonDump = document.getElementById('json-dump');
-        
-
-        elListingInfo.style.visibility = 'visible';
-        elAppListingName.innerText = listingRequest.orgName + " | "+ listingRequest.listingDetails.name
-        elListingName.innerText = listingRequest.listingDetails.name;
-        elListingPlatforms.innerText = listingRequest.listingDetails.platforms;
-        elListingVendorName.innerText = listingRequest.listingDetails.vendorName;
-        elListingVendorWebSite.innerText = listingRequest.listingDetails.vendorWebSite;
-        elListingVendorEmail.innerText = listingRequest.listingDetails.vendorEmail;
-        elListingTagLine.innerText = listingRequest.listingDetails.tagLine;
-        elListingShortDescription.innerText = listingRequest.listingDetails.shortDescription;
-        elListingFullDescription.innerText = listingRequest.listingDetails.fullDescription;
-        elListingVideoURL.innerText = listingRequest.listingDetails.videoURL;
-        elListingHelpDocumentation.innerText = listingRequest.listingDetails.helpDocumentation;
-        elListingAppLanguages.innerText = listingRequest.listingDetails.appLanguages;
-        elListingIndustries.innerText = listingRequest.listingDetails.industries;
-        elListingSellingParty.innerText = listingRequest.listingDetails.sellingParty;
-        elListingLicensingClassifications.innerText = listingRequest.listingDetails.licensingClassifications;
-        elListingAppPermissions.innerText = listingRequest.listingDetails.appPermissions;
-        elListingAttestations.innerText = listingRequest.listingDetails.attestations;
-        elListingAppType.innerText = listingRequest.listingDetails.appType;
-        // jsonDump.value = JSON.stringify(listingRequest.listingDetails)
-        //                 + '\n\n\n' 
-        //                 + JSON.stringify(listingRequest.attachments);
-    })
-    .catch(e => console.error(e));
+   let elContainer = document.getElementById('listing-interactions-container');
+   elContainer.appendChild(listingInteractionTemplate.new(listingRequest));
 }
 
 /**

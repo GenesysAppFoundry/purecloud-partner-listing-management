@@ -1,183 +1,79 @@
-let sample = {
-    "name": "Listing Name",
-
-    // CHECKBOX
-    "platforms": [
-        "purecloud", 
-        "pureconnect.premise",
-        "pureconnect.cloud",
-        "pureengage.premise",
-        "pureengage.cloud"
-    ],
-
-    "vendorName": "My Company",
-    "vendorWebSite": "http://www.mycompany.com",
-    "vendorEmail": "JackBauer@mycompany.com",
-
-    "tagLine": "100 Characters Max",
-    "shortDescription": "250 Characters Max",
-    "fullDescription": "2500 characters max. MarkDown format.",
-
-    "videoURL": "Vimeo or YouTube ONLY",
-    "helpDocumentation": "http://www.mycompany.com/help",
-
-    // CHECKBOX
-    "appLanguages": [
-        "English",
-        "Dutch",
-        "Spanish",
-        "Chinese",
-        "French Canadian",
-        "French",
-        "Australian English",
-        "UK Eglish",
-        "Hebrew",
-        "Hungarian",
-        "Mexican Spanish",
-        "Norwegian",
-        "Romanian",
-        "Swedish",
-        "Portuguese",
-        "Danish",
-        "New Zealand English",
-        "Euro English"
-    ],
-    // CHECKBOX
-    "industries": [
-        "healthcare",
-        "retail",
-        "telco",
-        "hospitality",
-        "airlines",
-        "automotive",
-        "high tech",
-        "banking"
-    ], // Note: More than 3 will be universal
-
-    // RADIO
-    "sellingParty": "Geneys AppFoundry, Genesys Reseller, AppFoundry Vendor, Genesys Professional Services",
-
-    // CHECKBOX
-    "licensingClassifications": [
-        "SIP EP Connector",
-        "Agent Connector",
-        "3rd Party Media",
-        "Advanced Integration",
-        "IVR Connector",
-        "Enterprise",
-        "WFM Connector",
-        "Wallboard Connector",
-        "Recording Connector"
-    ],
-
-    // ARRAY OF STRINGS. DYNAMIC
-    "appPermissions": [],
-
-    //CHECKBOX
-    "attestations": [
-        "HIPPA",
-        "GDPR",
-        "PCI",
-        "SOC 2",
-        "HITRUST",
-        "ISO 27001",
-        "FedRAMP"
-    ],
-
-    // CHECKBOX
-    "appType": [
-        "Premium Client",
-        "PureCloud Embeddable Framework",
-        "Bot",
-        "Data Action",
-        "IVR Flow"
-    ],
-
-    "hardwareAddons": {
-        // CHECKBOX
-        "regions": [
-            "useast",
-            "uswest",
-            "frankfurt",
-            "ireland",
-            "japan",
-            "australia",
-        ],
-        // DYNAMIC BASED ON SELECTED REGIONS
-        "URLs": {
-            "useast": {
-                "purchase": "link",
-                "firmware": "link"
+let x = {
+    "id": "",
+    "orgName": "orgName",
+    "status": "status",
+    "environment": "mypurecloud.com",
+    "listingDetails": {
+        "name": "Amazing App",
+        "platforms": ["purecloud"],
+        "vendorName": "asdasd",
+        "vendorWebSite": "asdsad.com",
+        "vendorEmail": "asdas@adasd.com",
+        "tagLine": "asdsa",
+        "shortDescription": "asdas",
+        "fullDescription": "asdasd",
+        "videoURL": "https://youtube.com/asdsad",
+        "helpDocumentation": "https://help.com",
+        "appLanguages": ["Chinese", "UK English", "Hungarian"],
+        "industries": ["hospitality"],
+        "sellingParty": "Genesys Reseller",
+        "licensingClassifications": ["", "Advanced Integration"],
+        "appPermissions": "permission1",
+        "attestations": ["PCI"],
+        "appType": ["PureCloud Embeddable Framework"],
+        "hardwareAddons": {
+            "regions": ["useast", "ireland"],
+            "URLs": {
+                "useast": {
+                    "purchase": "URL.com",
+                    "firmware": "URL.com"
+                },
+                "ireland": {
+                    "purchase": "URLdin.com",
+                    "firmware": "URLdin.com"
+                }
             }
+        },
+        "pricing": "Pricing",
+        "useCases": [{
+            "title": "Use Case 1",
+            "useCaseSummary": "qweqwe",
+            "businessBenefits": "qwewqe"
+        }, {
+            "title": "Use Case 2",
+            "useCaseSummary": "asdasd",
+            "businessBenefits": "asdasd"
+        }]
+    },
+
+    "attachments": {
+        "companyLogo": {
+            "sharingUri": "https://apps.mypurecloud.com/s/#/1/d23mlbggavfmzdodtus26h2ufa",
+            "id": "1eb6c584-c605-4acc-8dc3-9d25af1f5428"
+        },
+        "brochure": {
+            "sharingUri": "https://apps.mypurecloud.com/s/#/1/ixep5jur3bh67jvnbssvvdeogm",
+            "id": "45c8fea6-91d8-4fef-a6ad-0ca55a8c8e33"
+        },
+        "screenshots-1": {
+            "sharingUri": "https://apps.mypurecloud.com/s/#/1/oriwmt7u4fdb7kfhe43vhuoj3u",
+            "id": "7451664f-f4e1-461f-a8a7-273753d1c9dd"
+        },
+        "screenshots-2": {
+            "sharingUri": "https://apps.mypurecloud.com/s/#/1/mlc6oq6rm5btxhbiyor7mvicgq",
+            "id": "62c5e743-d167-433b-9c28-c3a3f6550234"
+        },
+        "screenshots-3": {
+            "sharingUri": "https://apps.mypurecloud.com/s/#/1/ol3vu5ili5dknl4uvvawelbhkm",
+            "id": "72f75a75-0b47-46a6-af94-ad41622c2753"
+        },
+        "screenshots-4": {
+            "sharingUri": "https://apps.mypurecloud.com/s/#/1/uutt7uz5vfgnrpt3ryzfqay7pi",
+            "id": "a5273fd3-3da9-4cd8-be7b-8e3258031f7a"
         }
     },
 
-    "pricing": "Pricing here",
+    "premiumAppDetails": {
 
-    // DYNAMIC
-    "useCases": [
-        {
-            "title": "",
-            "useCaseSummary": "MarkDown Format",
-            "businessBenefits": "MarkDown Format"
-        }
-    ],
-
-    "appLogoUrl": "link",
-    "companyLogoUrl": "link",
-    "screenshots": [
-        "link1", "link2", "link3", "link4"
-    ],
-    "marketingBrochure": "link",
-
-    // Attachments
-    // 1. App or Company Logo (min 144x144 PNG)
-    // 2. Screenshots (max 4 images) (ration 4:3 min 1024x768 PNG)
-
-    /**
-     * PREMIUM APP ADDITIONAL FIELDS
-     * Installation Card Fields
-     */
-    "premiumApp": {
-        "appName": "",
-        "appDescription": "",
-        "helpUrl": "required",
-
-        // ATTACHMENT
-        // Installation App Icon (Admin UI)
-        // - SVG Only
-        // - Ratio MUST be 1:1 (Ex. 96px x 96px)
-        // - Must be transparent background
-        "appIcon": null,
-
-        "applicationSettings": {
-            "defaultApplicationURL":  "link",
-
-            // DYNAMIC up to 3
-            "permissions": [],
-
-            // RADIO
-            "applicationLocation": [
-                "Directory menu",
-                "Performance menu",
-                "Apps menu",
-                "Sidecar (aka Widget Panel)"
-            ],
-
-            // ATTACHMENT
-            "hostedAppIcon": null,
-
-            // RADIO
-            "grantType": "Code Authorization OR Implicit Grant",
-
-            "TOS_URL": "link",
-
-            // OPTIONAL FIELDS
-            "faq": "url",
-            "privacyPolicy": "url",
-            "supportContact": "url or URI",
-            "salesContact": "url or uri",
-            "additionalHelp": "url",
-        }
     }
 }
