@@ -2,6 +2,10 @@
   color: #FF4F1F;
 }
 
+.genViolet{
+  color: #5D3E5D;
+}
+
 .loading-text {
   font-size: 32px;
 }
@@ -83,4 +87,14 @@ a {
 
 .btn-approve {
   margin: 10px;
+}
+
+#interactions-loader{
+  margin-top: 50px;
+  text-align: center;
+  font-size: 30px;
+}
+
+#loader-text{
+  font-size: 20px;
 }

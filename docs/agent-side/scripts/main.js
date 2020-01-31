@@ -2,6 +2,7 @@ import modal from '../../components/main.js';
 import agentConfig from './config/config.js';
 import test from './test/test.js';
 import partnerAccess from './partner-access.js';
+import view from './view.js';
 import listingInteractionTemplate from './templates/listing-interaction.js';
 
 //Load purecloud and create the ApiClient Instance
@@ -13,7 +14,8 @@ client.setPersistSettings(true, 'listing_management');
 const usersApi = new platformClient.UsersApi();
 const notificationsApi = new platformClient.NotificationsApi();
 const architectApi = new platformClient.ArchitectApi();
-const integrationsApi = new platformClient.IntegrationsApi();
+const analyticsApi = new platformClient.AnalyticsApi();
+const conversationsApi = new platformClient.ConversationsApi();
 
 // Global
 let user = {};
@@ -94,14 +96,149 @@ function setUp(){
     })
     .then((x) => {
         console.log(x);
-        listingRequestReceived(x);
+
+        return refreshInteractionsList();
+    })
+    .then(() => {
         setupButtonHandlers();
     })
+    .catch(e => console.error(e));
 }
 
-function listingRequestReceived(x){
-   let elContainer = document.getElementById('listing-interactions-container');
-   elContainer.appendChild(listingInteractionTemplate.new(x));
+
+/**
+ * From conversation object serialize to one that also include the actual
+ * lsiting details from the partner org.
+ * Technically not only serializatino but also gets the actual data.
+ * @param {Conversation} conversation 3rd party interaction
+ * @returns {Promise} serialized data  
+ */
+function serializeConversationDetails(conversation){
+    console.log(conversation);
+
+    return new Promise((resolve, reject) => {
+        // Build the template for the serialzed data
+        let serializedData = {
+            conversationId: conversation.id,
+            lastParticipant: conversation.participants
+                        [conversation.participants.length - 1].participantId,
+            listingData: null
+        }
+    
+        // Get the aprticipant data from the interaction
+        // and use to query the actual listing from partner org
+        let payload = conversation.participants[0]
+                        .attributes;
+        partnerAccess.getListingDetails(
+                payload.org, 
+                payload.environment, 
+                payload.dataTableId, 
+                payload.listingId)
+        .then((listingData) => {
+            serializedData.listingData = listingData;
+
+            resolve(serializedData);
+        })
+        .catch(e => reject(e));
+    });
+}
+
+/**
+ * Get interactions in the queue to display
+ */
+function refreshInteractionsList(){
+    view.showListingLoader('Gathering Listing Requests...');
+    view.hideBlankInteractionsMsg();
+
+    return getUnansweredInteractions(agentConfig.queueId)
+    .then((result) => {
+        console.log(result);
+        let convPromises = [];
+
+        // Scroll through analytics results and call getconversation
+        // on each to get the attributes then serialize it
+        // to finally get the details from partner-side.
+        result.conversations.forEach(c => {
+            convPromises.push(
+                conversationsApi.getConversation(c.conversationId)
+                .then((fullConvo) => {
+                    return serializeConversationDetails(fullConvo);
+                })
+                .catch(e => console.error(e))
+            );
+        });
+
+        return Promise.all(convPromises);
+    })
+    .then((serializedArr) => {
+        view.clearEmailContainer();
+        view.hideListingLoader();
+
+        if(serializedArr.length <= 0){
+            view.showBlankInteractionsMsg();
+        }else{
+            serializedArr.forEach(
+                (listingData) => view.addInteractionBox(listingData));
+        }
+    })
+    .catch((err) => {
+        console.log(err);
+    });
+}
+
+/**
+ * Get unanswered emails from queue
+ * @param {String} queueId PureCloud Queue ID
+ * @returns {Promise} the api response
+ */
+function getUnansweredInteractions(queueId){
+    let intervalTo = moment().utc().add(1, 'h');
+    let intervalFrom = intervalTo.clone().subtract(7, 'days');
+    let intervalString = intervalFrom.format() + '/' + intervalTo.format();
+    
+    let queryBody = {
+        'interval': intervalString,
+        'order': 'asc',
+        'orderBy': 'conversationStart',
+        'paging': {
+            'pageSize': '100',
+            'pageNumber': 1
+        },
+        'segmentFilters': [
+            {
+                'type': 'and',
+                'predicates': [
+                    {
+                        'type': 'dimension',
+                        'dimension': 'mediaType',
+                        'operator': 'matches',
+                        'value': 'email'
+                    },
+                    {
+                        'type': 'dimension',
+                        'dimension': 'queueId',
+                        'operator': 'matches',
+                        'value': queueId
+                    }
+                ]
+            }
+        ],
+        'conversationFilters': [
+            {
+                'type': 'or',
+                'predicates': [
+                    {
+                        'type': 'dimension',
+                        'dimension': 'conversationEnd',
+                        'operator': 'notExists',
+                        'value': null
+                    }
+                ]
+            }
+        ]
+    };
+
+    return analyticsApi.postAnalyticsConversationsDetailsQuery(queryBody);
 }
 
 /**

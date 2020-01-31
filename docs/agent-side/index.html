@@ -12,12 +12,26 @@
   src="https://code.jquery.com/jquery-3.4.1.min.js"
   integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
   crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" integrity="sha256-4iQZ6BVL4qNKlQ27TExEhBN1HFPvAvAMbFavKKosSWQ=" crossorigin="anonymous"></script>
   <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
   <script src="https://sdk-cdn.mypurecloud.com/javascript/64.0.0/purecloud-platform-client-v2.min.js"></script>
 </head>
 <body>
-  <section class="section" id="listing-interactions-container">
+  <section class="section">
     <h1>AppListing Pending Approvals</h1>
+    <div id="no-interactions-notif">
+      No Listing Requests.. for now
+    </div>
+    <!-- Loader-->
+    <div class="genViolet" id="interactions-loader">  
+      <i class="fas fa-cog fa-spin loader-graphic"></i>
+      <br>
+      <span id="loader-text">Loading Listing Requests...</span>  
+    </div>
+
+    <!-- Listing Requests -->
+    <div id="listing-interactions-container">
+    </div>
   </section>
   <script src="./scripts/main.js" type="module"></script>
 </body>
