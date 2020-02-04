@@ -11,10 +11,11 @@ export default {
      * Add an listing interaction box to the document
      * @param {Object} serializedData serialized info contains the info 
      * about the converstaion and listing
+     * @param {Function} assignToAgentCb callback when assign to me is pressed
      */
-    addInteractionBox(serializedData){
+    addInteractionBox(serializedData, assignToAgentCb){
         let elContainer = document.getElementById('listing-interactions-container');
-        let newBox = listingInteractionTemplate.new(serializedData);
+        let newBox = listingInteractionTemplate.new(serializedData, assignToAgentCb);
         
         if(newBox){
             elContainer.appendChild(newBox);

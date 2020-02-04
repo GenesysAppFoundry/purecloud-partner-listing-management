@@ -93,7 +93,7 @@ t.innerHTML =
     <br>
 
     <div class="button-container">
-      <button class="button" id="btn-approve">Assign to Me</button>
+      <button class="button btn-approve">Assign to Me</button>
     </div>
     <br>
   </div>      
@@ -102,11 +102,11 @@ t.innerHTML =
 `;
 
 export default {
-    new(serializedData){
+    new(serializedData, assignToAgent){
         let listingInfo = serializedData.listingData;
 
         // If conversation is already displayed don't do anything anymore.
-        let Ellistings = document.getElementsByClassName['listing-info'];
+        let Ellistings = document.getElementsByClassName('listing-info');
         console.log(Ellistings);
         if(Ellistings){
             for(let i = 0; i < Ellistings.length; i++){
@@ -155,6 +155,12 @@ export default {
             } else {
                 content.style.display = "block";
             }
+        });
+
+        // Assign to Agent
+        let elAssignButton = el.querySelectorAll('.btn-approve')[0];
+        elAssignButton.addEventListener('click', function(){
+            assignToAgent(serializedData);
         });
 
         return el;

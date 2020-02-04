@@ -103,7 +103,7 @@ function serializeConversationDetails(conversation){
         let serializedData = {
             conversationId: conversation.id,
             lastParticipant: conversation.participants
-                        [conversation.participants.length - 1].participantId,
+                        [conversation.participants.length - 1],
             listingData: null
         }
     
@@ -132,7 +132,7 @@ function refreshInteractionsList(){
     view.showListingLoader('Gathering Listing Requests...');
     view.hideBlankInteractionsMsg();
 
-    return getUnansweredInteractions(agentConfig.queueId)
+    return getQueueInteractions(agentConfig.queueId)
     .then((result) => {        
         console.log(result);
         let convPromises = [];
@@ -142,6 +142,9 @@ function refreshInteractionsList(){
         // on each to get the attributes then serialize it
         // to finally get the details from partner-side.
         result.conversations.forEach(c => {
+            let participants = c.participants;
+            if(participants[participants.length - 1].purpose != 'acd') return;
+
             convPromises.push(
                 conversationsApi.getConversation(c.conversationId)
                 .then((fullConvo) => {
@@ -161,7 +164,7 @@ function refreshInteractionsList(){
             view.showBlankInteractionsMsg();
         }else{
             serializedArr.forEach(
-                (listingData) => view.addInteractionBox(listingData));
+                (listingData) => view.addInteractionBox(listingData, assignToAgent));
         }
     })
     .catch((err) => {
@@ -170,11 +173,11 @@ function refreshInteractionsList(){
 }
 
 /**
- * Get unanswered emails from queue
+ * Get emails from queue
  * @param {String} queueId PureCloud Queue ID
  * @returns {Promise} the api response
  */
-function getUnansweredInteractions(queueId){
+function getQueueInteractions(queueId){
     let intervalTo = moment().utc().add(1, 'h');
     let intervalFrom = intervalTo.clone().subtract(7, 'days');
     let intervalString = intervalFrom.format() + '/' + intervalTo.format();
@@ -258,12 +261,42 @@ function onEmailNotification(message){
 
                 serializeConversationDetails(eventBody)
                 .then((serializedData) => {
-                    view.addInteractionBox(serializedData);
+                    view.addInteractionBox(serializedData, assignToAgent);
                 })
                 .catch(e => console.error(e));
             }
         }
     }
+}
+
+function assignToAgent(serializedData){
+    let conversationId = serializedData.conversationId;
+    let lastParticipant = serializedData.lastParticipant;
+
+    if(lastParticipant.purpose != 'acd'){
+        modal.showInfoModal(
+            'Oops',
+            'That interaction is no longer available. \n' + 
+            'Another person has already accepted this task.',
+            () => modal.hideInfoModal()
+        );
+    }else{
+        modal.showLoader('Assigning Email...');
+
+        let body = {
+            'userId': user.id,
+        };
+        conversationsApi.postConversationParticipantReplace(conversationId, 
+            lastParticipant.id, body)
+        .then(() => {
+
+            view.hideInteractionBox(conversationId);
+            modal.hideLoader();
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+    }    
 }
 
 /**
