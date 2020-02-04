@@ -1,7 +1,7 @@
 import view from './view.js';
-import modal from '../components/main.js';
-import config from '../config/config.js';
-import blankCoreListingJSON from '../config/core-listing-blank.js';
+import modal from '../../components/main.js';
+import config from '../../config/config.js';
+import blankCoreListingJSON from '../../config/core-listing-blank.js';
 import cheatChat from './cheat-chat.js';
 
 //Load purecloud and create the ApiClient Instance

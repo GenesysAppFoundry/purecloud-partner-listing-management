@@ -93,8 +93,9 @@ t.innerHTML =
     <br>
 
     <div class="button-container">
-      <button class="button" id="btn-approve">Approve!</button>
+      <button class="button" id="btn-approve">Assign to Me</button>
     </div>
+    <br>
   </div>      
 </div>
 </div>

@@ -14,7 +14,7 @@
  *      success: data action success
  */
 
-import config from '../config/config.js';
+import config from '../../config/config.js';
 
 let orgName = '';
 let environment = '';
