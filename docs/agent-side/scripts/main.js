@@ -17,6 +17,9 @@ const architectApi = new platformClient.ArchitectApi();
 const analyticsApi = new platformClient.AnalyticsApi();
 const conversationsApi = new platformClient.ConversationsApi();
 
+// Constants
+const topic = `v2.routing.queues.${agentConfig.queueId}.conversations.emails`;
+
 // Global
 let user = {};
 let listingRequest = {};
@@ -39,30 +42,9 @@ client.loginImplicitGrant(agentConfig.clientId, window.location.href)
     return notificationsApi.postNotificationsChannels();
 })
 // Create a subscription channel for incoming interaction
-.then((channel) => {
-    let topic = `v2.users.${user.id}.conversations.emails`;
-    
+.then((channel) => {    
     let websocket = new WebSocket(channel.connectUri);
-    websocket.onmessage = function(message){
-        // Parse notification string to a JSON object
-        const notification = JSON.parse(message.data);
-
-        // Check if email conversatino related
-        if(notification.topicName == topic) {
-            // Get participants
-            let agent = notification.eventBody
-                .participants.find(p => p.purpose == 'agent');
-            let customer = notification.eventBody
-                .participants.find(p => p.purpose == 'customer');
-            if(!agent) return;
-
-            if(agent.state == 'connected'){
-                listingRequest = JSON.parse(customer.attributes.listingDetail);
-                console.log(listingRequest);
-                listingRequestReceived();
-            }
-        }
-    }
+    websocket.onmessage = onEmailNotification;
 
     return notificationsApi
         .putNotificationsChannelSubscriptions(channel.id, [
@@ -151,9 +133,10 @@ function refreshInteractionsList(){
     view.hideBlankInteractionsMsg();
 
     return getUnansweredInteractions(agentConfig.queueId)
-    .then((result) => {
+    .then((result) => {        
         console.log(result);
         let convPromises = [];
+        if(!result.conversations) return;
 
         // Scroll through analytics results and call getconversation
         // on each to get the attributes then serialize it
@@ -174,7 +157,7 @@ function refreshInteractionsList(){
         view.clearEmailContainer();
         view.hideListingLoader();
 
-        if(serializedArr.length <= 0){
+        if(!serializedArr || serializedArr.length <= 0){
             view.showBlankInteractionsMsg();
         }else{
             serializedArr.forEach(
@@ -239,6 +222,48 @@ function getUnansweredInteractions(queueId){
     };
 
     return analyticsApi.postAnalyticsConversationsDetailsQuery(queryBody);
+}
+
+/**
+ * Debounce Workaround. Ok so in order to avoid duplicating istings on arrival
+ * we'll keep track of rcent conversations to be processed. Due to async.
+ * of processing the data, we can't reliably check duplication based on 
+ * whether an interaction box is already displayed or not. 
+ */
+let recentIds = [];
+/**
+ * Callback when any email notification happens on the queue
+ * @param {Object} message the event
+ */
+function onEmailNotification(message){
+    // Parse notification string to a JSON object
+    const notification = JSON.parse(message.data);
+    const eventBody = notification.eventBody;
+
+    // Check if email conversatino related
+    if(notification.topicName == topic) {
+        console.log(notification);
+        const participants = eventBody.participants;
+        const lastParticipant = participants[participants.length - 1];
+
+        // If new email message add to listing
+        if(lastParticipant.purpose == 'acd'
+                && lastParticipant.state == 'connected'){
+            if(!recentIds.includes(eventBody.id)){
+                // Debounce
+                recentIds.push(eventBody.id);
+                setTimeout(() => {
+                    recentIds = recentIds.filter(id => eventBody.id != id);
+                }, 3000);
+
+                serializeConversationDetails(eventBody)
+                .then((serializedData) => {
+                    view.addInteractionBox(serializedData);
+                })
+                .catch(e => console.error(e));
+            }
+        }
+    }
 }
 
 /**
@@ -328,6 +353,10 @@ function processTemporaryCredentials(){
 }
 
 
-function setupButtonHandlers(){
 
+function setupButtonHandlers(){
+    document.getElementById('btn-refresh-interactions')
+            .addEventListener('click', function(){
+                refreshInteractionsList();
+            });
 }

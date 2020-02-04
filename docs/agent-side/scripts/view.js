@@ -14,8 +14,11 @@ export default {
      */
     addInteractionBox(serializedData){
         let elContainer = document.getElementById('listing-interactions-container');
-        elContainer.appendChild(
-            listingInteractionTemplate.new(serializedData.listingData));
+        let newBox = listingInteractionTemplate.new(serializedData);
+        
+        if(newBox){
+            elContainer.appendChild(newBox);
+        }
     },
 
     /**

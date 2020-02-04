@@ -101,13 +101,32 @@ t.innerHTML =
 `;
 
 export default {
-    new(listingInfo){
+    new(serializedData){
+        let listingInfo = serializedData.listingData;
+
+        // If conversation is already displayed don't do anything anymore.
+        let Ellistings = document.getElementsByClassName['listing-info'];
+        console.log(Ellistings);
+        if(Ellistings){
+            for(let i = 0; i < Ellistings.length; i++){
+                if(Ellistings.item(i).id == serializedData.conversationId){
+                    return null;
+                }
+            }
+        }
+        
+
+        // Create the element
         let el = document.importNode(t.content, true);
-        console.log()
+        let elFirstChild = el.querySelectorAll('.listing-info')[0];
+        console.log(serializedData);
+        elFirstChild.id = serializedData.conversationId;
+
         // Add the org name + listing name
         let headerEl = el.querySelectorAll('.applisting-name')[0];
         headerEl.innerText = 
             `${listingInfo.orgName} - ${listingInfo.listingDetails.name}`;
+        
 
         // Use validators to fill info
         Object.keys(validators.listingDetail).forEach((key) => {
