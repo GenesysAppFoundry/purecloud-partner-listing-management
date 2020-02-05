@@ -1,5 +1,5 @@
-import config from '../../config/config.js';
-import listingStatus from  '../../config/listing-status.js';
+import config from '../../../config/config.js';
+import listingStatus from  '../../../config/listing-status.js';
 
 let t = document.createElement('template');
 t.innerHTML =

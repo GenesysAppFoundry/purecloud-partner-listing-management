@@ -2,7 +2,7 @@
  * Everything about the uploading of attachments
  */
 
-import validators from '../../config/validators.js'
+import validators from '../../../config/validators.js'
 
 /**
  * Validate 

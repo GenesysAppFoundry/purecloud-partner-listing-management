@@ -9,5 +9,5 @@ export default {
     "authenticationActionId": "custom_-_f0a8629e-5500-4873-b8c2-655c45ecf65e",
 
     // Queue for the cherry picking
-    "queueId": "5c0c5b20-40d9-4e35-99c5-334e63b9c99a"
+    "queueId": "ace341f9-3a5e-4753-883f-8360e30081f2"
 }

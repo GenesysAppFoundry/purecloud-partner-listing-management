@@ -2,6 +2,7 @@ import modal from '../../components/main.js';
 import agentConfig from './config/config.js';
 import test from './test/test.js';
 import partnerAccess from './partner-access.js';
+import view from './view.js';
 import listingInteractionTemplate from './templates/listing-interaction.js';
 
 //Load purecloud and create the ApiClient Instance
@@ -13,7 +14,11 @@ client.setPersistSettings(true, 'listing_management');
 const usersApi = new platformClient.UsersApi();
 const notificationsApi = new platformClient.NotificationsApi();
 const architectApi = new platformClient.ArchitectApi();
-const integrationsApi = new platformClient.IntegrationsApi();
+const analyticsApi = new platformClient.AnalyticsApi();
+const conversationsApi = new platformClient.ConversationsApi();
+
+// Constants
+const topic = `v2.routing.queues.${agentConfig.queueId}.conversations.emails`;
 
 // Global
 let user = {};
@@ -37,30 +42,9 @@ client.loginImplicitGrant(agentConfig.clientId, window.location.href)
     return notificationsApi.postNotificationsChannels();
 })
 // Create a subscription channel for incoming interaction
-.then((channel) => {
-    let topic = `v2.users.${user.id}.conversations.emails`;
-    
+.then((channel) => {    
     let websocket = new WebSocket(channel.connectUri);
-    websocket.onmessage = function(message){
-        // Parse notification string to a JSON object
-        const notification = JSON.parse(message.data);
-
-        // Check if email conversatino related
-        if(notification.topicName == topic) {
-            // Get participants
-            let agent = notification.eventBody
-                .participants.find(p => p.purpose == 'agent');
-            let customer = notification.eventBody
-                .participants.find(p => p.purpose == 'customer');
-            if(!agent) return;
-
-            if(agent.state == 'connected'){
-                listingRequest = JSON.parse(customer.attributes.listingDetail);
-                console.log(listingRequest);
-                listingRequestReceived();
-            }
-        }
-    }
+    websocket.onmessage = onEmailNotification;
 
     return notificationsApi
         .putNotificationsChannelSubscriptions(channel.id, [
@@ -94,14 +78,225 @@ function setUp(){
     })
     .then((x) => {
         console.log(x);
-        listingRequestReceived(x);
+
+        return refreshInteractionsList();
+    })
+    .then(() => {
         setupButtonHandlers();
     })
+    .catch(e => console.error(e));
 }
 
-function listingRequestReceived(x){
-   let elContainer = document.getElementById('listing-interactions-container');
-   elContainer.appendChild(listingInteractionTemplate.new(x));
+
+/**
+ * From conversation object serialize to one that also include the actual
+ * lsiting details from the partner org.
+ * Technically not only serializatino but also gets the actual data.
+ * @param {Conversation} conversation 3rd party interaction
+ * @returns {Promise} serialized data  
+ */
+function serializeConversationDetails(conversation){
+    console.log(conversation);
+
+    return new Promise((resolve, reject) => {
+        // Build the template for the serialzed data
+        let serializedData = {
+            conversationId: conversation.id,
+            lastParticipant: conversation.participants
+                        [conversation.participants.length - 1],
+            listingData: null
+        }
+    
+        // Get the aprticipant data from the interaction
+        // and use to query the actual listing from partner org
+        let payload = conversation.participants[0]
+                        .attributes;
+        partnerAccess.getListingDetails(
+                payload.org, 
+                payload.environment, 
+                payload.dataTableId, 
+                payload.listingId)
+        .then((listingData) => {
+            serializedData.listingData = listingData;
+
+            resolve(serializedData);
+        })
+        .catch(e => reject(e));
+    });
+}
+
+/**
+ * Get interactions in the queue to display
+ */
+function refreshInteractionsList(){
+    view.showListingLoader('Gathering Listing Requests...');
+    view.hideBlankInteractionsMsg();
+
+    return getQueueInteractions(agentConfig.queueId)
+    .then((result) => {        
+        console.log(result);
+        let convPromises = [];
+        if(!result.conversations) return;
+
+        // Scroll through analytics results and call getconversation
+        // on each to get the attributes then serialize it
+        // to finally get the details from partner-side.
+        result.conversations.forEach(c => {
+            let participants = c.participants;
+            if(participants[participants.length - 1].purpose != 'acd') return;
+
+            convPromises.push(
+                conversationsApi.getConversation(c.conversationId)
+                .then((fullConvo) => {
+                    return serializeConversationDetails(fullConvo);
+                })
+                .catch(e => console.error(e))
+            );
+        });
+
+        return Promise.all(convPromises);
+    })
+    .then((serializedArr) => {
+        view.clearEmailContainer();
+        view.hideListingLoader();
+
+        if(!serializedArr || serializedArr.length <= 0){
+            view.showBlankInteractionsMsg();
+        }else{
+            serializedArr.forEach(
+                (listingData) => view.addInteractionBox(listingData, assignToAgent));
+        }
+    })
+    .catch((err) => {
+        console.log(err);
+    });
+}
+
+/**
+ * Get emails from queue
+ * @param {String} queueId PureCloud Queue ID
+ * @returns {Promise} the api response
+ */
+function getQueueInteractions(queueId){
+    let intervalTo = moment().utc().add(1, 'h');
+    let intervalFrom = intervalTo.clone().subtract(7, 'days');
+    let intervalString = intervalFrom.format() + '/' + intervalTo.format();
+    
+    let queryBody = {
+        'interval': intervalString,
+        'order': 'asc',
+        'orderBy': 'conversationStart',
+        'paging': {
+            'pageSize': '100',
+            'pageNumber': 1
+        },
+        'segmentFilters': [
+            {
+                'type': 'and',
+                'predicates': [
+                    {
+                        'type': 'dimension',
+                        'dimension': 'mediaType',
+                        'operator': 'matches',
+                        'value': 'email'
+                    },
+                    {
+                        'type': 'dimension',
+                        'dimension': 'queueId',
+                        'operator': 'matches',
+                        'value': queueId
+                    }
+                ]
+            }
+        ],
+        'conversationFilters': [
+            {
+                'type': 'or',
+                'predicates': [
+                    {
+                        'type': 'dimension',
+                        'dimension': 'conversationEnd',
+                        'operator': 'notExists',
+                        'value': null
+                    }
+                ]
+            }
+        ]
+    };
+
+    return analyticsApi.postAnalyticsConversationsDetailsQuery(queryBody);
+}
+
+/**
+ * Debounce Workaround. Ok so in order to avoid duplicating istings on arrival
+ * we'll keep track of rcent conversations to be processed. Due to async.
+ * of processing the data, we can't reliably check duplication based on 
+ * whether an interaction box is already displayed or not. 
+ */
+let recentIds = [];
+/**
+ * Callback when any email notification happens on the queue
+ * @param {Object} message the event
+ */
+function onEmailNotification(message){
+    // Parse notification string to a JSON object
+    const notification = JSON.parse(message.data);
+    const eventBody = notification.eventBody;
+
+    // Check if email conversatino related
+    if(notification.topicName == topic) {
+        console.log(notification);
+        const participants = eventBody.participants;
+        const lastParticipant = participants[participants.length - 1];
+
+        // If new email message add to listing
+        if(lastParticipant.purpose == 'acd'
+                && lastParticipant.state == 'connected'){
+            if(!recentIds.includes(eventBody.id)){
+                // Debounce
+                recentIds.push(eventBody.id);
+                setTimeout(() => {
+                    recentIds = recentIds.filter(id => eventBody.id != id);
+                }, 3000);
+
+                serializeConversationDetails(eventBody)
+                .then((serializedData) => {
+                    view.addInteractionBox(serializedData, assignToAgent);
+                })
+                .catch(e => console.error(e));
+            }
+        }
+    }
+}
+
+function assignToAgent(serializedData){
+    let conversationId = serializedData.conversationId;
+    let lastParticipant = serializedData.lastParticipant;
+
+    if(lastParticipant.purpose != 'acd'){
+        modal.showInfoModal(
+            'Oops',
+            'That interaction is no longer available. \n' + 
+            'Another person has already accepted this task.',
+            () => modal.hideInfoModal()
+        );
+    }else{
+        modal.showLoader('Assigning Email...');
+
+        let body = {
+            'userId': user.id,
+        };
+        conversationsApi.postConversationParticipantReplace(conversationId, 
+            lastParticipant.id, body)
+        .then(() => {
+
+            view.hideInteractionBox(conversationId);
+            modal.hideLoader();
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+    }    
 }
 
 /**
@@ -191,6 +386,10 @@ function processTemporaryCredentials(){
 }
 
 
-function setupButtonHandlers(){
 
+function setupButtonHandlers(){
+    document.getElementById('btn-refresh-interactions')
+            .addEventListener('click', function(){
+                refreshInteractionsList();
+            });
 }
