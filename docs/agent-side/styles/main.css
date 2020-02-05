@@ -111,3 +111,15 @@ a {
 #genesys-details {
   font-weight: bold;
 }
+
+.hardware-addon-region {
+  display: none;
+}
+
+.use-case {
+  border-left: 2px solid #DDD; 
+  margin: 2px;
+  margin-bottom: 20px;
+  padding: 10px;
+  padding-left: 20px;
+}
