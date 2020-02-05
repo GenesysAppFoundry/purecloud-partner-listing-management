@@ -29,6 +29,7 @@ var urlParams = new URLSearchParams(window.location.search);
 let listingId = urlParams.get('id');
 let readOnly = urlParams.get('readonly');
 let listingRow = {};
+let listingRowNotes = [];
 let listingDetailsObject = {};
 let listingRowAttachments = {};
 let listingDataTable = null;
@@ -109,9 +110,11 @@ function loadListing(){
         listingRow = row;
         listingDetailsObject = JSON.parse(listingRow.listingDetails);
         listingRowAttachments = JSON.parse(listingRow.attachments);
+        listingRowNotes = JSON.parse(listingRow.devFoundryNotes);
         workspaceId = listingRow.workspaceId;
 
         view.fillEditListingFields(listingDetailsObject);
+        view.showDevFoundryNotes(listingRowNotes);
     })
 }
 

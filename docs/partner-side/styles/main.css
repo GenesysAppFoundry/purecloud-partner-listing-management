@@ -181,3 +181,7 @@ button.delete:hover {
     color: #9bb;
     display: none;
 }
+
+.devfoundry-note {
+    background-color: #faffff;
+}

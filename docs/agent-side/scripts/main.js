@@ -300,35 +300,40 @@ function checkExistingAssignedListing(){
 /**
  * Assign the listing interaction to the the user agent
  * @param {Object} serializedData result of the serialization function
+ * @returns {Promise}
  */
 function assignToAgent(serializedData){
-    let conversationId = serializedData.conversationId;
-    let lastParticipant = serializedData.lastParticipant;
+    return new Promise((resolve, reject) => {
+        let conversationId = serializedData.conversationId;
+        let lastParticipant = serializedData.lastParticipant;
 
-    if(lastParticipant.purpose != 'acd'){
-        modal.showInfoModal(
-            'Oops',
-            'That interaction is no longer available. \n' + 
-            'Another person has already accepted this task.',
-            () => modal.hideInfoModal()
-        );
-    }else{
-        modal.showLoader('Assigning Email...');
+        if(lastParticipant.purpose != 'acd'){
+            modal.showInfoModal(
+                'Oops',
+                'That interaction is no longer available. \n' + 
+                'Another person has already accepted this task.',
+                () => modal.hideInfoModal()
+            );
+        }else{
+            modal.showLoader('Assigning Email...');
 
-        let body = {
-            'userId': user.id,
-        };
-        conversationsApi.postConversationParticipantReplace(conversationId, 
-            lastParticipant.id, body)
-        .then(() => {
+            let body = {
+                'userId': user.id,
+            };
+            conversationsApi.postConversationParticipantReplace(conversationId, 
+                lastParticipant.id, body)
+            .then(() => {
 
-            view.hideInteractionBox(conversationId);
-            modal.hideLoader();
-        })
-        .catch((err) => {
-            console.log(err);
-        });
-    }    
+                view.hideInteractionBox(conversationId);
+                modal.hideLoader();
+                
+                resolve();
+            })
+            .catch((err) => {
+                reject(err);
+            });
+        }    
+    });
 }
 
 /**

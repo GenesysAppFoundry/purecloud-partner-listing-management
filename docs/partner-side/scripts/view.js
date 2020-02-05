@@ -1,5 +1,6 @@
 import fieldInterface from './util/field-interface.js';
 import listingCardTemplate from './templates/listing-card.js';
+import devfoundryNoteTemplate from './templates/devfoundry-note.js';
 import addNewListing from './templates/add-new-listing.js';
 import hardwareAddons from './special-fields/hardware-addons.js';
 import useCases from './special-fields/use-cases.js';
@@ -113,5 +114,14 @@ export default {
 
         let elListingControls = document.getElementById('edit-listing-controls');
         elListingControls.style.display = 'none';
+    },
+
+    showDevFoundryNotes(notes){
+        let elContainer = document.getElementById('devfoundry-notes-container');
+
+        notes.forEach(note => {
+            let newNote = devfoundryNoteTemplate.new(note);
+            elContainer.appendChild(newNote);
+        });
     }
 }

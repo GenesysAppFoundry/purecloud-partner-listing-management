@@ -1,4 +1,5 @@
 import validators from '../../../config/validators.js';
+import agentConfig from '../config/config.js';
 
 let t = document.createElement('template');
 t.innerHTML =
@@ -39,12 +40,7 @@ t.innerHTML =
     <label class="listing-key">
         Short Description:
     </label>
-    <label class="app-shortDescription"></label>
-    <br>
-    <label class="listing-key">
-        Full Description:
-    </label>
-    <label class="app-fullDescription"></label>
+    <label class="app-shortDescription"></label>    
     <br>
     <label class="listing-key">
         Video URL:
@@ -160,7 +156,11 @@ export default {
         // Assign to Agent
         let elAssignButton = el.querySelectorAll('.btn-approve')[0];
         elAssignButton.addEventListener('click', function(){
-            assignToAgent(serializedData);
+            assignToAgent(serializedData)
+            .then(() => {
+                window.location.href = agentConfig.redirectUriBase +
+                                        'listing-review.html';
+            })
         });
 
         return el;
