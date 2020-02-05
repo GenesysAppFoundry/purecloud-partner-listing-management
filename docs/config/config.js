@@ -2,7 +2,7 @@ export default {
     clientIDs: {        
         'mypurecloud.com': 'e7de8a75-62bb-43eb-9063-38509f8c21af'
     },
-    //"redirectUriBase": "https://princemerluza.github.io/purecloud-partner-listing-management/",
+    //"redirectUriBase": "https://princemerluza.github.io/purecloud-partner-listing-management/partner-side/",
     "redirectUriBase": "http://localhost:8080/partner-side/",
 
     // PureCloud assigned name for the premium app

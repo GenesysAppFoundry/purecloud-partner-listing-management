@@ -9,5 +9,10 @@ export default {
     "authenticationActionId": "custom_-_f0a8629e-5500-4873-b8c2-655c45ecf65e",
 
     // Queue for the cherry picking
-    "queueId": "ace341f9-3a5e-4753-883f-8360e30081f2"
+    "queueId": "ace341f9-3a5e-4753-883f-8360e30081f2",
+
+    // Redirect Uri
+    "redirectUriBase": "http://localhost:8080/agent-side/",
+    // "redirectUriBase": "https://princemerluza.github.io/purecloud-partner-listing-management//agent-side/",
+
 }

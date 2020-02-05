@@ -20,7 +20,8 @@ a {
 }
 
 .listing-key {
-  color: #FF4F1F;
+  color: #444A52;
+  font-weight: bold;
 }
 
 .button {
@@ -97,4 +98,16 @@ a {
 
 #loader-text{
   font-size: 20px;
+}
+
+.listing-field {
+  margin-bottom: 10px;
+}
+
+.genesys-details-container{
+  text-align: center;
+}
+
+#genesys-details {
+  font-weight: bold;
 }

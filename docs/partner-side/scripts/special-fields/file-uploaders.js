@@ -320,7 +320,6 @@ export default {
                 })
             })
             .then((result) => {
-
                 // Build the attacahment  of this file
                 // that will be in the data table attaachments
                 let attachment = {

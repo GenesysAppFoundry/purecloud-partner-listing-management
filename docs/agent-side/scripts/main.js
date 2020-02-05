@@ -1,9 +1,7 @@
 import modal from '../../components/main.js';
 import agentConfig from './config/config.js';
-import test from './test/test.js';
 import partnerAccess from './partner-access.js';
 import view from './view.js';
-import listingInteractionTemplate from './templates/listing-interaction.js';
 
 //Load purecloud and create the ApiClient Instance
 const platformClient = require('platformClient');
@@ -18,7 +16,7 @@ const analyticsApi = new platformClient.AnalyticsApi();
 const conversationsApi = new platformClient.ConversationsApi();
 
 // Constants
-const topic = `v2.routing.queues.${agentConfig.queueId}.conversations.emails`;
+const queueTopic = `v2.routing.queues.${agentConfig.queueId}.conversations.emails`;
 
 // Global
 let user = {};
@@ -39,22 +37,6 @@ client.loginImplicitGrant(agentConfig.clientId, window.location.href)
 .then((me) => {
     user = me;
 
-    return notificationsApi.postNotificationsChannels();
-})
-// Create a subscription channel for incoming interaction
-.then((channel) => {    
-    let websocket = new WebSocket(channel.connectUri);
-    websocket.onmessage = onEmailNotification;
-
-    return notificationsApi
-        .putNotificationsChannelSubscriptions(channel.id, [
-            {
-                id: topic
-            }
-        ]);
-})
-.then(() => {
-    console.log('Subscribed to Email');
     return setUp();
 })
 .then(() => {
@@ -67,19 +49,17 @@ client.loginImplicitGrant(agentConfig.clientId, window.location.href)
 function setUp(){    
     partnerAccess.setup(client, platformClient, user);
 
-    return processTemporaryCredentials()
+    return setupNotifications()
     .then(() => {
+        console.log('Notifications successfully setup');
 
-        return partnerAccess.getListingDetails(
-            'genesys4', 
-            'mypurecloud.com', 
-            'f6f81425-79fe-4269-b750-e86764411594', 
-            '1');
+        return processTemporaryCredentials();
     })
-    .then((x) => {
-        console.log(x);
-
+    .then(() => {
         return refreshInteractionsList();
+    })
+    .then(() => {
+        return checkExistingAssignedListing();
     })
     .then(() => {
         setupButtonHandlers();
@@ -238,37 +218,89 @@ let recentIds = [];
  * Callback when any email notification happens on the queue
  * @param {Object} message the event
  */
-function onEmailNotification(message){
+function onQueueEmailNotification(message){
     // Parse notification string to a JSON object
     const notification = JSON.parse(message.data);
     const eventBody = notification.eventBody;
 
-    // Check if email conversatino related
-    if(notification.topicName == topic) {
-        console.log(notification);
-        const participants = eventBody.participants;
-        const lastParticipant = participants[participants.length - 1];
+    console.log(notification);
+    const participants = eventBody.participants;
+    const lastParticipant = participants[participants.length - 1];
 
-        // If new email message add to listing
-        if(lastParticipant.purpose == 'acd'
-                && lastParticipant.state == 'connected'){
-            if(!recentIds.includes(eventBody.id)){
-                // Debounce
-                recentIds.push(eventBody.id);
-                setTimeout(() => {
-                    recentIds = recentIds.filter(id => eventBody.id != id);
-                }, 3000);
+    // If new email message add to listing
+    if(lastParticipant.purpose == 'acd'
+            && lastParticipant.state == 'connected'){
+        if(!recentIds.includes(eventBody.id)){
+            // Debounce
+            recentIds.push(eventBody.id);
+            setTimeout(() => {
+                recentIds = recentIds.filter(id => eventBody.id != id);
+            }, 3000);
 
-                serializeConversationDetails(eventBody)
-                .then((serializedData) => {
-                    view.addInteractionBox(serializedData, assignToAgent);
-                })
-                .catch(e => console.error(e));
-            }
+            serializeConversationDetails(eventBody)
+            .then((serializedData) => {
+                view.addInteractionBox(serializedData, assignToAgent);
+            })
+            .catch(e => console.error(e));
         }
     }
 }
 
+
+function onUserEmailNotification(message){
+    // Parse notification string to a JSON object
+    const notification = JSON.parse(message.data);
+    const eventBody = notification.eventBody;
+
+    checkExistingAssignedListing();
+}
+
+/**
+ * Check if agent already has an alerting or connected listing interactoin
+ * to handle
+ * @returns {Promise} the conversation, undefined if none
+ */
+function checkExistingAssignedListing(){
+    return conversationsApi.getConversations()
+    .then((result) => {
+        let conversations = result.entities;
+        console.log(conversations);
+
+        let listingInteraction = conversations.find((conversation) => {
+            try{
+                let participants = conversation.participants;
+                if(participants[0].purpose == 'customer' &&
+                        participants[0].attributes.listingId){
+                    return true;
+                }
+            }catch(e){
+                console.error(e);
+                return false;
+            }
+        });
+        
+        return listingInteraction;
+    })
+    .then((conversation) => {
+        if(conversation){
+            modal.showInfoModal(
+                'One at a Time',
+                'It seems you have an ongoing listing request to process. \n' +
+                'Press ok to review all the details.',
+                () => {
+                    window.location.href = agentConfig.redirectUriBase 
+                                            + 'listing-review.html';
+                }
+            );
+        }
+    })
+    .catch((e) => console.error(e));
+}
+
+/**
+ * Assign the listing interaction to the the user agent
+ * @param {Object} serializedData result of the serialization function
+ */
 function assignToAgent(serializedData){
     let conversationId = serializedData.conversationId;
     let lastParticipant = serializedData.lastParticipant;
@@ -297,6 +329,46 @@ function assignToAgent(serializedData){
             console.log(err);
         });
     }    
+}
+
+/**
+ * Creation of channels for PureLCoud Notifications on queue and user
+ */
+function setupNotifications(){
+    let userTopic = `v2.users.${user.id}.conversations.emails`;
+
+    return notificationsApi.postNotificationsChannels()
+    // Create a subscription channel for incoming interaction
+    // to the queue
+    .then((channel) => {    
+        let websocket = new WebSocket(channel.connectUri);
+        websocket.onmessage = function(message){
+            // Parse notification string to a JSON object
+            const notification = JSON.parse(message.data);
+            console.log(notification);
+            switch(notification.topicName){
+                case queueTopic:
+                    onQueueEmailNotification(message)
+                    break;
+                case userTopic:
+                    onUserEmailNotification(message)
+                    break;
+                default:
+                    break;
+            }
+        };
+
+        return notificationsApi
+            .putNotificationsChannelSubscriptions(channel.id, [
+                {
+                    id: queueTopic
+                },
+                {
+                    id: userTopic
+                }
+            ]);
+    })
+    .catch(e => console.error(e));
 }
 
 /**
