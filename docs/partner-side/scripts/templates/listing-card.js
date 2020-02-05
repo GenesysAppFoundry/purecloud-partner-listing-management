@@ -16,12 +16,13 @@ t.innerHTML =
                 Description of Listing
             </span>
             <br>
+            <hr>
             Status: <span class="listing-status">
                 ---
             </span>
             <br>
             <span class="devfoundry-comment-notif">
-               --DevFoundry commented on this Listing
+               ----- Genesys commented on this Listing -----
             </span>
         </p>
         </div>
