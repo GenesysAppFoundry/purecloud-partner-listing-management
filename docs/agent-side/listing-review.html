@@ -214,6 +214,7 @@
       </div>
 
       <!-- Attachemnts -->
+      <hr>
       <div class="listing-field" id="attachments-container">
         <p class="has-text-centered is-size-4">Files</p>
         <div id="companyLogo-attachment">
@@ -228,10 +229,17 @@
           <a href="http://" target="_blank" rel="noopener noreferrer"></a>
         </div>
       </div>
+      <hr>
 
+      <div id="devfoundry-comment-container">
+        <p>
+          Additional Comments (eg. If the partner need to fix something. Not needed if the listing is going to be approved.)
+        </p>
+        <textarea id="devfoundry-comment" class="textarea"></textarea>
+      </div>
       <div class="button-container">
-        <button class="button btn-approve">Approve</button>
-        <button class="button btn-approve">Reject</button>
+        <button class="button" id="btn-approve-listing">Approve</button>
+        <button class="button" id="btn-reject-listing">Reject & Send Comments</button>
       </div>
       <br>
     </div>      

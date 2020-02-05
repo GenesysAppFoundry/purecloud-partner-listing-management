@@ -17,6 +17,8 @@ const conversationsApi = new platformClient.ConversationsApi();
 
 // Global
 let user = {};
+let listingAttributes = {};
+let listingInteraction = null;
 
 // Authenticate
 client.loginImplicitGrant(agentConfig.clientId, window.location.href)
@@ -45,7 +47,9 @@ function setUp(){
     partnerAccess.setup(client, platformClient, user);
 
     return verifyInteractionHandling()
-    .then((listingAttributes) => {
+    .then((attrs) => {
+        listingAttributes = attrs;
+
         return partnerAccess.getListingDetails(
             listingAttributes.org,
             listingAttributes.environment,
@@ -55,6 +59,8 @@ function setUp(){
     })
     .then((listingInfo) => {
         view.fillAppDetails(listingInfo);
+
+        setupButtonHandlers();
     })
     .catch((e) => console.error(e));
 }
@@ -66,7 +72,7 @@ function verifyInteractionHandling(){
         console.log(conversations);
 
         // Get the listing interaction
-        let listingInteraction = conversations.find((conversation) => {
+        listingInteraction = conversations.find((conversation) => {
             try{
                 let participants = conversation.participants;
                 if(participants[0].purpose == 'customer' &&
@@ -114,6 +120,94 @@ function verifyInteractionHandling(){
     })
 }
 
-function setupButtonHandlers(){
+function approveListing(){
+    modal.showLoader('Approving this Request...');
 
+    partnerAccess.updateListingStatus(
+        listingAttributes.org,
+        listingAttributes.environment,
+        listingAttributes.dataTableId,
+        listingAttributes.listingId,
+        'APPROVED'
+    )
+    .then(() => {
+        let agentParticipant = listingInteraction.participants
+                                .find(p => p.purpose == 'agent');
+
+        // Disconnect the interaction
+        return conversationsApi.patchConversationParticipant(
+            listingInteraction.id,
+            agentParticipant.id,
+            {
+                "wrapup": {
+                   "code": agentConfig.wrapup.approve
+                },
+                "state": "disconnected"
+            }
+        )
+    })
+    .then(() => {
+        modal.hideLoader();
+        modal.showInfoModal(
+            'Success',
+            'You approval was successful!',
+            () => {
+                window.location.href = agentConfig.redirectUriBase;
+            }
+        );
+    })
+    .catch(e => console.error(e));
+}
+
+function rejectListing(){
+    modal.showLoader('Rejecting this Request...');
+    let comments = document.getElementById('devfoundry-comment');
+    partnerAccess.updateListingStatus(
+        listingAttributes.org,
+        listingAttributes.environment,
+        listingAttributes.dataTableId,
+        listingAttributes.listingId,
+        'FOR_REVISION',
+        comments.value
+    )
+    .then(() => {
+        let agentParticipant = listingInteraction.participants
+                                .find(p => p.purpose == 'agent');
+
+        // Disconnect the interaction
+        return conversationsApi.patchConversationParticipant(
+            listingInteraction.id,
+            agentParticipant.id,
+            {
+                "wrapup": {
+                   "code": agentConfig.wrapup.reject
+                },
+                "state": "disconnected"
+            }
+        )
+    })
+    .then(() => {
+        modal.hideLoader();
+        modal.showInfoModal(
+            'Success',
+            'Sending of rejection and comments successful!',
+            () => {
+                window.location.href = agentConfig.redirectUriBase;
+            }
+        );
+    })
+    .catch(e => console.error(e));
+}
+
+function setupButtonHandlers(){
+    let btnApprove = document.getElementById('btn-approve-listing');
+    let btnReject = document.getElementById('btn-reject-listing');
+
+    btnApprove.addEventListener('click', function(){
+        approveListing();
+    });
+
+    btnReject.addEventListener('click', function(){
+        rejectListing();
+    });
 }

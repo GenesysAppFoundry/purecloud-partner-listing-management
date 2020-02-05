@@ -43,7 +43,7 @@ function fillHardwareAddons(listingDetails){
 
     // Hide if no hardware add-ons
     if(hardwareAddons.regions.length <= 0){
-        elHardwareAddonsContainer.style.display = none;
+        elHardwareAddonsContainer.style.display = 'none';
     }
 
     // Fill all region values
@@ -111,9 +111,13 @@ function fillAttachments(attachments){
 
     // Brochure
     let elBrochure= document.getElementById('brochure-attachment');
-    let elBrochureLink = elBrochure.querySelectorAll('a')[0];
-    elBrochureLink.href = attachments.brochure.sharingUri;
-    elBrochureLink.innerText = attachments.brochure.sharingUri;
+    if(!attachments.brochure) {
+        elBrochure.style.display = 'none';
+    } else{
+        let elBrochureLink = elBrochure.querySelectorAll('a')[0];
+        elBrochureLink.href = attachments.brochure.sharingUri;
+        elBrochureLink.innerText = attachments.brochure.sharingUri;
+    }
 }
 
 export default {
