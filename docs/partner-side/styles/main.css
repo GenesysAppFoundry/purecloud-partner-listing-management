@@ -176,3 +176,8 @@ button.delete:hover {
     display: none;
     margin-left: 20px;
 }
+
+.devfoundry-comment-notif {
+    color: #9bb;
+    display: none;
+}

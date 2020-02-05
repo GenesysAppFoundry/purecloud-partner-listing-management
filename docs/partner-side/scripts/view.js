@@ -87,5 +87,31 @@ export default {
 
         // Pricing
         fieldInterface.textAreaFill('app-pricing', listingDetails.pricing);    
+    },
+
+    setReadOnlyListing(){
+        console.log('Listing is read only');
+        let inputs = document.querySelectorAll('input');
+        for(let i = 0; i < inputs.length; i++){
+            inputs.item(i).disabled = true;
+        }
+
+        let textareas = document.querySelectorAll('textarea');
+        for(let i = 0; i < textareas.length; i++){
+            textareas.item(i).disabled = true;
+        }
+
+        let buttons = document.querySelectorAll('button');
+        for(let i = 0; i < buttons.length; i++){
+            buttons.item(i).disabled = true;
+        }
+
+        let fileButtons = document.querySelectorAll('.file-label');
+        for(let i = 0; i < fileButtons.length; i++){
+            fileButtons.item(i).style.display = 'none';
+        }
+
+        let elListingControls = document.getElementById('edit-listing-controls');
+        elListingControls.style.display = 'none';
     }
 }

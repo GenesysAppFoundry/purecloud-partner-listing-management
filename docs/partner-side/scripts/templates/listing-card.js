@@ -19,9 +19,16 @@ t.innerHTML =
             Status: <span class="listing-status">
                 ---
             </span>
+            <br>
+            <span class="devfoundry-comment-notif">
+               --DevFoundry commented on this Listing
+            </span>
         </p>
         </div>
         <div>
+            <a class="button is-dark btn-assign btn-view-listing">
+                View
+            </a>
             <a class="button is-dark btn-assign btn-edit-listing">
                 Edit
             </a>
@@ -39,6 +46,7 @@ export default {
         let el = document.importNode(t.content, true);
 
         let appDetails = JSON.parse(dataTableRow.listingDetails);
+        let devFoundryNotes = JSON.parse(dataTableRow.devFoundryNotes);
         let status = dataTableRow.status;
 
         // Name
@@ -54,26 +62,68 @@ export default {
         let listingStatusEl = el.querySelectorAll('.listing-status')[0];
         listingStatusEl.innerText = listingStatus[status];
 
-        // Delete Button
+        // DevFoundry Notes
+        let elDevNotes = el.querySelectorAll('.devfoundry-comment-notif')[0];
+        if(devFoundryNotes.length > 0){
+            elDevNotes.style.display = 'block';
+        }
+
+        // Button Visibilities (Normally OFF)
         let btnDelete = el.querySelectorAll('.btn-delete-listing')[0];
-        // Hide delete button if status is no longer 'in progress'
-        if(status != 'IN_PROGRESS'){
-            btnDelete.style.visibility = 'hidden';
-        }else{
+        let btnEdit = el.querySelectorAll('.btn-edit-listing')[0];
+        let btnView = el.querySelectorAll('.btn-view-listing')[0];
+        btnDelete.style.display = 'none';
+        btnEdit.style.display = 'none';
+        btnView.style.display = 'none';
+
+        switch(status){
+            case 'IN_PROGRESS':
+                btnDelete.style.display = '';
+                btnEdit.style.display = '';
+                break;
+            case 'PENDING_APPROVAL':
+                btnView.style.display = '';
+                break;
+            case 'FOR_REVISION':
+                btnEdit.style.display = '';
+                break;
+            case 'APPROVED':
+                btnEdit.style.display = '';
+                break;
+            case 'LIVE':
+                btnEdit.style.display = '';
+                break;
+            default:
+                break;
+        }
+
+        // Delete Button
+        if(btnDelete.style.display != 'none'){
             btnDelete.onclick = function(){
                 showListingDeletionModal(dataTableRow.key);
             };
         }
-        
 
         // Edit Button
-        let btnEdit = el.querySelectorAll('.btn-edit-listing')[0];
-        btnEdit.onclick = function(){
-            window.location.href = 
-                config.redirectUriBase + 
-                'edit-listing.html' +
-                '?id=' + dataTableRow.key;
-        };
+        if(btnEdit.style.display != 'none'){
+            btnEdit.onclick = function(){
+                window.location.href = 
+                    config.redirectUriBase + 
+                    'edit-listing.html' +
+                    '?id=' + dataTableRow.key;
+            };
+        }
+
+        // View Button
+        if(btnView.style.display != 'none'){
+            btnView.onclick = function(){
+                window.location.href = 
+                    config.redirectUriBase + 
+                    'edit-listing.html' +
+                    '?id=' + dataTableRow.key +
+                    '&readonly=true';
+            };
+        }
 
         return el;
     }

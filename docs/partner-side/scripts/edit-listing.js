@@ -27,6 +27,7 @@ var urlParams = new URLSearchParams(window.location.search);
 
 // Globals
 let listingId = urlParams.get('id');
+let readOnly = urlParams.get('readonly');
 let listingRow = {};
 let listingDetailsObject = {};
 let listingRowAttachments = {};
@@ -36,6 +37,7 @@ let orgInfo = '';
 let managerGroup = null;
 let workspaceId = null;
 let environment = '';
+
 
 // Add modals to DOM
 modal.setup();
@@ -83,6 +85,10 @@ function setUp(){
     })
     .then(() => {
         cheatChat.setUp(orgInfo, environment, listingDataTable);
+
+        if(readOnly == 'true'){
+            view.setReadOnlyListing();
+        }
 
         assignValidators();
         assignButtonEventHandlers();
