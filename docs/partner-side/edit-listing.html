@@ -18,9 +18,33 @@
 <body>
   <section class="section">
     <div class="container">
+      <!-- AppFoundry Notes -->
       <div id="devfoundry-notes-container">
       </div>
-      
+      <hr>
+      <!-- Tab Navigation -->
+      <div class="tabs is-centered is-boxed is-medium">
+        <ul>
+          <li class="is-active">
+            <a id="listing-details-tab">
+              <span class="icon is-small">
+                <i class="fas fa-file-alt" aria-hidden="true"></i>
+              </span>
+              <span>Listing Details</span>
+            </a>
+          </li>
+          <li>
+            <a id="premium-app-details-tab">
+              <span class="icon is-small">
+                <i class="fas fa-star" aria-hidden="true"></i>
+              </span>
+              <span>Premium App Details</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Listing Details -->
       <form action="" id="edit-listing-form">
         <!-- First Section -->
         <div class="div-section">
@@ -669,21 +693,241 @@
             </div>
           </div>
         </div>
-        <hr>
+      </form>
 
-        <!-- Buttons  -->
-        <div class="field is-grouped" id="edit-listing-controls">
-          <div class="control">
-            <button id="btn-save" class="button is-link">Save</button>
+      <!-- Premium App Details -->
+      <form action="" id="edit-listing-pa-form">
+        <div class="box information-box">
+          <p>(Premium App explanation here.)</p>
+          <br>
+          <p>More Details here: 
+            <a href="https://developer.mypurecloud.com/appfoundry/premium-client-applications.html">Dev Center Article</a>
+          </p>
+          <p>Contact us for question: 
+            <a href="mailto:appfoundry@genesys.com">
+              appfoundry@genesys.com
+            </a>
+          </p>
+          <hr>
+          <div>
+            <div class="control">
+              <label class="checkbox">
+                <input type="checkbox" id="cb-p-app-isPremiumApp"> 
+                  <span>This Listing is a Premium App</span>
+              </label>
+            </div>
           </div>
-          <div class="control">
-            <button id="btn-cancel" class="button is-link is-light">Cancel</button>
+        </div>
+        <div id="p-app-premiumAppFields">
+          <!-- Premium App Description -->
+          <div class="field" id="p-app-description">
+            <label class="form-label">Description</label>
+            <div class="control">
+              <input class="input" type="text" placeholder="Description" value="">
+            </div>
+            <p class="help is-danger"></p>
           </div>
-          <div class="control">
-            <button id="btn-submit" class="button is-link is-light">Submit</button>
+          <!-- Help URL -->
+          <div class="field" id="p-app-helpURL">
+            <label class="form-label">Help URL</label>
+            <div class="control">
+              <input class="input" type="text" placeholder="Help URL" value="">
+            </div>
+            <p class="help is-danger"></p>
+          </div>
+          <!-- Default Application URL -->
+          <div class="field" id="p-app-defaultApplicationURL">
+            <label class="form-label">Default Application URL </label>
+            <div class="control">
+              <input class="input" type="text" placeholder="Default Application URL" value="">
+            </div>
+            <p class="help is-danger"></p>
+          </div>
+          <!-- Unique Premissions -->
+          <div class="field" id="p-app-uniquePermissions">
+            <label class="form-label">Unique Permissions</label>
+            <div class="control">
+              <input class="input" type="text" placeholder="Unique Permissions" value="">
+            </div>
+            <p class="help is-danger"></p>
+          </div>
+          <!-- Default Sandbox Options -->
+          <div class="field" id="p-app-defaultSandboxOptions">
+            <label class="form-label">Default Sandbox Options</label>
+            <p class="help is-danger"></p>
+            <div class="control">
+              <label class="checkbox">
+                <input type="checkbox" class="cb-p-app-defaultSandboxOptions" value="allow-forms"> 
+                  <span>allow-forms</span>
+              </label>
+              <br />
+              <label class="checkbox">
+                <input type="checkbox" class="cb-p-app-defaultSandboxOptions" value="allow-modals"> 
+                  <span>allow-modals</span>
+              </label>
+              <br />
+              <label class="checkbox">
+                <input type="checkbox" class="cb-p-app-defaultSandboxOptions" value="allow-popups"> 
+                  <span>allow-popups</span>
+              </label>
+              <br />
+              <label class="checkbox">
+                <input type="checkbox" class="cb-p-app-defaultSandboxOptions" value="allow-presentation"> 
+                  <span>allow-presentation</span>
+              </label>
+              <br />
+              <label class="checkbox">
+                <input type="checkbox" class="cb-p-app-defaultSandboxOptions" value="allow-same-origin"> 
+                  <span>allow-same-origin</span>
+              </label>
+              <br />
+              <label class="checkbox">
+                <input type="checkbox" class="cb-p-app-defaultSandboxOptions" value="allow-scripts"> 
+                  <span>allow-scripts</span>
+              </label>
+              <br />
+            </div>            
+          </div>
+          <!-- App Location -->
+          <div class="field" id="p-app-applicationLocation">
+            <label class="form-label">Selling Party</label>
+            <p class="help is-danger"></p>
+            <div class="control-applicationLocation">
+              <label class="radio">
+                <input type="radio" name="rdo-p-app-applicationLocation" value="Directory Menu">
+                Directory Menu
+              </label>
+              <label class="radio">
+                <input type="radio" name="rdo-p-app-applicationLocation" value="Performance Menu">
+                Performance Menu
+              </label>
+              <label class="radio">
+                <input type="radio" name="rdo-p-app-applicationLocation" value="Apps Menu">
+                Apps Menu
+              </label>
+              <label class="radio">
+                <input type="radio" name="rdo-p-app-applicationLocation" value="Sidecar (aka Widget panel)">
+                Sidecar (aka Widget panel)
+              </label>
+            </div>
+          </div>
+          <!-- Hosted App Icon -->
+          <div class="field" id="p-app-hostedAppIcon">
+            <label class="form-label">Hosted App Icon</label>
+            <div class="control">
+              <input class="input" type="text" placeholder="Hosted App Icon" value="">
+            </div>
+            <p class="help is-danger"></p>
+          </div>
+          <!-- Grant Type -->
+          <div class="field" id="p-app-regionalOAuthGrantType">
+            <label class="form-label">OAuth</label>
+            <p class="help is-danger"></p>
+            <div class="control-regionalOAuthGrantType">
+              <label class="radio">
+                <input type="radio" name="rdo-p-app-regionalOAuthGrantType" value="Code Authorization">
+                Code Authorization
+              </label>
+              <label class="radio">
+                <input type="radio" name="rdo-p-app-regionalOAuthGrantType" value="Implicit Grant">
+                Implicit Grant
+              </label>
+            </div>
+          </div>
+          <!-- Terms of Service URL -->
+          <div class="field" id="p-app-tosURL">
+            <label class="form-label">Terms of Service URL</label>
+            <div class="control">
+              <input class="input" type="text" placeholder="Terms of Service URL" value="">
+            </div>
+            <p class="help is-danger"></p>
+          </div>
+          <hr>
+          <!-- FAQ URL -->
+          <div class="field" id="p-app-faq">
+            <label class="form-label">FAQ URL</label>
+            <div class="control">
+              <input class="input" type="text" placeholder="FAQ" value="">
+            </div>
+            <p class="help is-danger"></p>
+          </div>
+          <!-- Privacy Policy URL -->
+          <div class="field" id="p-app-privacyPolicy">
+            <label class="form-label">Privacy Policy URL</label>
+            <div class="control">
+              <input class="input" type="text" placeholder="Privacy Policy URL" value="">
+            </div>
+            <p class="help is-danger"></p>
+          </div>
+          <!-- Support Contact -->
+          <div class="field" id="p-app-supportContact">
+            <label class="form-label">Support Contact</label>
+            <div class="control">
+              <input class="input" type="text" placeholder="Support Contact" value="">
+            </div>
+            <p class="help is-danger"></p>
+          </div>
+          <!-- Sales Contact -->
+          <div class="field" id="p-app-salesContact">
+            <label class="form-label">Sales Contact</label>
+            <div class="control">
+              <input class="input" type="text" placeholder="Sales Contact" value="">
+            </div>
+            <p class="help is-danger"></p>
+          </div>
+          <!-- Additional Help URLs -->
+          <div class="field" id="p-app-additionalHelpURLs">
+            <label class="form-label">Additional Help URLs</label>
+            <div class="control">
+              <input class="input" type="text" placeholder="Additional Help URLs" value="">
+            </div>
+            <p class="help is-danger"></p>
+          </div>
+          <hr>
+          <!-- Premium App Icon-->
+          <div class="field" id="p-app-icon">
+            <label class="label">Premium App Installation Icon (SVG Only)</label>
+            <p class="help is-danger"></p>
+            <div class="file">
+              <label class="file-label btn">
+                <input class="file-input" 
+                      type="file" 
+                      name="resume"
+                      accept=".svg"
+                >
+                <span class="file-cta">
+                  <span class="file-icon">
+                    <i class="fas fa-upload"></i>
+                  </span>
+                  <span class="file-label">
+                    Choose a file…
+                  </span>
+                </span>
+              </label>
+            </div>
+            <div class="preview-loading">
+              <div class="fa-2x">
+                <i class="fas fa-spinner fa-spin genOrange"></i>
+              </div>
+            </div>
+            <div class="preview-image"></div>
           </div>
         </div>
       </form>
+
+      <!-- Buttons  -->
+      <hr>
+      <div class="field is-grouped" id="edit-listing-controls">
+        <div class="control">
+          <button id="btn-save" class="button is-link">Save</button>
+        </div>
+        <div class="control">
+          <button id="btn-cancel" class="button is-link is-light">Cancel</button>
+        </div>
+        <div class="control">
+          <button id="btn-submit" class="button is-link is-light">Submit</button>
+        </div>
+      </div>
     </div>
   </section>
 

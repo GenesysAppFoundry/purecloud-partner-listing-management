@@ -2,6 +2,7 @@ import view from './view.js';
 import modal from '../../components/main.js';
 import config from '../../config/config.js';
 import blankCoreListingJSON from '../../config/core-listing-blank.js';
+import blankPremiumAppJSON from '../../config/premium-app-listing-blank.js';
 import cheatChat from './cheat-chat.js';
 
 //Load purecloud and create the ApiClient Instance
@@ -24,26 +25,6 @@ let listingsStatus = null;
 let orgInfo = null;
 let environment = '';
 
-// Authenticate
-// TODO: regional authentication
-client.loginImplicitGrant('e7de8a75-62bb-43eb-9063-38509f8c21af', 
-                        window.location.href.split('?')[0])
-.then(() => {
-    console.log('PureCloud Auth successful.');
-
-    environment = client.environment;
-    // Add modals to DOM
-    modal.setup();
-
-    modal.showLoader('Please wait...');
-    return setUp(); 
-})
-.then(() => {
-    modal.hideLoader();
-})    
-.catch((e) => {
-    console.error(e);
-});
 
 /**
  * Setup the the page and all authentication and data required
@@ -198,12 +179,13 @@ function createNewListing(listingName){
         // Create the JSON for the app listing details
         let jsonInfo = blankCoreListingJSON;
         jsonInfo.name = listingName;
+        let paJsonInfo = blankPremiumAppJSON;
 
         // Create the new row for the new listing
         return architectApi.postFlowsDatatableRows(listingDataTable.id, {
             key: version.toString(),
             listingDetails: JSON.stringify(jsonInfo),
-            premiumAppDetails: '{}',
+            premiumAppDetails: JSON.stringify(paJsonInfo),
             attachments: '{}',
             workspaceId: newWorkspaceId
         });
@@ -274,3 +256,25 @@ window.showListingDeletionModal = showListingDeletionModal;
 
 window.showCreationModal = modal.showCreationModal;
 window.hideCreationModal = modal.hideCreationModal;
+
+
+// Authenticate
+// TODO: regional authentication
+client.loginImplicitGrant('e7de8a75-62bb-43eb-9063-38509f8c21af', 
+                        window.location.href.split('?')[0])
+.then(() => {
+    console.log('PureCloud Auth successful.');
+
+    environment = client.environment;
+    // Add modals to DOM
+    modal.setup();
+
+    modal.showLoader('Please wait...');
+    return setUp(); 
+})
+.then(() => {
+    modal.hideLoader();
+})    
+.catch((e) => {
+    console.error(e);
+});

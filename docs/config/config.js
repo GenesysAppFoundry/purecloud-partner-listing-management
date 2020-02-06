@@ -4,6 +4,8 @@ export default {
     },
     //"redirectUriBase": "https://princemerluza.github.io/purecloud-partner-listing-management/partner-side/",
     "redirectUriBase": "http://localhost:8080/partner-side/",
+    //"globalAssetsURL": "https://princemerluza.github.io/purecloud-partner-listing-management/assets/",
+    "globalAssetsURL": "http://localhost:8080/assets/",
 
     // PureCloud assigned name for the premium app
     // This should match the integration type name of the Premium App

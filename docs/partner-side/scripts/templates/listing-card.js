@@ -76,6 +76,10 @@ export default {
         btnDelete.style.display = 'none';
         btnEdit.style.display = 'none';
         btnView.style.display = 'none';
+        
+        // FOR TESTING.
+        // TODO: Delete next line
+        btnDelete.style.display = '';
 
         switch(status){
             case 'IN_PROGRESS':

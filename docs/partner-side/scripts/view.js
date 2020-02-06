@@ -4,6 +4,7 @@ import devfoundryNoteTemplate from './templates/devfoundry-note.js';
 import addNewListing from './templates/add-new-listing.js';
 import hardwareAddons from './special-fields/hardware-addons.js';
 import useCases from './special-fields/use-cases.js';
+import validators from '../../config/validators.js';
 
 export default {
     /**
@@ -28,66 +29,59 @@ export default {
         containerEl.appendChild(addNewEl);
     },
 
-    fillEditListingFields(listingDetails){
-        // Name
-        fieldInterface.inputTextFill('app-name', listingDetails.name);
-
-        // Platform checkboxes
-        fieldInterface.checkBoxesFill('cb-app-platform', listingDetails.platforms);
-        
-        // Vendor Name 
-        fieldInterface.inputTextFill('app-vendorName', listingDetails.vendorName);
-
-        // Vendor Website 
-        fieldInterface.inputTextFill('app-vendorWebSite', listingDetails.vendorWebSite);    
-
-        // Vendor Email 
-        fieldInterface.inputTextFill('app-vendorEmail', listingDetails.vendorEmail);    
-
-        // TagLine
-        fieldInterface.inputTextFill('app-tagLine', listingDetails.tagLine);    
-
-        // Short Description
-        fieldInterface.textAreaFill('app-shortDescription', listingDetails.shortDescription);    
-
-        // Full Description
-        fieldInterface.textAreaFill('app-fullDescription', listingDetails.fullDescription);    
-
-        // Video URL
-        fieldInterface.inputTextFill('app-videoURL', listingDetails.videoURL);    
-
-        // Help Documentation
-        fieldInterface.inputTextFill('app-helpDocumentation', listingDetails.helpDocumentation);    
-
-        // App Languages
-        fieldInterface.checkBoxesFill('cb-appLanguages', listingDetails.appLanguages);
-
-        // Industries
-        fieldInterface.checkBoxesFill('cb-app-industries', listingDetails.industries);
-
-        // Selling Party
-        fieldInterface.radioFill('rdo-app-sellingParty', listingDetails.sellingParty);
-
-        // Licensing
-        fieldInterface.checkBoxesFill('cb-app-licensing', listingDetails.licensingClassifications);
-
-        // App Permissions
-        fieldInterface.inputTextFill('app-appPermissions', listingDetails.appPermissions);    
-
-        // Attestations
-        fieldInterface.checkBoxesFill('cb-app-attestations', listingDetails.attestations);
-
-        // App Type
-        fieldInterface.checkBoxesFill('cb-app-appType', listingDetails.appType);
+    fillEditListingFields(listingDetails, premiumAppDetails){
+        // Basic Fields
+        let listingDetailRule = validators.listingDetail;
+        Object.keys(listingDetailRule).forEach((key) => {
+            let rule = listingDetailRule[key];
+            switch(rule.type){
+                case 'input':
+                    fieldInterface.inputTextFill(
+                        rule.fieldId, listingDetails[key]);
+                    break;
+                case 'textarea':
+                    fieldInterface.textAreaFill(
+                        rule.fieldId, listingDetails[key]);
+                    break;
+                case 'checkbox':
+                    fieldInterface.checkBoxesFill(
+                        rule.checkboxClass, listingDetails[key]);
+                    break;
+                case 'radio':
+                    fieldInterface.radioFill(
+                        rule.radioName, listingDetails[key]);
+                    break;
+            }
+        });
+        // Premium App Basic Fields
+        let premiumAppRule = validators.premiumAppDetails;
+        Object.keys(premiumAppRule).forEach((key) => {
+            let rule = premiumAppRule[key];
+            switch(rule.type){
+                case 'input':
+                    fieldInterface.inputTextFill(
+                        rule.fieldId, premiumAppDetails[key]);
+                    break;
+                case 'textarea':
+                    fieldInterface.textAreaFill(
+                        rule.fieldId, premiumAppDetails[key]);
+                    break;
+                case 'checkbox':
+                    fieldInterface.checkBoxesFill(
+                        rule.checkboxClass, premiumAppDetails[key]);
+                    break;
+                case 'radio':
+                    fieldInterface.radioFill(
+                        rule.radioName, premiumAppDetails[key]);
+                    break;
+            }
+        });
 
         // Hardware Add-ons 
         hardwareAddons.fillInnerFields(listingDetails.hardwareAddons);
 
         // Use Cases
-        useCases.showUseCases(listingDetails.useCases);
-
-        // Pricing
-        fieldInterface.textAreaFill('app-pricing', listingDetails.pricing);    
+        useCases.showUseCases(listingDetails.useCases); 
     },
 
     setReadOnlyListing(){
@@ -123,5 +117,45 @@ export default {
             let newNote = devfoundryNoteTemplate.new(note);
             elContainer.appendChild(newNote);
         });
+    },
+    
+    showListingDetailsTab(){
+        let elForm = document.getElementById('edit-listing-form');
+        let elPaForm = document.getElementById('edit-listing-pa-form');
+        let elListingTab = document.getElementById('listing-details-tab');
+        let elPATab = document.getElementById('premium-app-details-tab');
+
+        elListingTab.parentElement.classList.add('is-active');
+        elPATab.parentElement.classList.remove('is-active');
+
+        elForm.style.display = '';
+        elPaForm.style.display = 'none';
+    },
+
+    showPremiumAppDetailsTab(){
+        let elForm = document.getElementById('edit-listing-form');
+        let elPaForm = document.getElementById('edit-listing-pa-form');
+        let elListingTab = document.getElementById('listing-details-tab');
+        let elPATab = document.getElementById('premium-app-details-tab');
+
+        elListingTab.parentElement.classList.remove('is-active');
+        elPATab.parentElement.classList.add('is-active');
+
+        elForm.style.display = 'none';
+        elPaForm.style.display = '';
+    },
+
+    showPremiumAppFields(){
+        let container = document.getElementById('p-app-premiumAppFields');
+        let cb = document.getElementById('cb-p-app-isPremiumApp');
+        cb.checked = true;
+        container.style.display = '';
+    },
+
+    hidePremiumAppFields(){
+        let container = document.getElementById('p-app-premiumAppFields');
+        let cb = document.getElementById('cb-p-app-isPremiumApp');
+        cb.checked = false;
+        container.style.display = 'none';
     }
 }

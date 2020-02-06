@@ -31,48 +31,26 @@ let readOnly = urlParams.get('readonly');
 let listingRow = {};
 let listingRowNotes = [];
 let listingDetailsObject = {};
+let premiumAppDetailsObject = {};
 let listingRowAttachments = {};
 let listingDataTable = null;
-let validatorFunctions = [];
+let validatorFunctions = {
+    core: [],
+    premium: []
+};
 let orgInfo = '';
 let managerGroup = null;
 let workspaceId = null;
 let environment = '';
+let isPremiumApp = false; // Don't set this manually, use the setPremiumAppStatus()
 
-
-// Add modals to DOM
-modal.setup();
-modal.showLoader('Loading Listing...');
-
-// Authenticate
-// TODO: regional authentication
-client.loginImplicitGrant('e7de8a75-62bb-43eb-9063-38509f8c21af', 
-                    window.location.href.split('?')[0],
-                    {state: listingId})
-.then((data) => {
-    listingId = client.authData.state;
-    console.log('PureCloud Auth successful.');
-    environment = client.environment;
-
-    // Checks if the query params are already in the URL, if not readd it
-    if(!window.location.href.includes('?')){
-        history.pushState({}, '', window.location.href + '?id=' + listingId);
-    }
-
-    return setUp(); 
-})
-.then(() => {
-    modal.hideLoader();
-})    
-.catch((e) => {
-    console.error(e);
-});
-
-console.log(client);
 /**
  * Initial Setup for the page
  */
 function setUp(){
+    // Default view setup for the page
+    view.showListingDetailsTab();
+
     // Set up Cheat Chat
     return organizationApi.getOrganizationsMe()
     .then((org) => {
@@ -92,7 +70,7 @@ function setUp(){
         }
 
         assignValidators();
-        assignButtonEventHandlers();
+        assignEventHandlers();
         validateAllFields();
         setupSpecialFields();
     });
@@ -107,13 +85,17 @@ function loadListing(){
     })
     .then((row) => {
         console.log(row);
+        // Keep references to the cells data
         listingRow = row;
         listingDetailsObject = JSON.parse(listingRow.listingDetails);
+        premiumAppDetailsObject = JSON.parse(listingRow.premiumAppDetails);
         listingRowAttachments = JSON.parse(listingRow.attachments);
         listingRowNotes = JSON.parse(listingRow.devFoundryNotes);
         workspaceId = listingRow.workspaceId;
 
-        view.fillEditListingFields(listingDetailsObject);
+        setPremiumAppStatus(premiumAppDetailsObject._isPremiumApp);
+
+        view.fillEditListingFields(listingDetailsObject, premiumAppDetailsObject);
         view.showDevFoundryNotes(listingRowNotes);
     })
 }
@@ -145,12 +127,21 @@ function saveListing(){
                                     listingDetails[key].type, 
                                     listingDetails[key].fieldId);
     });
+    // Premium App Basic Fields
+    let premiumAppRules = validators.premiumAppDetails;
+    Object.keys(premiumAppRules).forEach((key) => {
+        premiumAppDetailsObject[key] = fieldInterface.getFieldValue(
+                                    premiumAppRules[key].type, 
+                                    premiumAppRules[key].fieldId);
+    });
+    premiumAppDetailsObject._isPremiumApp = isPremiumApp;
 
     // Special fields
     buildSpecialFields();
 
     // Listing Row. Turn the entire thing to string
     listingRow.listingDetails = JSON.stringify(listingDetailsObject);
+    listingRow.premiumAppDetails = JSON.stringify(premiumAppDetailsObject); 
     console.log(listingRow);
 
     // Attachments
@@ -226,38 +217,15 @@ function assignValidators(){
     // Listing Details
     let listingDetails = validators.listingDetail;
     Object.keys(listingDetails).forEach((key) => {
-        validatorFunctions.push(assignValidator(listingDetails[key]));
+        validatorFunctions.core.push(assignValidator(listingDetails[key]));
     });
 
     // Premium App
-    // TODO:
-}
-
-/**
- * Assign event handlers to the static buttons
- */
-function assignButtonEventHandlers(){
-    // Save
-    document.getElementById('btn-save')
-            .addEventListener('click', function(e){
-                e.preventDefault(); // Prevent submitting form
-                saveListing();
-            });
-    
-    // Cancel
-    document.getElementById('btn-cancel')
-            .addEventListener('click', function(e){
-                e.preventDefault(); // Prevent submitting form
-                window.location.href = config.redirectUriBase;
-            });
-
-    // Submit
-    document.getElementById('btn-submit')
-            .addEventListener('click', function(e){
-                e.preventDefault(); // Prevent submitting form
-
-                submitListing();
-            });
+    let premiumAppRules = validators.premiumAppDetails;
+    Object.keys(premiumAppRules).forEach((key) => {
+        console.log(key);
+        validatorFunctions.premium.push(assignValidator(premiumAppRules[key]));
+    });
 }
 
 /**
@@ -267,12 +235,21 @@ function assignButtonEventHandlers(){
 function validateAllFields(){
     let allValid = true;
 
-    // Basic Fields
-    validatorFunctions.forEach((validator) => {
+    // Basic Fields Core
+    validatorFunctions.core.forEach((validator) => {
         if(!validator.func.apply(validator.context)){
             allValid = false;
         }
     });
+    if(isPremiumApp){
+        // Basic Fields Premium
+        validatorFunctions.premium.forEach((validator) => {
+            if(!validator.func.apply(validator.context)){
+                allValid = false;
+            }
+        });
+    }
+    
 
     //Special Fields
     if(!validateSpecialFields()) allValid = false;
@@ -311,7 +288,7 @@ function validateSpecialFields(){
     // TODO: Use Cases
 
     // Attachemnt fields
-    if(!fileUploaders.validateFields()) valid = false;
+    if(!fileUploaders.validateFields(isPremiumApp)) valid = false;
 
     return valid;
 }
@@ -352,3 +329,92 @@ function submitListing(){
         modal.hideYesNoModal();
     })
 }
+
+function setPremiumAppStatus(status){
+    isPremiumApp = status;
+    if(isPremiumApp){
+        view.showPremiumAppFields();
+        validateAllFields();
+    }else{
+        view.hidePremiumAppFields();
+    }
+}
+
+/**
+ * Assign event handlers to the static buttons
+ * and other elements
+ */
+function assignEventHandlers(){
+    // Save
+    document.getElementById('btn-save')
+            .addEventListener('click', function(e){
+                e.preventDefault(); // Prevent submitting form
+                saveListing();
+            });
+    
+    // Cancel
+    document.getElementById('btn-cancel')
+            .addEventListener('click', function(e){
+                e.preventDefault(); // Prevent submitting form
+                window.location.href = config.redirectUriBase;
+            });
+
+    // Submit
+    document.getElementById('btn-submit')
+            .addEventListener('click', function(e){
+                e.preventDefault(); // Prevent submitting form
+
+                submitListing();
+            });
+
+    // Tabs
+    document.getElementById('listing-details-tab')
+        .addEventListener('click', function(){
+            view.showListingDetailsTab();
+        });
+
+    document.getElementById('premium-app-details-tab')
+        .addEventListener('click', function(){
+            view.showPremiumAppDetailsTab();
+        });
+
+    // Premium App Checkbox
+    document.getElementById('cb-p-app-isPremiumApp')
+        .addEventListener('change', function(){
+            // Call setter only if it's a togglet to prevent infinite loop
+            if(this.checked != isPremiumApp){
+                setPremiumAppStatus(this.checked);
+            }
+        })
+}
+
+
+// Add modals to DOM
+modal.setup();
+modal.showLoader('Loading Listing...');
+
+// Authenticate
+// TODO: regional authentication
+client.loginImplicitGrant('e7de8a75-62bb-43eb-9063-38509f8c21af', 
+                    window.location.href.split('?')[0],
+                    {state: listingId})
+.then((data) => {
+    listingId = client.authData.state;
+    console.log('PureCloud Auth successful.');
+    environment = client.environment;
+
+    // Checks if the query params are already in the URL, if not readd it
+    if(!window.location.href.includes('?')){
+        history.pushState({}, '', window.location.href + '?id=' + listingId);
+    }
+
+    return setUp(); 
+})
+.then(() => {
+    modal.hideLoader();
+})    
+.catch((e) => {
+    console.error(e);
+});
+
+console.log(client);

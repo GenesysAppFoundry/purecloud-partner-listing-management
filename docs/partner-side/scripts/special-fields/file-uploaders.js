@@ -3,6 +3,7 @@
  */
 
 import validators from '../../../config/validators.js'
+import config from '../../../config/config.js';
 
 /**
  * Validate 
@@ -203,7 +204,7 @@ export default {
                 contentManagementApi.getContentmanagementDocument(doc.id)
                 .then((docPcData) => {
                     let thumbnails = docPcData.thumbnails;
-                    if(thumbnails){
+                    if(thumbnails && thumbnails.length > 0){
                         const img  = new Image();
                         img.addEventListener('load', () => {
                             el_previewContainer.style.display = 'block';
@@ -214,8 +215,20 @@ export default {
                         });
                         img.src = docPcData.thumbnails[0].imageUri; 
                     }else{
-                        el_previewContainer.innerText =
-                             `No Preview available. But file ${doc.title} exists.`;
+                        const img  = new Image();
+                        img.addEventListener('load', () => {
+                            el_previewContainer.style.display = 'block';
+                            el_previewLoading.style.display = 'none';
+                            el_previewContainer.appendChild(img);
+
+                            el_errorMessage.innerText = '';
+                        });
+                        img.src = config.globalAssetsURL + 'img/file.png'; 
+
+                        let statement = document.createElement('div'); 
+                        statement.innerText =
+                             `No Preview available. But don't worry, file ${docPcData.filename} is stored and exists.`;
+                        el_previewContainer.appendChild(statement);
                     }
                 })
                 .catch(e => console.error(e));
@@ -348,13 +361,15 @@ export default {
      * error messages if they are present or not.
      * TL;DR: No error message displayed = all files are valid.
      * Exception is the "required" property for the rule.
+     * @param {Boolean} includePremium if it should consider premium app attachments
      */
-    validateFields(){
+    validateFields(includePremium){
         let valid = true;
         
         Object.keys(validators.attachments).forEach(key => {
             let rule = validators.attachments[key];
             if(!rule.fieldId) return;
+            if(!includePremium && rule.forPremium) return;
 
             let el_container = document.getElementById(rule.fieldId);
             let el_preview = el_container.querySelectorAll('.preview-image')[0];
