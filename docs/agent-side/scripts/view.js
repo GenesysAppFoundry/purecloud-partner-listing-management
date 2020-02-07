@@ -14,6 +14,8 @@ export default {
      * @param {Function} assignToAgentCb callback when assign to me is pressed
      */
     addInteractionBox(serializedData, assignToAgentCb){
+        if(!serializedData) return;
+
         let elContainer = document.getElementById('listing-interactions-container');
         let newBox = listingInteractionTemplate.new(serializedData, assignToAgentCb);
         
@@ -70,5 +72,7 @@ export default {
      */
     hideBlankInteractionsMsg(){
         elNoInteractionsText.style.display = 'none';
-    }
+    },
+
+
 }

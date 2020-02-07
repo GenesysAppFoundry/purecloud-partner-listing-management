@@ -130,7 +130,7 @@ function refreshInteractionsList(){
                 .then((fullConvo) => {
                     return serializeConversationDetails(fullConvo);
                 })
-                .catch(e => console.error(e))
+                .catch(e => null)
             );
         });
 

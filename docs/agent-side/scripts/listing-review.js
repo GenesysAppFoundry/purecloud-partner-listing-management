@@ -20,29 +20,6 @@ let user = {};
 let listingAttributes = {};
 let listingInteraction = null;
 
-// Authenticate
-client.loginImplicitGrant(agentConfig.clientId, window.location.href)
-// Login
-.then(() => {
-    modal.setup();
-    console.log('PureCloud Auth successful.');
-
-    modal.showLoader('Setting you up');
-    return usersApi.getUsersMe();
-})    
-// Get User
-.then((me) => {
-    user = me;
-
-    return setUp();
-})
-.then(() => {
-    modal.hideLoader();
-})
-.catch((e) => {
-    console.error(e);
-});
-
 function setUp(){    
     partnerAccess.setup(client, platformClient, user);
 
@@ -59,8 +36,17 @@ function setUp(){
     })
     .then((listingInfo) => {
         view.fillAppDetails(listingInfo);
+        view.showListingDetailsTab();
 
-        setupButtonHandlers();
+        // If not premium app don't show the tabs at all
+        let isPremiumApp = listingInfo.premiumAppDetails._isPremiumApp;
+        if(isPremiumApp){
+            view.showTabs();
+        }else{
+            view.hideTabs();
+        }
+
+        setupEventHandlers();
     })
     .catch((e) => console.error(e));
 }
@@ -199,7 +185,19 @@ function rejectListing(){
     .catch(e => console.error(e));
 }
 
-function setupButtonHandlers(){
+function setupEventHandlers(){
+    // TAabs
+    document.getElementById('listing-details-tab')
+        .addEventListener('click', function(){
+            view.showListingDetailsTab();
+        });
+
+    document.getElementById('premium-app-details-tab')
+        .addEventListener('click', function(){
+            view.showPremiumAppDetailsTab();
+        });
+
+    // Final Decision
     let btnApprove = document.getElementById('btn-approve-listing');
     let btnReject = document.getElementById('btn-reject-listing');
 
@@ -211,3 +209,27 @@ function setupButtonHandlers(){
         rejectListing();
     });
 }
+
+
+// Authenticate
+client.loginImplicitGrant(agentConfig.clientId, window.location.href)
+// Login
+.then(() => {
+    modal.setup();
+    console.log('PureCloud Auth successful.');
+
+    modal.showLoader('Setting you up');
+    return usersApi.getUsersMe();
+})    
+// Get User
+.then((me) => {
+    user = me;
+
+    return setUp();
+})
+.then(() => {
+    modal.hideLoader();
+})
+.catch((e) => {
+    console.error(e);
+});

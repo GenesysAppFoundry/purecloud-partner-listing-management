@@ -22,18 +22,44 @@ useCaseTemplate.innerHTML =
 </div>
 `;
 
-function fillBasicFields(listingDetails){
+function fillBasicFields(listingDetails, premiumAppDetails){
     // Fill the basic normal boring fields
     Object.keys(validators.listingDetail).forEach((key) => {
         let rule = validators.listingDetail[key];
 
-        let elLabel = document.querySelectorAll(`#${rule.fieldId}`);
+        let elLabelQ = document.querySelectorAll(`#${rule.fieldId}`);
 
-        // Only fill fields that are actually availble in the card
-        if(elLabel.length > 0){
-            elLabel[0].innerText = listingDetails[key];
+        // Only fill fields that are actually in the DOM
+        if(elLabelQ.length > 0){
+            let elLabel = elLabelQ[0];
+
+            elLabel.innerText = listingDetails[key];
+
+            // If link also assign the href
+            if(elLabel.tagName == 'A'){
+                elLabel.href = listingDetails[key];
+            }
         }
-    })
+    });
+
+    // Fill the basic normal boring fields of premium app
+    Object.keys(validators.premiumAppDetails).forEach((key) => {
+        let rule = validators.premiumAppDetails[key];
+
+        let elLabelQ = document.querySelectorAll(`#${rule.fieldId}`);
+
+        // Only fill fields that are actually in the DOM
+        if(elLabelQ.length > 0){
+            let elLabel = elLabelQ[0];
+
+            elLabel.innerText = premiumAppDetails[key];
+
+            // If link also assign the href
+            if(elLabel.tagName == 'A'){
+                elLabel.href = premiumAppDetails[key];
+            }
+        }
+    });
 }
 
 function fillHardwareAddons(listingDetails){
@@ -118,6 +144,16 @@ function fillAttachments(attachments){
         elBrochureLink.href = attachments.brochure.sharingUri;
         elBrochureLink.innerText = attachments.brochure.sharingUri;
     }
+
+    // Premium App icon
+    let elPAppIcon = document.getElementById('premiumAppIcon-attachment');
+    if(!attachments.premiumAppIcon){
+        elPAppIcon.style.display = 'none';
+    }else{
+        let elPAppIconLink = elPAppIcon.querySelectorAll('a')[0];
+        elPAppIconLink.href = attachments.premiumAppIcon.sharingUri;
+        elPAppIconLink.innerText = attachments.premiumAppIcon.sharingUri;
+    }
 }
 
 export default {
@@ -132,9 +168,53 @@ export default {
         elGenDetails.innerText = 
                 `${listingInfo.orgName} (${listingInfo.environment})`; 
 
-        fillBasicFields(listingDetails);
+        // Fill the fields. aka "Fill"ds
+        fillBasicFields(listingDetails, premiumAppDetails);
         fillHardwareAddons(listingDetails);
         fillUseCases(listingDetails);
         fillAttachments(attachments);
+    },
+
+    showListingDetailsTab(){
+        let elForm = document.getElementById('core-listing-section');
+        let elPaForm = document.getElementById('premium-app-section');
+        let elListingTab = document.getElementById('listing-details-tab');
+        let elPATab = document.getElementById('premium-app-details-tab');
+
+        elListingTab.parentElement.classList.add('is-active');
+        elPATab.parentElement.classList.remove('is-active');
+
+        elForm.style.display = '';
+        elPaForm.style.display = 'none';
+    },
+
+    showPremiumAppDetailsTab(){
+        let elForm = document.getElementById('core-listing-section');
+        let elPaForm = document.getElementById('premium-app-section');
+        let elListingTab = document.getElementById('listing-details-tab');
+        let elPATab = document.getElementById('premium-app-details-tab');
+
+        elListingTab.parentElement.classList.remove('is-active');
+        elPATab.parentElement.classList.add('is-active');
+
+        elForm.style.display = 'none';
+        elPaForm.style.display = '';
+    },
+
+    /**
+     * Hide the tabs that switch between core and premium app details
+     */
+    hideTabs(){
+        let tabControl = document.getElementById('tab-switcher');
+        tabControl.style.display = 'none';
+    },
+
+    /**
+     * Shows the tabs that switch between core and premium app details
+     * by default the tabs are shown anyway, but you  know
+     */
+    showTabs(){
+        let tabControl = document.getElementById('tab-switcher');
+        tabControl.style.display = '';
     }
 }
