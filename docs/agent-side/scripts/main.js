@@ -1,5 +1,5 @@
 import modal from '../../components/main.js';
-import agentConfig from './config/config.js';
+import config from '../../config/config.js';
 import partnerAccess from './partner-access.js';
 import view from './view.js';
 
@@ -16,35 +16,12 @@ const analyticsApi = new platformClient.AnalyticsApi();
 const conversationsApi = new platformClient.ConversationsApi();
 
 // Constants
-const queueTopic = `v2.routing.queues.${agentConfig.queueId}.conversations.emails`;
+const queueTopic = `v2.routing.queues.${config.agent.queueId}.conversations.emails`;
 
 // Global
 let user = {};
 let listingRequest = {};
 
-
-// Authenticate
-client.loginImplicitGrant(agentConfig.clientId, window.location.href)
-// Login
-.then(() => {
-    modal.setup();
-    console.log('PureCloud Auth successful.');
-
-    modal.showLoader('Setting you up');
-    return usersApi.getUsersMe();
-})    
-// Get User
-.then((me) => {
-    user = me;
-
-    return setUp();
-})
-.then(() => {
-    modal.hideLoader();
-})
-.catch((e) => {
-    console.error(e);
-});
 
 function setUp(){    
     partnerAccess.setup(client, platformClient, user);
@@ -112,7 +89,7 @@ function refreshInteractionsList(){
     view.showListingLoader('Gathering Listing Requests...');
     view.hideBlankInteractionsMsg();
 
-    return getQueueInteractions(agentConfig.queueId)
+    return getQueueInteractions(config.agent.queueId)
     .then((result) => {        
         console.log(result);
         let convPromises = [];
@@ -288,7 +265,7 @@ function checkExistingAssignedListing(){
                 'It seems you have an ongoing listing request to process. \n' +
                 'Press ok to review all the details.',
                 () => {
-                    window.location.href = agentConfig.redirectUriBase 
+                    window.location.href = config.agent.redirectUriBase 
                                             + 'listing-review.html';
                 }
             );
@@ -387,7 +364,7 @@ function processTemporaryCredentials(){
     let tempCreds = [];
     let tempCredCount = 0;
 
-    return architectApi.getFlowsDatatableRows(agentConfig.dataTableId, {
+    return architectApi.getFlowsDatatableRows(config.agent.dataTableId, {
         pageSize: 500,
         showbrief: false
     })
@@ -407,7 +384,7 @@ function processTemporaryCredentials(){
             let process = new Promise((resolve, reject) => {
                 // Get the temp row
                 architectApi.getFlowsDatatableRow(
-                    agentConfig.dataTableId, 
+                    config.agent.dataTableId, 
                     cred.key, 
                     { showbrief: false })
                 .then((row) => {
@@ -418,7 +395,7 @@ function processTemporaryCredentials(){
                     });
 
                     return architectApi.getFlowsDatatableRow(
-                        agentConfig.dataTableId, 
+                        config.agent.dataTableId, 
                         credKey[0], 
                         { showbrief: false })
                 })
@@ -430,7 +407,7 @@ function processTemporaryCredentials(){
                     row[credEnv] = JSON.stringify(cellObject);
 
                     return architectApi.putFlowsDatatableRow(
-                        agentConfig.dataTableId, 
+                        config.agent.dataTableId, 
                         row.key,
                         { body: row }
                     )
@@ -438,7 +415,7 @@ function processTemporaryCredentials(){
                 // Delete the temp row
                 .then(() => {
                     return architectApi.deleteFlowsDatatableRow(
-                        agentConfig.dataTableId, 
+                        config.agent.dataTableId, 
                         cred.key
                     )
                 })
@@ -465,8 +442,36 @@ function processTemporaryCredentials(){
 
 
 function setupButtonHandlers(){
-    document.getElementById('btn-refresh-interactions')
-            .addEventListener('click', function(){
-                refreshInteractionsList();
-            });
+    let refreshes = document.querySelectorAll('.btn-refresh');
+    for(let i = 0; i < refreshes.length; i++){
+        refreshes.item(i).addEventListener('click', function(){
+            refreshInteractionsList();
+        })
+    }
 }
+
+
+view.addHeader();
+
+// Authenticate
+client.loginImplicitGrant(config.agent.clientId, window.location.href)
+// Login
+.then(() => {
+    modal.setup();
+    console.log('PureCloud Auth successful.');
+
+    modal.showLoader('Setting you up');
+    return usersApi.getUsersMe();
+})    
+// Get User
+.then((me) => {
+    user = me;
+
+    return setUp();
+})
+.then(() => {
+    modal.hideLoader();
+})
+.catch((e) => {
+    console.error(e);
+});

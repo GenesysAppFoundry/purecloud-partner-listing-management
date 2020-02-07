@@ -12,13 +12,13 @@ t.innerHTML =
         <div class="control">
           <input class="input useCase-title" type="text" placeholder="" value="">
         </div>
-        <label class="label">Summary</label>
+        <label class="label">Summary <span class="md-format-text">(MarkDown Format)</span></label>
         <div class="control">
           <textarea class="textarea useCase-summary" placeholder="Summary" value=""></textarea>
         </div>
       </div>
       <div class="div-info">
-        <label class="label">Business Benefits</label>
+        <label class="label">Business Benefits <span class="md-format-text">(MarkDown Format)</span></label>
         <div class="control">
           <textarea class="textarea useCase-benefits" placeholder="Business Benefits" value=""></textarea>
         </div>

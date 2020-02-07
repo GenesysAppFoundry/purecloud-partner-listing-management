@@ -1,5 +1,5 @@
 import modal from '../../components/main.js';
-import agentConfig from './config/config.js';
+import config from '../../config/config.js';
 import partnerAccess from './partner-access.js';
 import view from './view-listing-review.js';
 
@@ -76,7 +76,7 @@ function verifyInteractionHandling(){
                 'Hmm',
                 'You don\'t have any listing requests assigned to you.',
                 () => {
-                    window.location.href = agentConfig.redirectUriBase;
+                    window.location.href = config.agent.redirectUriBase;
                 }
             )
         }
@@ -126,7 +126,7 @@ function approveListing(){
             agentParticipant.id,
             {
                 "wrapup": {
-                   "code": agentConfig.wrapup.approve
+                   "code": config.agent.wrapup.approve
                 },
                 "state": "disconnected"
             }
@@ -138,7 +138,7 @@ function approveListing(){
             'Success',
             'You approval was successful!',
             () => {
-                window.location.href = agentConfig.redirectUriBase;
+                window.location.href = config.agent.redirectUriBase;
             }
         );
     })
@@ -166,7 +166,7 @@ function rejectListing(){
             agentParticipant.id,
             {
                 "wrapup": {
-                   "code": agentConfig.wrapup.reject
+                   "code": config.agent.wrapup.reject
                 },
                 "state": "disconnected"
             }
@@ -178,7 +178,7 @@ function rejectListing(){
             'Success',
             'Sending of rejection and comments successful!',
             () => {
-                window.location.href = agentConfig.redirectUriBase;
+                window.location.href = config.agent.redirectUriBase;
             }
         );
     })
@@ -210,9 +210,9 @@ function setupEventHandlers(){
     });
 }
 
-
+view.addHeader();
 // Authenticate
-client.loginImplicitGrant(agentConfig.clientId, window.location.href)
+client.loginImplicitGrant(config.agent.clientId, window.location.href)
 // Login
 .then(() => {
     modal.setup();

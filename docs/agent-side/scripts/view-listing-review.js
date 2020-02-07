@@ -2,6 +2,7 @@
  * View module for the listing-review page
  */
 import validators from '../../config/validators.js';
+import headerTemplate from './templates/header.js';
 
 let useCaseTemplate = document.createElement('template');
 useCaseTemplate.innerHTML = 
@@ -216,5 +217,10 @@ export default {
     showTabs(){
         let tabControl = document.getElementById('tab-switcher');
         tabControl.style.display = '';
+    },
+
+    addHeader(){
+        let hero = document.getElementById('hero');
+        hero.appendChild(headerTemplate.new());
     }
 }

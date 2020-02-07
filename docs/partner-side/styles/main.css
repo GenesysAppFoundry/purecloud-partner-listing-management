@@ -209,3 +209,14 @@ section#hero img {
 section#hero div.hero-body {
     padding: 1.5rem;
 }
+
+#second-refresh {
+    padding: 14px;
+    padding-right: 22px;
+}
+
+.md-format-text {
+    font-size: 0.65em;
+    text-decoration: underline;
+    color: rgb(255, 124, 88);
+}

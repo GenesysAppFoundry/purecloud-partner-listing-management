@@ -3,7 +3,7 @@
  * read/do in the partner orgs
  */
 
-import agentConfig from './config/config.js';
+import config from '../../config/config.js';
 
 let pcClient = null;
 let platformClient = null;
@@ -22,7 +22,7 @@ function getAccessToken(orgName, environment){
     return new Promise((resolve, reject) => {
         // Get the row where the org creds are
         architectApi.getFlowsDatatableRow(
-            agentConfig.dataTableId,
+            config.agent.dataTableId,
             orgName[0],
             { showbrief: false }
         )
@@ -33,7 +33,7 @@ function getAccessToken(orgName, environment){
     
             // Run the data action to acquire an access token to partner's org
             return integrationsApi.postIntegrationsActionExecute(
-                agentConfig.authenticationActionId,
+                config.agent.authenticationActionId,
                 {
                     encodedCreds: authHeader
                 }

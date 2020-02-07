@@ -1,5 +1,5 @@
 import validators from '../../../config/validators.js';
-import agentConfig from '../config/config.js';
+import config from '../../../config/config.js';
 
 let t = document.createElement('template');
 t.innerHTML =
@@ -158,7 +158,7 @@ export default {
         elAssignButton.addEventListener('click', function(){
             assignToAgent(serializedData)
             .then(() => {
-                window.location.href = agentConfig.redirectUriBase +
+                window.location.href = config.agent.redirectUriBase +
                                         'listing-review.html';
             })
         });

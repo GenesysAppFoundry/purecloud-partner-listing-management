@@ -1,4 +1,5 @@
 import listingInteractionTemplate from './templates/listing-interaction.js';
+import headerTemplate from './templates/header.js';
 
 const elLoader = document.getElementById('interactions-loader');
 const elLoaderText = elLoader.querySelectorAll('.loader-text');
@@ -78,6 +79,11 @@ let funcs = {
      */
     hideBlankInteractionsMsg(){
         elNoInteractionsText.style.display = 'none';
+    },
+
+    addHeader(){
+        let hero = document.getElementById('hero');
+        hero.appendChild(headerTemplate.new());
     }
 }
 

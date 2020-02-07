@@ -126,3 +126,28 @@ a {
 #devfoundry-comment-container {
   margin-bottom: 20px;
 }
+
+section#hero {
+    background-color: #222529;
+}
+
+section#hero a {
+    color: #FDFDFD;
+}
+section#hero a:hover {
+    background-color: #444a52;
+}
+
+
+section#hero img {
+    max-height: 1rem;
+}
+
+section#hero div.hero-body {
+    padding: 1.5rem;
+}
+
+#second-refresh {
+    padding: 14px;
+    padding-right: 22px;
+}
