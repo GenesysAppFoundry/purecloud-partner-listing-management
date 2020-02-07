@@ -189,3 +189,23 @@ button.delete:hover {
 .information-box {
     background-color: #f5ffff;
 }
+
+section#hero {
+    background-color: #5d3e5d;
+}
+
+section#hero a {
+    color: #FFFFFF;
+}
+section#hero a:hover {
+    background-color: #755175;
+}
+
+
+section#hero img {
+    max-height: 1rem;
+}
+
+section#hero div.hero-body {
+    padding: 1.5rem;
+}

@@ -1,6 +1,7 @@
 import fieldInterface from './util/field-interface.js';
 import listingCardTemplate from './templates/listing-card.js';
 import devfoundryNoteTemplate from './templates/devfoundry-note.js';
+import headerTemplate from './templates/header.js';
 import addNewListing from './templates/add-new-listing.js';
 import hardwareAddons from './special-fields/hardware-addons.js';
 import useCases from './special-fields/use-cases.js';
@@ -157,5 +158,10 @@ export default {
         let cb = document.getElementById('cb-p-app-isPremiumApp');
         cb.checked = false;
         container.style.display = 'none';
+    },
+
+    addHeader(){
+        let hero = document.getElementById('hero');
+        hero.appendChild(headerTemplate.new());
     }
 }

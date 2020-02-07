@@ -393,6 +393,7 @@ function assignEventHandlers(){
 modal.setup();
 modal.showLoader('Loading Listing...');
 
+view.addHeader();
 // Authenticate
 // TODO: regional authentication
 client.loginImplicitGrant('e7de8a75-62bb-43eb-9063-38509f8c21af', 

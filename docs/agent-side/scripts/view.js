@@ -6,7 +6,7 @@ const elListingContainer =
     document.getElementById('listing-interactions-container');
 const elNoInteractionsText = document.getElementById('no-interactions-notif');
 
-export default {
+let funcs = {
     /**
      * Add an listing interaction box to the document
      * @param {Object} serializedData serialized info contains the info 
@@ -14,7 +14,13 @@ export default {
      * @param {Function} assignToAgentCb callback when assign to me is pressed
      */
     addInteractionBox(serializedData, assignToAgentCb){
+        // If an interaction has invalid details and the partner 
+        // data table and lsitings can't be reach, just ignore it.
+        // Interaction is still in queue but uh, let's take care of that later.
+        // TODO:
         if(!serializedData) return;
+
+        funcs.hideBlankInteractionsMsg();
 
         let elContainer = document.getElementById('listing-interactions-container');
         let newBox = listingInteractionTemplate.new(serializedData, assignToAgentCb);
@@ -72,7 +78,7 @@ export default {
      */
     hideBlankInteractionsMsg(){
         elNoInteractionsText.style.display = 'none';
-    },
-
-
+    }
 }
+
+export default funcs
