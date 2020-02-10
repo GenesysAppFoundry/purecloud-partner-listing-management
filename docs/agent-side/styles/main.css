@@ -10,10 +10,6 @@
   font-size: 32px;
 }
 
-.listing-info {
-  padding: 10px;
-}
-
 a {
   color: #FF4F1F;
 }
@@ -71,16 +67,6 @@ a {
   background-color: #FF4F1F !important;
 }
 
-.listing-container {
-  padding: 0 18px;
-  display: none;
-  overflow: hidden;
-  background-color: white;
-  border: 2px solid #FF4F1F !important;
-  border-bottom-left-radius: 25px;
-  border-bottom-right-radius: 25px;
-}
-
 .button-container {
   text-align: right;
 }
@@ -97,10 +83,6 @@ a {
 
 #loader-text{
   font-size: 20px;
-}
-
-.listing-field {
-  margin-bottom: 10px;
 }
 
 .genesys-details-container{
@@ -150,4 +132,53 @@ section#hero div.hero-body {
 #second-refresh {
     padding: 14px;
     padding-right: 22px;
+}
+
+.tabs .is-active a{
+  color: #FF4F1F !important;
+}
+
+.tabs a{
+  color: #4a4a4a !important;
+}
+
+.div-section {
+  display: flex;
+  overflow: auto;
+}
+
+.div-info {
+  flex-grow: 50;
+  margin: 20px;
+}
+
+.listing-key {
+  color: #FF4F1F;
+}
+
+.hardware-addon-region span, .use-case-title, .use-case-summary, .use-case-benefits {
+  margin-left: 10px;
+}
+
+#useast-purchase-url, #uswest-purchase-url, #frankfurt-purchase-url, #ireland-purchase-url, #japan-purchase-url, #australia-purchase-url,
+#useast-firmware-url, #uswest-firmware-url, #frankfurt-firmware-url, #ireland-firmware-url, #japan-firmware-url, #australia-firmware-url{
+  margin: 0px;
+}
+
+#hardware-addons-container, #p-attachments-container, #devfoundry-comment-container {
+  margin-left: 20px;
+}
+
+#hardware-addons-container .div-info {
+  margin: 0px !important;
+  flex-grow: 30 !important;
+} 
+
+.with-margin {
+  margin-left: 60px;
+}
+
+.textarea:focus {
+  border-color: #FF4F1F !important;
+  box-shadow: 0 0 0 0 !important;
 }
