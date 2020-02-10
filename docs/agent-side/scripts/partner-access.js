@@ -76,7 +76,8 @@ export default {
                     method: 'GET',
                     headers: {
                         "Content-Type": "application/json",
-                        "cache-control": "no-cache",
+                        "Access-Control-Request-Headers": "authorization,cache-control,content-type",
+                        "Access-Control-Request-Method": "GET",
                         "Authorization": `Bearer ${token}`
                     }
                 })
