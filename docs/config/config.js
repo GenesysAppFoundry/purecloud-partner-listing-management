@@ -135,9 +135,6 @@ export default {
         // Data Table where the org credentials are
         "dataTableId": "dbf3ce0b-89f1-42c9-87fd-94b873340710",
 
-        // The Data Action that requests token via Client Credentials Grant
-        "authenticationActionId": "custom_-_f0a8629e-5500-4873-b8c2-655c45ecf65e",
-
         // Queue for the cherry picking
         "queueId": "ace341f9-3a5e-4753-883f-8360e30081f2",
 
@@ -145,6 +142,14 @@ export default {
         "wrapup": {
             "approve": "b225be2f-11da-4b87-8cea-04a094d27f12",
             "reject": "dbff2cf8-d7f2-44c4-80ea-90a3c3974368"
-        }    
+        },
+
+        // DATA ACTIONS
+        "dataActions": {
+            // The Data Action that requests token via Client Credentials Grant
+            "authentication": "custom_-_f0a8629e-5500-4873-b8c2-655c45ecf65e",
+            "getListing": "custom_-_842677c3-cebf-4248-9fa9-1ab66337135a",
+            "updateListing": "custom_-_364f11ca-27a0-46bb-8ba4-13d70dee80f4"
+        }
     }
 };

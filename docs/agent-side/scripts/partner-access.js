@@ -33,7 +33,7 @@ function getAccessToken(orgName, environment){
     
             // Run the data action to acquire an access token to partner's org
             return integrationsApi.postIntegrationsActionExecute(
-                config.agent.authenticationActionId,
+                config.agent.dataActions.authentication,
                 {
                     encodedCreds: authHeader
                 }
@@ -70,37 +70,34 @@ export default {
     getListingDetails(orgName, environment, dataTableId, listingId){
         return new Promise((resolve, reject) => {
             getAccessToken(orgName, environment)
-            .then((token) => {
-                $.ajax({
-                    url: `https://api.mypurecloud.com/api/v2/flows/datatables/${dataTableId}/rows/${listingId}?showbrief=false`,
-                    method: 'GET',
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Access-Control-Request-Headers": "authorization,cache-control,content-type",
-                        "Access-Control-Request-Method": "GET",
-                        "Authorization": `Bearer ${token}`
+            .then((token) => {             
+                return integrationsApi.postIntegrationsActionExecute(
+                    config.agent.dataActions.getListing,
+                    {
+                        token: token,
+                        dataTableId: dataTableId,
+                        listingId: listingId
                     }
-                })
-                .done((raw) => {
-                    let serialized = raw;
-                    // Serialize so all 'JSON' cells will be parsed as JSON
-                    Object.keys(serialized).forEach(key => {
-                        let val = serialized[key];
-                        try {
-                            serialized[key] = JSON.parse(val);
-                        } catch (e) {
-                            serialized[key] = val;
-                        }
-                    });
+                )
+            })
+            .then((raw) => {
+                let serialized = raw;
+                // Serialize so all 'JSON' cells will be parsed as JSON
+                Object.keys(serialized).forEach(key => {
+                    let val = serialized[key];
+                    try {
+                        serialized[key] = JSON.parse(val);
+                    } catch (e) {
+                        serialized[key] = val;
+                    }
+                });
 
-                    // Additional properties to identify listing
-                    serialized.id = serialized.key;
-                    serialized.orgName = orgName;
-                    serialized.environment = environment;
+                // Additional properties to identify listing
+                serialized.id = serialized.key;
+                serialized.orgName = orgName;
+                serialized.environment = environment;
 
-                    resolve(serialized);
-                })
-                .fail((e) => reject(e));
+                resolve(serialized);
             })
             .catch(e => reject(e));
         })
@@ -123,15 +120,14 @@ export default {
             .then((tkn) => {
                 token = tkn;
 
-                return $.ajax({
-                    url: `https://api.mypurecloud.com/api/v2/flows/datatables/${dataTableId}/rows/${listingId}?showbrief=false`,
-                    method: 'GET',
-                    headers: {
-                        "Content-Type": "application/json",
-                        "cache-control": "no-cache",
-                        "Authorization": `Bearer ${token}`
+                return integrationsApi.postIntegrationsActionExecute(
+                    config.agent.dataActions.getListing,
+                    {
+                        token: token,
+                        dataTableId: dataTableId,
+                        listingId: listingId
                     }
-                })
+                )
             })
             .then((raw) => {
                 let updated = raw;
@@ -150,20 +146,22 @@ export default {
 
                     updated.devFoundryNotes = JSON.stringify(dfNotes);
                 }
-                let requestBody = {
-                    body: updated
-                }
 
-               return $.ajax({
-                    url: `https://api.mypurecloud.com/api/v2/flows/datatables/${dataTableId}/rows/${listingId}`,
-                    method: 'PUT',
-                    headers: {
-                        "Content-Type": "application/json",
-                        "cache-control": "no-cache",
-                        "Authorization": `Bearer ${token}`
-                    },
-                    data: JSON.stringify(updated)
-                })
+                // Build the request body for input to data action
+                let requestBody = {
+                    token: token,
+                    dataTableId: dataTableId,
+                    listingId: listingId,
+                }
+                // Add the listing columns to the request body
+                Object.keys(updated).forEach(key => {
+                    requestBody[key] = updated[key];
+                });
+
+                return integrationsApi.postIntegrationsActionExecute(
+                    config.agent.dataActions.updateListing,
+                    requestBody
+                )
             })
             .then(() => {
                 resolve();
