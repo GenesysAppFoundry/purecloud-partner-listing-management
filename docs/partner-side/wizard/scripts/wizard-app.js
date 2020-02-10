@@ -1,8 +1,8 @@
 /*
 *   NOTE: This sample uses ES6 features
 */
-import appConfig from '../../config/config.js';
-import cheatChat from '../../partner-side/scripts/cheat-chat.js';
+import appConfig from '../../../config/config.js';
+import cheatChat from '../../scripts/cheat-chat.js';
 
 // JQuery Alias
 const $ = window.$;
@@ -748,6 +748,7 @@ class WizardApp {
      */
     _pureCloudAuthenticate() {
         this.purecloudClient.setEnvironment(this.pcApp.pcEnvironment);
+        console.log(this.redirectUri);
         return this.purecloudClient.loginImplicitGrant(
                         appConfig.clientIDs[this.pcApp.pcEnvironment], 
                         this.redirectUri, 

@@ -19,6 +19,7 @@ var getUrlParameter = function getUrlParameter(sParam) {
  * @param {Sring} page 
  */
 var goToPage = function goToPage(page){
+    console.log(page);
     window.location = getUrlParameter('langTag') ? 
         page + '.html?langTag=' + getUrlParameter('langTag') : 
         page + '.html?langTag=en-us';
