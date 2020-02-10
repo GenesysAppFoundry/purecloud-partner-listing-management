@@ -723,171 +723,187 @@
           </div>
         </div>
         <div id="p-app-premiumAppFields">
-          <!-- Premium App Description -->
-          <div class="field" id="p-app-description">
-            <label class="form-label">Description</label>
-            <div class="control">
-              <input class="input" type="text" placeholder="Description" value="">
+          <div class="div-section">
+            <div class="div-info">
+              <!-- Premium App Description -->
+              <div class="field" id="p-app-description">
+                <label class="form-label">Description</label>
+                <div class="control">
+                  <input class="input" type="text" placeholder="Description" value="">
+                </div>
+                <p class="help is-danger"></p>
+              </div>
+              <!-- Help URL -->
+              <div class="field" id="p-app-helpURL">
+                <label class="form-label">Help URL</label>
+                <div class="control">
+                  <input class="input" type="text" placeholder="Help URL" value="">
+                </div>
+                <p class="help is-danger"></p>
+              </div>
+              <!-- Default Application URL -->
+              <div class="field" id="p-app-defaultApplicationURL">
+                <label class="form-label">Default Application URL </label>
+                <div class="control">
+                  <input class="input" type="text" placeholder="Default Application URL" value="">
+                </div>
+                <p class="help is-danger"></p>
+              </div>
+              <!-- Unique Premissions -->
+              <div class="field" id="p-app-uniquePermissions">
+                <label class="form-label">Unique Permissions</label>
+                <div class="control">
+                  <input class="input" type="text" placeholder="Unique Permissions" value="">
+                </div>
+                <p class="help is-danger"></p>
+              </div>
+              <!-- Hosted App Icon -->
+              <div class="field" id="p-app-hostedAppIcon">
+                <label class="form-label">Hosted App Icon</label>
+                <div class="control">
+                  <input class="input" type="text" placeholder="Hosted App Icon" value="">
+                </div>
+                <p class="help is-danger"></p>
+              </div>
+              <!-- Terms of Service URL -->
+              <div class="field" id="p-app-tosURL">
+                <label class="form-label">Terms of Service URL</label>
+                <div class="control">
+                  <input class="input" type="text" placeholder="Terms of Service URL" value="">
+                </div>
+                <p class="help is-danger"></p>
+              </div>
             </div>
-            <p class="help is-danger"></p>
-          </div>
-          <!-- Help URL -->
-          <div class="field" id="p-app-helpURL">
-            <label class="form-label">Help URL</label>
-            <div class="control">
-              <input class="input" type="text" placeholder="Help URL" value="">
-            </div>
-            <p class="help is-danger"></p>
-          </div>
-          <!-- Default Application URL -->
-          <div class="field" id="p-app-defaultApplicationURL">
-            <label class="form-label">Default Application URL </label>
-            <div class="control">
-              <input class="input" type="text" placeholder="Default Application URL" value="">
-            </div>
-            <p class="help is-danger"></p>
-          </div>
-          <!-- Unique Premissions -->
-          <div class="field" id="p-app-uniquePermissions">
-            <label class="form-label">Unique Permissions</label>
-            <div class="control">
-              <input class="input" type="text" placeholder="Unique Permissions" value="">
-            </div>
-            <p class="help is-danger"></p>
-          </div>
-          <!-- Default Sandbox Options -->
-          <div class="field" id="p-app-defaultSandboxOptions">
-            <label class="form-label">Default Sandbox Options</label>
-            <p class="help is-danger"></p>
-            <div class="control">
-              <label class="checkbox">
-                <input type="checkbox" class="cb-p-app-defaultSandboxOptions" value="allow-forms"> 
-                  <span>allow-forms</span>
-              </label>
-              <br />
-              <label class="checkbox">
-                <input type="checkbox" class="cb-p-app-defaultSandboxOptions" value="allow-modals"> 
-                  <span>allow-modals</span>
-              </label>
-              <br />
-              <label class="checkbox">
-                <input type="checkbox" class="cb-p-app-defaultSandboxOptions" value="allow-popups"> 
-                  <span>allow-popups</span>
-              </label>
-              <br />
-              <label class="checkbox">
-                <input type="checkbox" class="cb-p-app-defaultSandboxOptions" value="allow-presentation"> 
-                  <span>allow-presentation</span>
-              </label>
-              <br />
-              <label class="checkbox">
-                <input type="checkbox" class="cb-p-app-defaultSandboxOptions" value="allow-same-origin"> 
-                  <span>allow-same-origin</span>
-              </label>
-              <br />
-              <label class="checkbox">
-                <input type="checkbox" class="cb-p-app-defaultSandboxOptions" value="allow-scripts"> 
-                  <span>allow-scripts</span>
-              </label>
-              <br />
-            </div>            
-          </div>
-          <!-- App Location -->
-          <div class="field" id="p-app-applicationLocation">
-            <label class="form-label">App Location</label>
-            <p class="help is-danger"></p>
-            <div class="control-applicationLocation">
-              <label class="radio">
-                <input type="radio" name="rdo-p-app-applicationLocation" value="Directory Menu">
-                Directory Menu
-              </label>
-              <label class="radio">
-                <input type="radio" name="rdo-p-app-applicationLocation" value="Performance Menu">
-                Performance Menu
-              </label>
-              <label class="radio">
-                <input type="radio" name="rdo-p-app-applicationLocation" value="Apps Menu">
-                Apps Menu
-              </label>
-              <label class="radio">
-                <input type="radio" name="rdo-p-app-applicationLocation" value="Sidecar (aka Widget panel)">
-                Sidecar (aka Widget panel)
-              </label>
+            <div class="div-info">
+              <!-- Default Sandbox Options -->
+              <div class="field" id="p-app-defaultSandboxOptions">
+                <label class="form-label">Default Sandbox Options</label>
+                <p class="help is-danger"></p>
+                <div class="control">
+                  <label class="checkbox">
+                    <input type="checkbox" class="cb-p-app-defaultSandboxOptions" value="allow-forms"> 
+                      <span>allow-forms</span>
+                  </label>
+                  <br />
+                  <label class="checkbox">
+                    <input type="checkbox" class="cb-p-app-defaultSandboxOptions" value="allow-modals"> 
+                      <span>allow-modals</span>
+                  </label>
+                  <br />
+                  <label class="checkbox">
+                    <input type="checkbox" class="cb-p-app-defaultSandboxOptions" value="allow-popups"> 
+                      <span>allow-popups</span>
+                  </label>
+                  <br />
+                  <label class="checkbox">
+                    <input type="checkbox" class="cb-p-app-defaultSandboxOptions" value="allow-presentation"> 
+                      <span>allow-presentation</span>
+                  </label>
+                  <br />
+                  <label class="checkbox">
+                    <input type="checkbox" class="cb-p-app-defaultSandboxOptions" value="allow-same-origin"> 
+                      <span>allow-same-origin</span>
+                  </label>
+                  <br />
+                  <label class="checkbox">
+                    <input type="checkbox" class="cb-p-app-defaultSandboxOptions" value="allow-scripts"> 
+                      <span>allow-scripts</span>
+                  </label>
+                  <br />
+                </div>            
+              </div>
+              <!-- App Location -->
+              <div class="field" id="p-app-applicationLocation">
+                <label class="form-label">App Location</label>
+                <p class="help is-danger"></p>
+                <div class="control-applicationLocation">
+                  <label class="radio">
+                    <input type="radio" name="rdo-p-app-applicationLocation" value="Directory Menu">
+                    Directory Menu
+                  </label>
+                  <label class="radio">
+                    <input type="radio" name="rdo-p-app-applicationLocation" value="Performance Menu">
+                    Performance Menu
+                  </label>
+                  <label class="radio">
+                    <input type="radio" name="rdo-p-app-applicationLocation" value="Apps Menu">
+                    Apps Menu
+                  </label>
+                  <label class="radio">
+                    <input type="radio" name="rdo-p-app-applicationLocation" value="Sidecar (aka Widget panel)">
+                    Sidecar (aka Widget panel)
+                  </label>
+                </div>
+              </div>
+              <!-- Grant Type -->
+              <div class="field" id="p-app-regionalOAuthGrantType">
+                <label class="form-label">OAuth</label>
+                <p class="help is-danger"></p>
+                <div class="control-regionalOAuthGrantType">
+                  <label class="radio">
+                    <input type="radio" name="rdo-p-app-regionalOAuthGrantType" value="Code Authorization">
+                    Code Authorization
+                  </label>
+                  <label class="radio">
+                    <input type="radio" name="rdo-p-app-regionalOAuthGrantType" value="Implicit Grant">
+                    Implicit Grant
+                  </label>
+                </div>
+              </div>
             </div>
           </div>
-          <!-- Hosted App Icon -->
-          <div class="field" id="p-app-hostedAppIcon">
-            <label class="form-label">Hosted App Icon</label>
-            <div class="control">
-              <input class="input" type="text" placeholder="Hosted App Icon" value="">
-            </div>
-            <p class="help is-danger"></p>
-          </div>
-          <!-- Grant Type -->
-          <div class="field" id="p-app-regionalOAuthGrantType">
-            <label class="form-label">OAuth</label>
-            <p class="help is-danger"></p>
-            <div class="control-regionalOAuthGrantType">
-              <label class="radio">
-                <input type="radio" name="rdo-p-app-regionalOAuthGrantType" value="Code Authorization">
-                Code Authorization
-              </label>
-              <label class="radio">
-                <input type="radio" name="rdo-p-app-regionalOAuthGrantType" value="Implicit Grant">
-                Implicit Grant
-              </label>
-            </div>
-          </div>
-          <!-- Terms of Service URL -->
-          <div class="field" id="p-app-tosURL">
-            <label class="form-label">Terms of Service URL</label>
-            <div class="control">
-              <input class="input" type="text" placeholder="Terms of Service URL" value="">
-            </div>
-            <p class="help is-danger"></p>
-          </div>
+          
           <hr>
-          <!-- FAQ URL -->
-          <div class="field" id="p-app-faq">
-            <label class="form-label">FAQ URL</label>
-            <div class="control">
-              <input class="input" type="text" placeholder="FAQ" value="">
+
+          <div class="div-section">
+            <div class="div-info">
+              <!-- FAQ URL -->
+              <div class="field" id="p-app-faq">
+                <label class="form-label">FAQ URL</label>
+                <div class="control">
+                  <input class="input" type="text" placeholder="FAQ" value="">
+                </div>
+                <p class="help is-danger"></p>
+              </div>
+              <!-- Privacy Policy URL -->
+              <div class="field" id="p-app-privacyPolicy">
+                <label class="form-label">Privacy Policy URL</label>
+                <div class="control">
+                  <input class="input" type="text" placeholder="Privacy Policy URL" value="">
+                </div>
+                <p class="help is-danger"></p>
+              </div>
+              <!-- Support Contact -->
+              <div class="field" id="p-app-supportContact">
+                <label class="form-label">Support Contact</label>
+                <div class="control">
+                  <input class="input" type="text" placeholder="Support Contact" value="">
+                </div>
+                <p class="help is-danger"></p>
+              </div>
             </div>
-            <p class="help is-danger"></p>
-          </div>
-          <!-- Privacy Policy URL -->
-          <div class="field" id="p-app-privacyPolicy">
-            <label class="form-label">Privacy Policy URL</label>
-            <div class="control">
-              <input class="input" type="text" placeholder="Privacy Policy URL" value="">
+            <div class="div-info">
+              <!-- Sales Contact -->
+              <div class="field" id="p-app-salesContact">
+                <label class="form-label">Sales Contact</label>
+                <div class="control">
+                  <input class="input" type="text" placeholder="Sales Contact" value="">
+                </div>
+                <p class="help is-danger"></p>
+              </div>
+              <!-- Additional Help URLs -->
+              <div class="field" id="p-app-additionalHelpURLs">
+                <label class="form-label">Additional Help URLs</label>
+                <div class="control">
+                  <input class="input" type="text" placeholder="Additional Help URLs" value="">
+                </div>
+                <p class="help is-danger"></p>
+              </div>
             </div>
-            <p class="help is-danger"></p>
           </div>
-          <!-- Support Contact -->
-          <div class="field" id="p-app-supportContact">
-            <label class="form-label">Support Contact</label>
-            <div class="control">
-              <input class="input" type="text" placeholder="Support Contact" value="">
-            </div>
-            <p class="help is-danger"></p>
-          </div>
-          <!-- Sales Contact -->
-          <div class="field" id="p-app-salesContact">
-            <label class="form-label">Sales Contact</label>
-            <div class="control">
-              <input class="input" type="text" placeholder="Sales Contact" value="">
-            </div>
-            <p class="help is-danger"></p>
-          </div>
-          <!-- Additional Help URLs -->
-          <div class="field" id="p-app-additionalHelpURLs">
-            <label class="form-label">Additional Help URLs</label>
-            <div class="control">
-              <input class="input" type="text" placeholder="Additional Help URLs" value="">
-            </div>
-            <p class="help is-danger"></p>
-          </div>
+          
           <hr>
+          
           <!-- Premium App Icon-->
           <div class="field" id="p-app-icon">
             <label class="label">Premium App Installation Icon (SVG Only)</label>

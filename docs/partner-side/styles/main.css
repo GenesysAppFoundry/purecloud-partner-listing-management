@@ -10,6 +10,10 @@
     color: #FF4F1F;
 }
 
+a {
+    color: #FF4F1F !important;
+}
+
 .form-label {
     color: #FF4F1F;
     display: block;
@@ -219,4 +223,26 @@ section#hero div.hero-body {
     font-size: 0.65em;
     text-decoration: underline;
     color: rgb(255, 124, 88);
+}
+
+.tabs .is-active a{
+    color: #FF4F1F !important;
+}
+
+.tabs a{
+    color: #4a4a4a !important;
+}
+
+.control-applicationLocation {
+    display: flex;
+    flex-direction: column;
+}
+
+.control-regionalOAuthGrantType {
+    display: flex;
+    flex-direction: column;
+}
+
+#p-app-icon {
+    margin-left: 20px;
 }
