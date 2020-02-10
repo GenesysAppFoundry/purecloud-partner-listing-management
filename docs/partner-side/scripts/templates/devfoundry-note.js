@@ -4,10 +4,8 @@ t.innerHTML =
 <div class="box devfoundry-note">
     <article class="media">
     <div class="media-content">
-        <em>From:</em> <span class="from"></span>
-        <br>
-        <em>Timestamp:</em> <span class="note-timestamp"></span>
-        <br>
+        <div class="note-from"><em>From:</em> <span class="from"></span></div>
+        <div class="note-time"><span class="note-timestamp"></span></div>
         <em>Message:</em><br>
         <span class="devfoundry-note-message"></span>
     </div>

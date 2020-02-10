@@ -246,3 +246,18 @@ section#hero div.hero-body {
 #p-app-icon {
     margin-left: 20px;
 }
+
+.note-from {
+    float: left;
+    width: 50%;
+  }
+  
+  .note-time {
+    float: right;
+    text-align: right;
+    width: 50%;
+  }
+
+  .devfoundry-note-message {
+      margin-left: 10px;
+  }

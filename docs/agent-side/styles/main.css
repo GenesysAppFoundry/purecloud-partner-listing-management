@@ -95,6 +95,7 @@ a {
 
 .hardware-addon-region {
   display: none;
+  margin-bottom: 10px;
 }
 
 .use-case {
@@ -181,4 +182,18 @@ section#hero div.hero-body {
 .textarea:focus {
   border-color: #FF4F1F !important;
   box-shadow: 0 0 0 0 !important;
+}
+
+.note-from {
+  /* float: left;
+  width: 50%; */
+
+  text-align: left !important;
+}
+
+.note-time {
+  /* float: right;
+  width: 50%; */
+
+  text-align: right !important;
 }
