@@ -10,6 +10,10 @@
   font-size: 32px;
 }
 
+body {
+  overflow-x: auto;
+}
+
 a {
   color: #FF4F1F;
 }
@@ -102,8 +106,7 @@ a {
   border-left: 2px solid #DDD; 
   margin: 2px;
   margin-bottom: 20px;
-  padding: 10px;
-  padding-left: 20px;
+  padding-left: 5px;
 }
 
 #devfoundry-comment-container {
@@ -133,6 +136,10 @@ section#hero div.hero-body {
 #second-refresh {
     padding: 14px;
     padding-right: 22px;
+}
+
+.tabs {
+  overflow-x: hidden !important;
 }
 
 .tabs .is-active a{
@@ -165,15 +172,6 @@ section#hero div.hero-body {
 #useast-firmware-url, #uswest-firmware-url, #frankfurt-firmware-url, #ireland-firmware-url, #japan-firmware-url, #australia-firmware-url{
   margin: 0px;
 }
-
-#hardware-addons-container, #p-attachments-container, #devfoundry-comment-container {
-  margin-left: 20px;
-}
-
-#hardware-addons-container .div-info {
-  margin: 0px !important;
-  flex-grow: 30 !important;
-} 
 
 .with-margin {
   margin-left: 60px;
