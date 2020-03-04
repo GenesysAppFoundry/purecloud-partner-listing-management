@@ -261,3 +261,8 @@ section#hero div.hero-body {
   .devfoundry-note-message {
       margin-left: 10px;
   }
+
+#preview-listing-iframe {
+    width: 100%;
+    height: 800px;
+}

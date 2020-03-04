@@ -121,29 +121,72 @@ export default {
     },
     
     showListingDetailsTab(){
+        // Content
         let elForm = document.getElementById('edit-listing-form');
         let elPaForm = document.getElementById('edit-listing-pa-form');
+        let elPLDiv = document.getElementById('preview-listing-div');
+
+        // Tab elements
         let elListingTab = document.getElementById('listing-details-tab');
         let elPATab = document.getElementById('premium-app-details-tab');
+        let elPLTab = document.getElementById('preview-listing-tab');
 
+        // Switch tab highlighting
         elListingTab.parentElement.classList.add('is-active');
         elPATab.parentElement.classList.remove('is-active');
+        elPLTab.parentElement.classList.remove('is-active');
+        
 
+        // Show/Hide sections
         elForm.style.display = '';
         elPaForm.style.display = 'none';
+        elPLDiv.style.display = 'none';
     },
 
     showPremiumAppDetailsTab(){
-        let elForm = document.getElementById('edit-listing-form');
-        let elPaForm = document.getElementById('edit-listing-pa-form');
-        let elListingTab = document.getElementById('listing-details-tab');
-        let elPATab = document.getElementById('premium-app-details-tab');
+         // Content
+         let elForm = document.getElementById('edit-listing-form');
+         let elPaForm = document.getElementById('edit-listing-pa-form');
+         let elPLDiv = document.getElementById('preview-listing-div');
+ 
+         // Tab elements
+         let elListingTab = document.getElementById('listing-details-tab');
+         let elPATab = document.getElementById('premium-app-details-tab');
+         let elPLTab = document.getElementById('preview-listing-tab');
+ 
+         // Switch tab highlighting
+         elListingTab.parentElement.classList.remove('is-active');
+         elPATab.parentElement.classList.add('is-active');
+         elPLTab.parentElement.classList.remove('is-active');
+         
+ 
+         // Show/Hide sections
+         elForm.style.display = 'none';
+         elPaForm.style.display = '';
+         elPLDiv.style.display = 'none';
+    },
 
-        elListingTab.parentElement.classList.remove('is-active');
-        elPATab.parentElement.classList.add('is-active');
-
-        elForm.style.display = 'none';
-        elPaForm.style.display = '';
+    showPreviewListingTab(){
+         // Content
+         let elForm = document.getElementById('edit-listing-form');
+         let elPaForm = document.getElementById('edit-listing-pa-form');
+         let elPLDiv = document.getElementById('preview-listing-div');
+ 
+         // Tab elements
+         let elListingTab = document.getElementById('listing-details-tab');
+         let elPATab = document.getElementById('premium-app-details-tab');
+         let elPLTab = document.getElementById('preview-listing-tab');
+ 
+         // Switch tab highlighting
+         elListingTab.parentElement.classList.remove('is-active');
+         elPATab.parentElement.classList.remove('is-active');
+         elPLTab.parentElement.classList.add('is-active');
+         
+ 
+         // Show/Hide sections
+         elForm.style.display = 'none';
+         elPaForm.style.display = 'none';
+         elPLDiv.style.display = '';
     },
 
     showPremiumAppFields(){

@@ -119,25 +119,8 @@ function saveListing(){
     }
 
     modal.showLoader('Saving Listing...');
-
-    // Build the "normal" fields
-    let listingDetails = validators.listingDetail;
-    Object.keys(listingDetails).forEach((key) => {
-        listingDetailsObject[key] = fieldInterface.getFieldValue(
-                                    listingDetails[key].type, 
-                                    listingDetails[key].fieldId);
-    });
-    // Premium App Basic Fields
-    let premiumAppRules = validators.premiumAppDetails;
-    Object.keys(premiumAppRules).forEach((key) => {
-        premiumAppDetailsObject[key] = fieldInterface.getFieldValue(
-                                    premiumAppRules[key].type, 
-                                    premiumAppRules[key].fieldId);
-    });
-    premiumAppDetailsObject._isPremiumApp = isPremiumApp;
-
-    // Special fields
-    buildSpecialFields();
+    buildFields();
+    
 
     // Listing Row. Turn the entire thing to string
     listingRow.listingDetails = JSON.stringify(listingDetailsObject);
@@ -188,6 +171,32 @@ function saveListing(){
         console.log('Saved the listing!');
     })
     .catch((e) => console.error(e));
+}
+
+
+/**
+ * Builds the fields of the Core and Premium App Details.
+ * Sets it to the global listingDetailsObject and premiumAppDetailsObject
+ */
+function buildFields(){
+    // Build the "normal" fields
+    let listingDetails = validators.listingDetail;
+    Object.keys(listingDetails).forEach((key) => {
+        listingDetailsObject[key] = fieldInterface.getFieldValue(
+                                    listingDetails[key].type, 
+                                    listingDetails[key].fieldId);
+    });
+    // Premium App Basic Fields
+    let premiumAppRules = validators.premiumAppDetails;
+    Object.keys(premiumAppRules).forEach((key) => {
+        premiumAppDetailsObject[key] = fieldInterface.getFieldValue(
+                                    premiumAppRules[key].type, 
+                                    premiumAppRules[key].fieldId);
+    });
+    premiumAppDetailsObject._isPremiumApp = isPremiumApp;
+
+    // Special fields
+    buildSpecialFields();
 }
 
 /**
@@ -340,11 +349,35 @@ function setPremiumAppStatus(status){
     }
 }
 
+
+/**
+ * Send a message to the preview listing iframe to update it 
+ * with the listings' info
+ */
+function updatePreviewListing(){
+    // Get current value of the fields
+    buildFields();
+
+    // Send message to the window to update the preview
+    let previewWindow = document.getElementById('preview-listing-iframe')
+                                .contentWindow;
+
+    previewWindow.postMessage({
+        listingDetails: listingDetailsObject,
+        premiumAppDetails: premiumAppDetailsObject,
+        listingRowAttachments: listingRowAttachments
+    }, config.root);
+}
+
 /**
  * Assign event handlers to the static buttons
  * and other elements
  */
 function assignEventHandlers(){
+    // Preview Listing Iframe load the src
+    document.getElementById('preview-listing-iframe').src = 
+            config.root + 'components/listing-preview/index.html';
+
     // Save
     document.getElementById('btn-save')
             .addEventListener('click', function(e){
@@ -376,6 +409,12 @@ function assignEventHandlers(){
     document.getElementById('premium-app-details-tab')
         .addEventListener('click', function(){
             view.showPremiumAppDetailsTab();
+        });
+
+    document.getElementById('preview-listing-tab')
+        .addEventListener('click', function(){
+            view.showPreviewListingTab();
+            updatePreviewListing();
         });
 
     // Premium App Checkbox
