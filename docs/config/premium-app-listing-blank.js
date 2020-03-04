@@ -13,6 +13,5 @@ export default {
     "privacyPolicy": "",
     "supportContact": "",
     "salesContact": "",
-    "additionalHelpURLs": "",
-    "faq": ""
+    "additionalHelpURLs": ""
 }
