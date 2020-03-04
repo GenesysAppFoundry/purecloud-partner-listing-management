@@ -11,14 +11,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/PrinceMerluza/purecloud-partner-listing-management.git"
+    "url": "git+https://github.com/GenesysAppFoundry/purecloud-partner-listing-management.git"
   },
   "author": "Prince Merluza",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/PrinceMerluza/purecloud-partner-listing-management/issues"
+    "url": "https://github.com/GenesysAppFoundry/purecloud-partner-listing-management/issues"
   },
-  "homepage": "https://github.com/PrinceMerluza/purecloud-partner-listing-management#readme",
+  "homepage": "https://github.com/GenesysAppFoundry/purecloud-partner-listing-management#readme",
   "dependencies": {
     "express": "^4.17.1"
   }
