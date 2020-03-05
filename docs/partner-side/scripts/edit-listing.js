@@ -105,17 +105,15 @@ function loadListing(){
  * @returns {Promise} 
  */
 function saveListing(){
-    // Validate fields first
-    if(!validateAllFields()){
+    // Validate files to be uploaded
+    if(!validateAttachments()){
         modal.showInfoModal(
             'Error',
-            'Some fields are incorrect. Please review.',
+            'Please check your file uploads.',
             () => {
                 modal.hideInfoModal();
-            })
-        return new Promise((resolve, reject) => {
-            reject('Save failed.');
-        });
+            });
+        return;
     }
 
     modal.showLoader('Saving Listing...');
@@ -263,6 +261,9 @@ function validateAllFields(){
     //Special Fields
     if(!validateSpecialFields()) allValid = false;
 
+    // Attachments
+    if(!validateAttachments()) allValid = false;
+
     return allValid;
 }
 
@@ -289,12 +290,23 @@ function buildSpecialFields(){
 
 /**
  * Run validation for special fields
+ * @returns {Boolean}
  */
 function validateSpecialFields(){
     let valid = true;
 
     // TODO: Hardware Add-ons
     // TODO: Use Cases
+
+    return valid;
+}
+
+/**
+ * Run validation for attachment files
+ * @returns {Boolean}
+ */
+function validateAttachments(){
+    let valid = true;
 
     // Attachemnt fields
     if(!fileUploaders.validateFields(isPremiumApp)) valid = false;
@@ -307,6 +319,19 @@ function submitListing(){
     'Confirmation', 
     'Are you sure you\'re ready to submit this for approval? This will save the listing before submission',
     () => {
+        // Validate fields first
+        if(!validateAllFields()){
+            modal.showInfoModal(
+                'Error',
+                'Some fields are incorrect. Please review.',
+                () => {
+                    modal.hideInfoModal();
+                    modal.hideYesNoModal();
+                });
+
+            return;
+        }
+
         saveListing()
         .then(() => {
             modal.hideInfoModal();
