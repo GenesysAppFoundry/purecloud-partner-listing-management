@@ -7,6 +7,8 @@
   <title>AppFoundry Listing Preview</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
   <link rel="stylesheet" href="./style.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/showdown@1.9.1/dist/showdown.min.js"></script>
   <script src="./index.js" type="module"></script>
 </head>
 
@@ -24,8 +26,10 @@
       </div>
       <div class="listing-container">
         <div class="columns is-gapless">
+          <!-- LEFT -->
           <div class="column">
             <div class="listing-left-container">
+              <!-- TOP PART WITH LOGO AND SHORT DESCIRPTION -->
               <div class="columns is-gapless">
                 <div class="column is-one-quarter">
                   <img class="logo" src="../../assets/img/logo-blank.png" alt="" srcset="">
@@ -36,11 +40,110 @@
                 </div>
               </div>
               <hr>
+              <!-- NAVIGATION -->
+              <div id="page-navigation" class="tabs">
+                <ul>
+                  <li>
+                    <a id="description-nav-btn">
+                      Description
+                    </a>
+                  </li>
+                  <li>
+                    <a id="useCases-nav-btn">
+                      Use Cases
+                    </a>
+                  </li>
+                  <li>
+                    <a id="pricing-nav-btn">
+                      Pricing
+                    </a>
+                  </li>
+                  <li>
+                    <a id="productDetails-nav-btn">
+                      Product Details
+                    </a>
+                  </li>
+                </ul>
+              </div>
+              
+              <!-- FULL DESCRIPTION -->
+              <div id="nav-description-container">
+                <div class="app-fullDescription markdown-container">
+                  Full Description Here
+                </div>
+              </div>
+
+              <!-- USE CASES -->
+              <div id="nav-useCases-container">
+
+              </div>
+
+              <!-- PRICING -->
+              <div id="nav-pricing-container">
+
+              </div>
+
+              <!-- PRODUCT DETAILS -->
+              <div id="nav-productDetails-container">
+
+              </div>
+              
             </div>
           </div>
+          <!-- RIGHT -->
           <div class="column is-one-quarter">
             <div class="listing-right-container">
-              No gap
+              <button class="button contact-us">
+                Contact Us
+              </button>
+              <!-- Author -->
+              <div class="columns">
+                <div class="column left-column">
+                  <strong>Author</strong> 
+                </div>
+                <div class="column right-column">
+                  <a class="app-vendorWebSite" href="http://">
+                    <span class="app-vendorName">
+                      Vendor
+                    </span>
+                  </a>
+                </div>
+              </div>
+              <!-- Language -->
+              <div class="columns">
+                <div class="column left-column">
+                  <strong>Languages</strong> 
+                </div>
+                <div class="column right-column">
+                  <div class="app-appLanguages">
+                    Languages Here
+                  </div>
+                </div>
+              </div>
+              <!-- Industries -->
+              <div class="columns">
+                <div class="column left-column">
+                  <strong>Industries</strong> 
+                </div>
+                <div class="column right-column">
+                  <div class="app-industries">
+                    Industries Here
+                  </div>
+                </div>
+              </div>
+              <!-- Additional Information -->
+              <div class="additional-information">
+                <p>
+                  <strong>Additional Information</strong>
+                </p>
+                <p>
+                  <a class="p-app-tosURL" href="">Terms and Conditions</a>
+                </p>
+                <!-- TODO: There should be marketing brochure here -->
+                <p>
+                  <a class="app-helpDocumentation" href="">Help Documentation</a>
+                </p>
+              </div>
             </div>
           </div>
         </div>

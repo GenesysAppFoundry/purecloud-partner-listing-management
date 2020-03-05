@@ -6,7 +6,17 @@ body {
     background-color: #f4f4f6;
 }
 
+a {
+    color: #FF4B23;
+}
+
+a:hover {
+    color: #FF4B23;
+    text-decoration: underline;
+}
+
 .listing-outer-container {
+    max-width: 1200px;
     top: -250px;
 }
 
@@ -20,8 +30,8 @@ body {
     box-shadow: 0 1px 1px 1px #d5d5d5;
     border-radius: 5px;
     margin: 0 auto 40px;
-    
     background-color: #fff;
+    font-weight: 300;
 }
 
 .listing-left-container {
@@ -34,7 +44,15 @@ body {
     height: 100%;
     border-bottom-right-radius: 5px;
     border-top-right-radius: 5px;
-    padding: 30px 20px;
+    padding: 30px;
+}
+
+.listing-right-container .columns {
+    margin-bottom: 0;
+}
+
+.listing-right-container .columns .column{
+    padding-bottom: 0.5rem;
 }
 
 .background-hero {
@@ -54,4 +72,103 @@ body {
 
 img.logo{
     max-width: 130px;
+    width: 100%;
+}
+
+.tabs {
+    font-size: 14px;
+}
+
+.tabs ul{
+    border-bottom-style: none;
+}
+
+.tabs a:hover {
+    border-bottom-color: #fff;
+    text-decoration: none;
+    color: #b0b0b0;
+}
+
+.tabs li a{
+    font-weight: 700;
+    padding: 0 15px 4px 12px;
+    border-bottom: 4px solid #fff;
+    color: #b0b0b0;
+}
+
+.tabs li.is-active a {
+    border-bottom: 4px solid #4e5054;
+    color: #4e5054;
+}
+
+button.contact-us {
+    height: 50px;
+    border-radius: 25px;
+    color: #fff;
+    background-color: #FF4B23;
+    border: 2px solid #FF4B23;
+    font-size: 19px;
+    margin: 0 auto 20px;
+    width: 100%;
+    outline: 0;
+    transition-duration: .3s;
+}
+
+button.contact-us:hover {
+    background-color: #fff;
+    color: #FF4B23;
+    border: 2px solid #FF4B23;
+}
+
+.additional-information {
+    margin-top: 10px;
+}
+
+/** 
+================================================================
+                        MARKDOWN
+================================================================
+ **/
+.markdown-container p {
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.markdown-container h1 {
+    font-weight: 700;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.markdown-container h2 {
+    font-weight: 700;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.markdown-container h3 {
+    font-weight: 700;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.markdown-container ul {
+    list-style-type: disc;
+    list-style-position: inside;
+    margin-bottom: 10px;
+    margin-top: 0;
+    margin-bottom: 10px;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    padding-inline-start: 40px;
+}
+
+.markdown-container ol {
+    list-style-position: inside;
+    margin-bottom: 10px;
+    margin-top: 0;
+    margin-bottom: 10px;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    padding-inline-start: 40px;
 }

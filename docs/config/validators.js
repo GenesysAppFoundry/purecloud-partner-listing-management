@@ -59,7 +59,8 @@ export default {
             type: "textarea", 
             required: true,
             maxChar: 2500,
-            message: "Required. Maximum of 2500 characters."
+            message: "Required. Maximum of 2500 characters.",
+            markdown: true
         },
         videoURL: {
             fieldId: "app-videoURL",
