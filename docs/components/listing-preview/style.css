@@ -124,6 +124,24 @@ button.contact-us:hover {
     margin-top: 10px;
 }
 
+.product-details {
+    border: 1px solid #eee;
+    border-radius: 5px;
+
+    display: flex !important;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.product-details .columns {
+    margin: 0px !important;
+}
+
+.item {
+    margin: 5px 20px;
+    padding: 5px;
+}
+
 /** 
 ================================================================
                         MARKDOWN
