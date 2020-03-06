@@ -68,7 +68,12 @@ function fillPage(data){
                     return;
                 }
 
-                fieldEl.innerHTML = util.arrayToDivList(listingDetails[key]);
+                // Check if has value
+                if(listingDetails[key].length > 0){
+                    fieldEl.innerHTML = util.arrayToDivList(listingDetails[key]);
+                }else{
+                    fieldEl.parentElement.hidden = true;
+                }
                 return;
             }
 
@@ -80,7 +85,12 @@ function fillPage(data){
                 if(fieldEl.tagName.toLowerCase() == 'a'){
                     fieldEl.href = listingDetails[key];
                 }else{
-                    fieldEl.innerText = listingDetails[key];
+                    // Check if has value
+                    if(listingDetails[key] !== ''){
+                        fieldEl.innerText = listingDetails[key];
+                    }else{
+                        fieldEl.parentElement.hidden = true;
+                    }
                 }
             }
         });
@@ -110,11 +120,6 @@ function showPage(page){
 
     // Activate the tab btn
     document.getElementById(page.btn).parentElement.classList.add('is-active');
-
-    // Additional styles for Pricing Details
-    if (page.container == 'nav-productDetails-container'){
-        document.getElementById(page.container).style.display = 'flex';
-    }
 }
 
 /**

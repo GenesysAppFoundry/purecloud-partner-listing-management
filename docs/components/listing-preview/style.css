@@ -131,6 +131,14 @@ button.contact-us:hover {
     flex-wrap: wrap;
 }
 
+.hardware {
+    margin-bottom: 20px;
+}
+
+.additional-info {
+    display: flex;
+}
+
 .item {
     margin: 5px 20px;
     padding: 5px;
