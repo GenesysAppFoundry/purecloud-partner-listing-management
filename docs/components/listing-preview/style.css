@@ -127,14 +127,8 @@ button.contact-us:hover {
 .product-details {
     border: 1px solid #eee;
     border-radius: 5px;
-
-    display: flex !important;
     flex-direction: row;
     flex-wrap: wrap;
-}
-
-.product-details .columns {
-    margin: 0px !important;
 }
 
 .item {

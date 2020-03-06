@@ -110,6 +110,11 @@ function showPage(page){
 
     // Activate the tab btn
     document.getElementById(page.btn).parentElement.classList.add('is-active');
+
+    // Additional styles for Pricing Details
+    if (page.container == 'nav-productDetails-container'){
+        document.getElementById(page.container).style.display = 'flex';
+    }
 }
 
 /**
