@@ -73,6 +73,7 @@ function setUp(){
         assignEventHandlers();
         validateAllFields();
         setupSpecialFields();
+        setupPreviewWindow();
     });
 }
 
@@ -383,11 +384,11 @@ function updatePreviewListing(){
     // Get current value of the fields
     buildFields();
 
-    // Send message to the window to update the preview
-    let previewWindow = document.getElementById('preview-listing-iframe')
-                                .contentWindow;
+    view.reloadPreviewWindow();
+}
 
-    previewWindow.postMessage({
+function setupPreviewWindow(){
+    view.setupPreviewWindow({
         listingDetails: listingDetailsObject,
         premiumAppDetails: premiumAppDetailsObject,
         listingRowAttachments: listingRowAttachments
@@ -401,7 +402,7 @@ function updatePreviewListing(){
 function assignEventHandlers(){
     // Preview Listing Iframe load the src
     document.getElementById('preview-listing-iframe').src = 
-            config.root + 'components/listing-preview/index.html';
+            config.root + '/components/listing-preview/index.html';
 
     // Save
     document.getElementById('btn-save')

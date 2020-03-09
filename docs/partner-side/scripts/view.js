@@ -206,5 +206,20 @@ export default {
     addHeader(){
         let hero = document.getElementById('hero');
         hero.appendChild(headerTemplate.new());
+    },
+
+    setupPreviewWindow(data, origin){
+        let previewEl = document.getElementById('preview-listing-iframe');
+        let previewWindow = previewEl.contentWindow;
+
+        previewEl.onload = () => {
+            previewWindow.postMessage(data, origin);
+        }
+    },
+
+    reloadPreviewWindow(){
+        let previewWindow = document.getElementById('preview-listing-iframe')
+                                .contentWindow;
+        previewWindow.location.reload();
     }
 }
