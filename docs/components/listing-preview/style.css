@@ -124,6 +124,86 @@ button.contact-us:hover {
     margin-top: 10px;
 }
 
+.carousel-container {
+    padding: 10px;
+    border: 1px solid #eee;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+.carousel-wrapper {
+    overflow: hidden;
+    width: 100%;
+    margin: auto;
+}
+
+.carousel-wrapper * {
+    box-sizing: border-box;  
+}
+
+.carousel {
+    -webkit-transform-style: preserve-3d;
+    -moz-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+}
+
+.carousel-item {
+    opacity: 0;
+    position: absolute;
+    top:0;
+    width: 100%;
+    margin: auto;
+    padding: 1rem 4rem;
+    z-index: 100;
+    transition: transform .5s, opacity .5s, z-index .5s;
+}
+
+.carousel-item.initial,
+.carousel-item.active {
+  opacity: 1;
+  position: relative;
+  z-index: 900;
+}
+
+.carousel-item.prev,
+.carousel-item.next {
+  z-index: 800;
+}
+
+.carousel-item.prev {
+    transform: translateX(-100%);
+}
+
+.carousel-item.next {
+    transform: translateX(100%);
+}
+
+.carousel-circle {
+    padding: 0;
+    margin: 0 2px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 3px solid #FF4B23;
+    background: #fff;
+    cursor: pointer;
+    transition-duration: 0.25s;
+    transition-timing-function: ease;
+}
+
+.carousel-circle:focus {
+    outline: 0;
+}
+
+.carousel-circle:hover {
+    background: #FF4B23;
+}
+
+.carousel-circle.active {
+    width: 32px;
+    border-radius: 25px;
+}
+
 /** 
 ================================================================
                         MARKDOWN

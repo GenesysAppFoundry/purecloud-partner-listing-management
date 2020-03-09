@@ -1,5 +1,5 @@
-const root = "https://genesysappfoundry.github.io/purecloud-partner-listing-management/";
-// const root = "http://localhost:8080/";
+// const root = "https://genesysappfoundry.github.io/purecloud-partner-listing-management/";
+const root = "http://localhost:8080/";
 
 export default {    
     clientIDs: {        

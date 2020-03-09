@@ -1,12 +1,7 @@
 import validators from '../../config/validators.js';
-import util from './util.js';
-
-// Get reference to showdownjs library
-const showdown = window.showdown;
-let converter = new showdown.Converter({
-    noHeaderId: true,
-    strikethrough: true
-});
+import carousel from './util/carousel.js';
+import testData from './test/listing-data.js';
+import util from './util/util.js';
 
 // Contains the container and btn elements of the page of the listings.
 const pageMap = {
@@ -45,6 +40,8 @@ function receiveMessage(event){
  * @param {Object} data the listing info from the parent iframe
  */
 function fillPage(data){
+    console.log('Filling page...');
+
     listing = data;
     determineFieldVisibility();
 
@@ -85,6 +82,43 @@ function fillPage(data){
             }
         });
     });
+
+    // EYO, A SPECIAL CASE:
+    // Video(if existing) and add it to last part of carousel
+    // TODO: Use Youtube and Vimeo SDKs to detect playing so 
+    // autoplay of carousel will stop.
+    if(listingDetails.videoURL){
+        let videoUrlString = listingDetails.videoURL;
+        let carouselContainer = document.getElementById('carousel');
+        let newCarouselDiv = document.createElement('div');
+        let embedEl = document.createElement('iframe');
+        newCarouselDiv.classList.add('carousel-item');
+        embedEl.style.width = '100%';
+        embedEl.style.height = '424px';
+
+        // Make it a valid URL if not (add http(s))
+        if(videoUrlString.search('http') == -1){
+            videoUrlString = `https://${videoUrlString}`;
+        }
+
+        // Check if Youtube or Vimeo
+        let videoUrl = new URL(videoUrlString);
+        if(videoUrl.host.search('youtube') > -1){
+            let videoId = videoUrl.searchParams.get('v');
+            embedEl.src = `https://www.youtube.com/embed/${videoId}`;
+        }
+
+        if(videoUrl.host.search('vimeo') > -1){
+            let videoId = videoUrl.pathname.substr(1);  
+            embedEl.src = `https://player.vimeo.com/video/${videoId}?color=ff0179`;
+        }
+
+        newCarouselDiv.appendChild(embedEl);
+        carouselContainer.appendChild(newCarouselDiv);
+
+        // Re-Init the carousel
+        carousel.initCarousel();
+    }
 }
 
 /**
@@ -101,7 +135,6 @@ function showPage(page){
     // Disable the tab elements active look
     document.getElementById('page-navigation').querySelectorAll('li')
         .forEach(el => {
-            console.log('que');
             el.classList.remove('is-active');
         });
 
@@ -131,6 +164,33 @@ function determineFieldVisibility(){
     }else{
         document.getElementById(pageMap.pricing.btn).style.display = '';
     }
+
+    // Languages Right Side
+    if(listingDetails.appLanguages.length <= 0){
+        document.getElementById('right-languages-container')
+            .style.display = 'none';
+    }else{
+        document.getElementById('right-languages-container')
+            .style.display = '';
+    }
+
+    // TOS Right Side
+    if(premiumAppDetails.tosURL.length <= 0){
+        document.getElementById('right-TOS-container')
+            .style.display = 'none';
+    }else{
+        document.getElementById('right-TOS-container')
+            .style.display = '';
+    }
+
+    // Help Documentation Right Side
+    if(listingDetails.helpDocumentation.length <= 0){
+        document.getElementById('right-helpDocumentation-container')
+            .style.display = 'none';
+    }else{
+        document.getElementById('right-helpDocumentation-container')
+            .style.display = '';
+    }
 }
 
 /**
@@ -152,3 +212,17 @@ function setEventHandlers(){
 // ======================================
 setEventHandlers();
 showPage(pageMap.description);
+
+// Initialize Carousel
+carousel.initCarousel();
+
+// Setup showdown converter
+let converter = new showdown.Converter({
+    noHeaderId: true,
+    strikethrough: true
+});
+
+// Load test if page is not laoded in na iframe
+if (window.location == window.parent.location) {
+    fillPage(testData);
+}
