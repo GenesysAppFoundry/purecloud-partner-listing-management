@@ -224,6 +224,39 @@ button.contact-us:hover {
     padding: 5px;
 }
 
+.use-case-header {
+    font-weight: 700;
+}
+
+.use-case-title {
+    background-color: #fff;
+    color: #FF4B23;
+    cursor: pointer;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-weight: 700;
+}
+
+.use-case-title::before{
+    font-size: 11px;
+    content: '⯆ ';
+}
+
+.use-case-title.active::before {
+    font-size: 11px;
+    content: '⯅ ';
+}
+
+.use-case-content {
+    padding: 0 18px;
+    background-color: white;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+}
+
 /** 
 ================================================================
                         MARKDOWN

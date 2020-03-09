@@ -1,5 +1,5 @@
-// const root = "https://genesysappfoundry.github.io/purecloud-partner-listing-management/";
-const root = "http://localhost:8080/";
+// const root = "https://genesysappfoundry.github.io/purecloud-partner-listing-management";
+const root = "http://localhost:8080";
 
 export default {    
     clientIDs: {        
@@ -7,8 +7,8 @@ export default {
     },
 
     "root": root,
-    "redirectUriBase": `${root}partner-side/`,
-    "globalAssetsURL": `${root}assets/`,
+    "redirectUriBase": `${root}/partner-side/`,
+    "globalAssetsURL": `${root}/assets/`,
 
     // PureCloud assigned name for the premium app
     // This should match the integration type name of the Premium App
@@ -129,7 +129,7 @@ export default {
 
     "agent": {
         // Redirect Uri
-        "redirectUriBase": `${root}agent-side/`,
+        "redirectUriBase": `${root}/agent-side/`,
 
         // Implicit Grant Client Id
         "clientId": "73be3dbd-183f-48d2-a7f6-34bb30f65f56",

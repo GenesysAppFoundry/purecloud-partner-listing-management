@@ -1,3 +1,4 @@
+import config from '../../config/config.js';
 import validators from '../../config/validators.js';
 import carousel from './util/carousel.js';
 import testData from './test/listing-data.js';
@@ -31,8 +32,10 @@ let listing = null;
  * @param {Event} event event that's sent
  */
 function receiveMessage(event){
-    let data = event.data;
-    fillPage(data);
+    if(event.origin == config.root){
+        let data = event.data;
+        fillPage(data);
+    }
 }
 
 /**
@@ -48,6 +51,7 @@ function fillPage(data){
     let listingDetails = data.listingDetails;
     let premiumAppDetails = data.premiumAppDetails;
 
+    // BASIC FIELDS
     // Get the fields from the validators file
     Object.keys(validators.listingDetail).forEach(key => {
         let val = validators.listingDetail[key];
@@ -93,7 +97,63 @@ function fillPage(data){
         });
     });
 
-    // EYO, A SPECIAL CASE:
+    // SPECIAL FIELDS
+    // Use Cases
+    let useCaseTemplate = document.createElement('template');
+    useCaseTemplate.innerHTML = `
+    <div class="use-case">
+        <button class="use-case-title"></button>
+        <div class="use-case-content">
+            <div class="use-case-summary-container">
+            <div class="use-case-header">Use Case Summary</div>
+                <div class="use-case-summary-content markdown-container">
+            </div>
+            </div>
+            <div class="use-case-benefits-container">
+                <div class="use-case-header">Business Benefits</div>
+                <div class="use-case-benefits-content markdown-container">
+                </div>
+            </div> 
+        </div>
+    </div>
+    `;
+    
+    let useCasesContainerEl = document.getElementById('nav-useCases-container');
+    let useCases = listingDetails.useCases;
+
+    // Display the Use Cases
+    useCases.forEach((useCase) => {
+        let useCaseEl = document.importNode(useCaseTemplate.content, true);
+        let titleEl = useCaseEl.querySelectorAll(
+                                '.use-case-title')[0];
+        let summaryEl = useCaseEl.querySelectorAll(
+                                '.use-case-summary-content')[0];
+        let benefitsEl = useCaseEl.querySelectorAll(
+                                '.use-case-benefits-content')[0];
+                                
+
+        // Fill the content
+        titleEl.innerHTML = useCase.title;
+        summaryEl.innerHTML = converter.makeHtml(useCase.useCaseSummary);
+        benefitsEl.innerHTML = converter.makeHtml(useCase.businessBenefits);
+
+        // Add element to page
+        useCasesContainerEl.appendChild(useCaseEl);
+
+        // Assign collapsible behavior
+        titleEl.addEventListener('click', () => {
+            titleEl.classList.toggle('active');
+            let content = titleEl.nextElementSibling;
+            if (content.style.maxHeight) {
+                content.style.maxHeight = null;
+            } else {
+                content.style.maxHeight = content.scrollHeight + 'px';
+            }
+        });
+    });
+
+
+    // SPECIAL CASE:
     // Video(if existing) and add it to last part of carousel
     // TODO: Use Youtube and Vimeo SDKs to detect playing so 
     // autoplay of carousel will stop.
@@ -162,7 +222,7 @@ function showPage(page){
 function determineFieldVisibility(){
     let listingDetails = listing.listingDetails;
     let premiumAppDetails = listing.premiumAppDetails;
-
+console.log(listing);
     // Navigation Items
     if(listingDetails.useCases.length <= 0){
         document.getElementById(pageMap.useCases.btn).style.display = 'none';
