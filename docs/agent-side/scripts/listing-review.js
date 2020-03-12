@@ -35,15 +35,21 @@ function setUp(){
         );
     })
     .then((listingInfo) => {
+        view.setupPreviewWindow({
+            listingDetails: listingInfo.listingDetails,
+            premiumAppDetails: listingInfo.premiumAppDetails,
+            listingRowAttachments: listingInfo.attachments
+        }, config.root);
+
         view.fillAppDetails(listingInfo);
         view.showListingDetailsTab();
 
         // If not premium app don't show the tabs at all
         let isPremiumApp = listingInfo.premiumAppDetails._isPremiumApp;
         if(isPremiumApp){
-            view.showTabs();
+            view.showPremiumAppTab();
         }else{
-            view.hideTabs();
+            view.hidePremiumAppTab();
         }
 
         setupEventHandlers();
@@ -186,7 +192,11 @@ function rejectListing(){
 }
 
 function setupEventHandlers(){
-    // TAabs
+    // Preview Listing Iframe load the src
+    document.getElementById('preview-listing-iframe').src = 
+        config.root + '/components/listing-preview/index.html';
+
+    // Tabs
     document.getElementById('listing-details-tab')
         .addEventListener('click', function(){
             view.showListingDetailsTab();
@@ -195,6 +205,11 @@ function setupEventHandlers(){
     document.getElementById('premium-app-details-tab')
         .addEventListener('click', function(){
             view.showPremiumAppDetailsTab();
+        });
+    
+    document.getElementById('preview-listing-tab')
+        .addEventListener('click', function(){
+            view.showPreviewListingTab();
         });
 
     // Final Decision

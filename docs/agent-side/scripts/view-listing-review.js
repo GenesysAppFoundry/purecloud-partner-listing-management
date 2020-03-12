@@ -158,6 +158,15 @@ function fillAttachments(attachments){
 }
 
 export default {
+    setupPreviewWindow(data, origin){
+        let previewEl = document.getElementById('preview-listing-iframe');
+        let previewWindow = previewEl.contentWindow;
+
+        previewEl.onload = () => {
+            previewWindow.postMessage(data, origin);
+        }
+    },
+
     fillAppDetails(listingInfo){
         console.log(listingInfo);
         let listingDetails = listingInfo.listingDetails;
@@ -179,34 +188,59 @@ export default {
     showListingDetailsTab(){
         let elForm = document.getElementById('core-listing-section');
         let elPaForm = document.getElementById('premium-app-section');
+        let elPLDiv = document.getElementById('preview-listing-section');
         let elListingTab = document.getElementById('listing-details-tab');
         let elPATab = document.getElementById('premium-app-details-tab');
+        let elPreviewTab = document.getElementById('preview-listing-tab');
 
         elListingTab.parentElement.classList.add('is-active');
         elPATab.parentElement.classList.remove('is-active');
+        elPreviewTab.parentElement.classList.remove('is-active');
 
         elForm.style.display = '';
         elPaForm.style.display = 'none';
+        elPLDiv.style.display = 'none';
     },
 
     showPremiumAppDetailsTab(){
         let elForm = document.getElementById('core-listing-section');
         let elPaForm = document.getElementById('premium-app-section');
+        let elPLDiv = document.getElementById('preview-listing-section');
         let elListingTab = document.getElementById('listing-details-tab');
         let elPATab = document.getElementById('premium-app-details-tab');
+        let elPreviewTab = document.getElementById('preview-listing-tab');
 
         elListingTab.parentElement.classList.remove('is-active');
         elPATab.parentElement.classList.add('is-active');
+        elPreviewTab.parentElement.classList.remove('is-active');
 
         elForm.style.display = 'none';
         elPaForm.style.display = '';
+        elPLDiv.style.display = 'none';
     },
+
+    showPreviewListingTab(){
+        let elForm = document.getElementById('core-listing-section');
+        let elPaForm = document.getElementById('premium-app-section');
+        let elPLDiv = document.getElementById('preview-listing-section');
+        let elListingTab = document.getElementById('listing-details-tab');
+        let elPATab = document.getElementById('premium-app-details-tab');
+        let elPreviewTab = document.getElementById('preview-listing-tab');
+
+        elListingTab.parentElement.classList.remove('is-active');
+        elPATab.parentElement.classList.remove('is-active');
+        elPreviewTab.parentElement.classList.add('is-active');
+
+        elForm.style.display = 'none';
+        elPaForm.style.display = 'none';
+        elPLDiv.style.display = '';
+   },
 
     /**
      * Hide the tabs that switch between core and premium app details
      */
-    hideTabs(){
-        let tabControl = document.getElementById('tab-switcher');
+    hidePremiumAppTab(){
+        let tabControl = document.getElementById('premium-app-detail');
         tabControl.style.display = 'none';
     },
 
@@ -214,8 +248,8 @@ export default {
      * Shows the tabs that switch between core and premium app details
      * by default the tabs are shown anyway, but you  know
      */
-    showTabs(){
-        let tabControl = document.getElementById('tab-switcher');
+    showPremiumAppTab(){
+        let tabControl = document.getElementById('premium-app-detail');
         tabControl.style.display = '';
     },
 

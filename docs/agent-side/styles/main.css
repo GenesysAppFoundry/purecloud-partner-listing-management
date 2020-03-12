@@ -181,3 +181,8 @@ section#hero div.hero-body {
   border-color: #FF4F1F !important;
   box-shadow: 0 0 0 0 !important;
 }
+
+#preview-listing-iframe {
+  width: 100%;
+  height: 800px;
+}
