@@ -1,5 +1,13 @@
-const root = "https://genesysappfoundry.github.io/purecloud-partner-listing-management";
-// const root = "http://localhost:8080";
+const origin = "https://genesysappfoundry.github.io";
+// const origin = "http://localhost:8080";
+
+
+// Keep origin as tld as it's being used 
+// to check post messages in preview listing.
+// root would be the actual root URI of the project.
+const root = (origin == 'https://genesysappfoundry.github.io') ?
+                origin + '/purecloud-partner-listing-management' :
+                origin;
 
 export default {    
     clientIDs: {        
