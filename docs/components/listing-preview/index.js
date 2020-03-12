@@ -32,6 +32,8 @@ let listing = null;
  * @param {Event} event event that's sent
  */
 function receiveMessage(event){
+    console.log('Message received.');
+    console.log(event);
     if(event.origin == config.root){
         let data = event.data;
         fillPage(data);

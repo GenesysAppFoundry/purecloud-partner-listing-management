@@ -213,6 +213,8 @@ export default {
         let previewWindow = previewEl.contentWindow;
 
         previewEl.onload = () => {
+            console.log(`Sending data to preview listing. ${origin}`);
+            console.log(data);
             previewWindow.postMessage(data, origin);
         }
     },
