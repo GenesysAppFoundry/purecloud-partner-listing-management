@@ -34,6 +34,7 @@ let listing = null;
 function receiveMessage(event){
     console.log('Message received.');
     console.log(event);
+
     if(event.origin == config.origin){
         let data = event.data;
         fillPage(data);
