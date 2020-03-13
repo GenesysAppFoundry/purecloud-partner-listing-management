@@ -1,5 +1,5 @@
-// const origin = "https://genesysappfoundry.github.io";
-const origin = "http://localhost:8080";
+const origin = "https://genesysappfoundry.github.io";
+// const origin = "http://localhost:8080";
 
 
 // Keep origin as tld as it's being used 
