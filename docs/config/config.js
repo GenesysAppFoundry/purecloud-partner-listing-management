@@ -11,7 +11,13 @@ const root = (origin == 'https://genesysappfoundry.github.io') ?
 
 export default {    
     clientIDs: {        
-        'mypurecloud.com': 'e7de8a75-62bb-43eb-9063-38509f8c21af'
+        'mypurecloud.com': 'e7de8a75-62bb-43eb-9063-38509f8c21af' // Genesys4
+        // 'mypurecloud.com': 'f9fafff1-1d26-40a5-a6c5-c10ab5f78711',
+        // 'mypurecloud.com.au': '5019931d-4450-42a2-aa94-05aefe95a5d9',
+        // 'mypurecloud.ie': '90504ddc-79ee-4ba8-ae4c-c2ae1a8ed781',
+        // 'mypurecloud.jp': '808dd205-2d7b-4ee3-b78d-ccafe69b0bf8',
+        // 'mypurecloud.de': '9ac7637c-bbe6-4fdb-beeb-97caed8012a0',
+        // 'usw2.pure.cloud': 'c79690bb-c50e-46d1-bac6-2b3bda64d573'
     },
 
     "root": root,
